@@ -10,7 +10,8 @@ import {
   Printer, 
   MessageCircle,
   Hash,
-  ShoppingBag
+  ShoppingBag,
+  Share2
 } from 'lucide-react';
 import Image from 'next/image';
 import { 
@@ -65,9 +66,10 @@ interface OrderPanelProps {
   onUpdateQty: (designId: string, sizeId: string, qty: number) => void;
   onRemove: (designId: string) => void;
   settings: AppSettings;
+  onShare: () => void;
 }
 
-export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: OrderPanelProps) {
+export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings, onShare }: OrderPanelProps) {
   
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
 
@@ -180,18 +182,26 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             </div>
           </div>
           
-          <div className="flex items-center bg-muted/50 rounded-full border border-border p-1 shadow-sm h-11 w-full sm:w-32 transition-all hover:shadow-md">
+          <div className="flex items-center bg-muted/50 rounded-full border border-border p-1 shadow-sm h-11 w-full sm:w-44 transition-all hover:shadow-md">
             <button 
               onClick={shareToWhatsApp} 
-              className="flex-1 h-full flex items-center justify-center rounded-l-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-full flex items-center justify-center rounded-l-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
               title="Share on WhatsApp"
             >
               <MessageCircle className="w-5 h-5 text-green-500 group-hover:scale-110 transition-transform" />
             </button>
             <div className="w-px h-5 bg-border/60 shrink-0" />
             <button 
+              onClick={onShare} 
+              className="flex-1 h-full flex items-center justify-center hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
+              title="Clean Share View"
+            >
+              <Share2 className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
+            </button>
+            <div className="w-px h-5 bg-border/60 shrink-0" />
+            <button 
               onClick={handlePrint} 
-              className="flex-1 h-full flex items-center justify-center rounded-r-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="flex-1 h-full flex items-center justify-center rounded-r-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
               title="Print PDF"
             >
               <Printer className="w-5 h-5 text-foreground group-hover:scale-110 transition-transform" />

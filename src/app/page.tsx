@@ -6,6 +6,7 @@ import { DesignList } from '@/components/scarf-app/design-list';
 import { OrderPanel } from '@/components/scarf-app/order-panel';
 import { CSVImport } from '@/components/scarf-app/csv-import';
 import { FloatingDock } from '@/components/scarf-app/floating-dock';
+import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
 
 export default function ScarfOrderApp() {
@@ -20,6 +21,22 @@ export default function ScarfOrderApp() {
   } = useOrder();
 
   const [isCsvOpen, setIsCsvOpen] = useState(false);
+  const [isShareMode, setIsShareMode] = useState(false);
+
+  // If Share Mode is active, render only the presentation view
+  if (isShareMode) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">
+        <ShareView 
+          order={currentOrder} 
+          designs={DESIGNS} 
+          settings={settings} 
+          onBack={() => setIsShareMode(false)} 
+        />
+        <Toaster />
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
@@ -48,6 +65,7 @@ export default function ScarfOrderApp() {
             onUpdateQty={updateQuantity} 
             onRemove={removeItem}
             settings={settings}
+            onShare={() => setIsShareMode(true)}
           />
         </section>
       </main>
@@ -57,7 +75,7 @@ export default function ScarfOrderApp() {
         onReset={clearOrder}
       />
 
-      {/* Dialogs - Hidden but kept for logic stability */}
+      {/* Dialogs */}
       <CSVImport 
         open={isCsvOpen} 
         onClose={() => setIsCsvOpen(false)} 
