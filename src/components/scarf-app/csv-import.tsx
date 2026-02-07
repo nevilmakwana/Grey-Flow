@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -71,7 +70,7 @@ export function CSVImport({ open, onClose, designs, onImport }: CSVImportProps) 
         <DialogHeader>
           <DialogTitle>Bulk Order Import</DialogTitle>
           <DialogDescription>
-            Paste CSV data in format: <code className="bg-slate-100 px-1">design_id, size_id, quantity</code>.
+            Paste CSV data in format: <code className="bg-muted px-1 rounded">design_id, size_id, quantity</code>.
             AI will attempt to match IDs for you.
           </DialogDescription>
         </DialogHeader>
@@ -85,19 +84,19 @@ export function CSVImport({ open, onClose, designs, onImport }: CSVImportProps) 
           />
 
           {isProcessing && (
-            <div className="flex items-center justify-center py-4 text-slate-500 gap-3">
+            <div className="flex items-center justify-center py-4 text-muted-foreground gap-3">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span>Matching data with designs...</span>
             </div>
           )}
 
           {report && (
-            <div className="bg-slate-50 p-4 rounded-xl border max-h-[200px] overflow-y-auto">
+            <div className="bg-muted/50 p-4 rounded-xl border border-border max-h-[200px] overflow-y-auto">
               <div className="flex items-center gap-2 mb-2 text-amber-600">
                 <AlertTriangle className="w-4 h-4" />
                 <span className="text-sm font-bold uppercase tracking-tight">Mismatch Report</span>
               </div>
-              <p className="text-sm text-slate-600 whitespace-pre-wrap">{report}</p>
+              <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report}</p>
             </div>
           )}
         </div>
@@ -108,7 +107,7 @@ export function CSVImport({ open, onClose, designs, onImport }: CSVImportProps) 
               Analyze CSV
             </Button>
           ) : (
-            <Button onClick={confirmImport} className="rounded-xl px-8 bg-green-600 hover:bg-green-700">
+            <Button onClick={confirmImport} className="rounded-xl px-8 bg-green-600 hover:bg-green-700 text-white">
               <CheckCircle className="w-4 h-4 mr-2" /> Import {pendingResults.length} Matches
             </Button>
           )}
