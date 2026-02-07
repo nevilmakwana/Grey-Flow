@@ -56,8 +56,8 @@ export default function ScarfOrderApp() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden">
-        {/* Left Pane - Searchable Design List */}
-        <aside className="w-80 border-r bg-muted/20 flex flex-col no-print transition-all duration-300">
+        {/* Left Pane - Searchable Design List (Width reduced by 20%) */}
+        <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300">
           <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />
         </aside>
 
