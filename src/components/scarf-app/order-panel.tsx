@@ -158,7 +158,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       {/* Printable Header - Apple Inspired */}
       <div className="hidden print:flex justify-between items-end mb-10 border-b-4 border-foreground pb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground">{settings.company_name}</h1>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">{settings.company_name}</h1>
           <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Professional Textile Order Draft</p>
         </div>
         <div className="text-right">
@@ -174,7 +174,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mt-4 md:-mt-8 mb-8 py-4 no-print border-b border-border/50">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
+            <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Order Summary</h2>
             <div className="flex flex-col mt-2">
               <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
               <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
@@ -203,7 +203,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
                   {/* Fixed Aspect Ratio Container (1:1 Square) */}
-                  <div className="w-full md:w-28 bg-muted border-r border-border relative aspect-square shrink-0">
+                  <div className="w-full md:w-32 bg-muted border-r border-border relative aspect-square shrink-0">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
@@ -212,58 +212,60 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       data-ai-hint="textile pattern"
                     />
                   </div>
-                  <div className="flex-1 p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-lg font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                        <div className="h-1 w-8 bg-primary mt-1 rounded-full" />
+                  <div className="flex-1 p-4 md:p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="space-y-1">
+                        <h3 className="text-xl font-black font-mono tracking-tighter text-slate-900 dark:text-white">{design.design_id}</h3>
+                        <div className="h-1.5 w-12 bg-primary rounded-full" />
                       </div>
                       <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => onRemove(item.design_id)}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-8 w-8"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-9 w-9"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </Button>
                     </div>
 
-                    <Table>
-                      <TableHeader className="bg-muted/40 print:bg-muted border-none">
-                        <TableRow className="hover:bg-transparent border-none">
-                          <TableHead className="w-full font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Size Specs</TableHead>
-                          <TableHead className="text-center min-w-[80px] font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Qty</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {design.sizes.map((size) => {
-                          const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                          const qty = orderSize?.quantity || 0;
-                          
-                          return (
-                            <TableRow key={size.size_id} className="hover:bg-transparent border-border/50">
-                              <TableCell className="font-bold py-1.5 text-foreground text-xs">{size.label}</TableCell>
-                              <TableCell className="text-center py-1.5">
-                                <div className="flex justify-center no-print">
-                                  <Input 
-                                    type="number" 
-                                    min="0"
-                                    step="1"
-                                    value={qty === 0 ? "" : qty}
-                                    onChange={(e) => {
-                                      const val = parseInt(e.target.value);
-                                      onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
-                                    }}
-                                    className="w-20 text-center h-8 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
-                                  />
-                                </div>
-                                <span className="hidden print:inline font-black text-xl text-foreground">{qty}</span>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })}
-                      </TableBody>
-                    </Table>
+                    <div className="rounded-2xl overflow-hidden border border-border">
+                      <Table>
+                        <TableHeader className="bg-muted/50 print:bg-muted border-none">
+                          <TableRow className="hover:bg-transparent border-none">
+                            <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
+                            <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {design.sizes.map((size) => {
+                            const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                            const qty = orderSize?.quantity || 0;
+                            
+                            return (
+                              <TableRow key={size.size_id} className="hover:bg-transparent border-border">
+                                <TableCell className="font-bold py-3 text-slate-800 dark:text-slate-200 text-sm">{size.label}</TableCell>
+                                <TableCell className="text-center py-3">
+                                  <div className="flex justify-center no-print">
+                                    <Input 
+                                      type="number" 
+                                      min="0"
+                                      step="1"
+                                      value={qty === 0 ? "" : qty}
+                                      onChange={(e) => {
+                                        const val = parseInt(e.target.value);
+                                        onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
+                                      }}
+                                      className="w-24 text-center h-10 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
+                                    />
+                                  </div>
+                                  <span className="hidden print:inline font-black text-2xl text-slate-900">{qty}</span>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -273,42 +275,43 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       </div>
 
       {/* Summary Section - Final Totals */}
-      <div className="mt-8 p-4 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-8">
-        <div className="flex items-center gap-2 mb-3">
+      <div className="mt-8 p-6 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12">
+        <div className="flex items-center gap-2 mb-4">
           <div className="p-2 bg-foreground text-background rounded-xl">
-            <Hash className="w-4 h-4" />
+            <Hash className="w-5 h-5" />
           </div>
-          <h3 className="text-lg font-black uppercase tracking-tight text-foreground">Consolidated Summary</h3>
+          <h3 className="text-xl font-black uppercase tracking-tight text-slate-900 dark:text-white">Consolidated Summary</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Small Scarf Total</span>
-            <span className="text-2xl font-black text-foreground">{totals.small}</span>
-            <span className="text-[10px] text-muted-foreground font-bold uppercase">50x50 cm</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Small Scarf Total</span>
+            <span className="text-3xl font-black text-slate-900 dark:text-white">{totals.small}</span>
+            <span className="text-[11px] text-muted-foreground font-bold uppercase">50x50 cm</span>
           </div>
-          <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Large Scarf Total</span>
-            <span className="text-2xl font-black text-foreground">{totals.large}</span>
-            <span className="text-[10px] text-muted-foreground font-bold uppercase">90x90 cm</span>
+          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Large Scarf Total</span>
+            <span className="text-3xl font-black text-slate-900 dark:text-white">{totals.large}</span>
+            <span className="text-[11px] text-muted-foreground font-bold uppercase">90x90 cm</span>
           </div>
-          <div className="flex flex-col p-3 bg-foreground text-background rounded-2xl shadow-lg shadow-foreground/5 print:bg-foreground print:shadow-none">
-            <span className="text-[9px] font-black uppercase opacity-60 tracking-[0.1em] mb-1">Net Grand Total</span>
-            <span className="text-2xl font-black">{grandTotal}</span>
-            <span className="text-[10px] opacity-60 font-bold uppercase">Total Units Requested</span>
+          <div className="flex flex-col p-4 bg-foreground text-background rounded-2xl shadow-lg shadow-foreground/5 print:bg-foreground print:shadow-none">
+            <span className="text-[10px] font-black uppercase opacity-60 tracking-[0.1em] mb-1">Net Grand Total</span>
+            <span className="text-3xl font-black">{grandTotal}</span>
+            <span className="text-[11px] opacity-60 font-bold uppercase">Total Units Requested</span>
           </div>
         </div>
       </div>
 
       {/* Printable Footer */}
       <div className="hidden print:block text-center pt-10 mt-10 border-t-2 border-border">
-        <p className="font-bold text-lg text-foreground">Thank you for your business.</p>
+        <p className="font-bold text-xl text-slate-900">Thank you for your business.</p>
         <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">This is an official order draft generated via Scarf Order Pro</p>
-        <div className="mt-6 flex items-center justify-center gap-2">
-          <div className="w-8 h-8 bg-foreground rounded-lg" />
-          <span className="font-black text-sm tracking-tighter text-foreground">{settings.company_name}</span>
+        <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="w-10 h-10 bg-foreground rounded-xl" />
+          <span className="font-black text-lg tracking-tighter text-slate-900">{settings.company_name}</span>
         </div>
       </div>
     </div>
   );
 }
+
