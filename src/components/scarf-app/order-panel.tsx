@@ -212,7 +212,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
               <Card className="no-print overflow-hidden border-border bg-card shadow-sm rounded-3xl transition-all hover:shadow-md">
                 <CardContent className="p-0">
                   <div className="flex flex-col sm:flex-row">
-                    <div className="w-full sm:w-48 bg-muted relative aspect-square shrink-0 overflow-hidden">
+                    <div className="w-full sm:w-48 aspect-square relative shrink-0 overflow-hidden bg-muted">
                       <Image 
                         src={design.image_url} 
                         alt={design.design_id} 
@@ -274,27 +274,27 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                 </CardContent>
               </Card>
 
-              {/* MINIMAL PRINT BLOCK */}
-              <div className="hidden print:flex gap-8 items-start">
-                <div className="w-32 h-32 relative shrink-0 rounded-xl overflow-hidden bg-muted">
+              {/* MINIMAL PRINT BLOCK - FIXED IMAGE SIZE */}
+              <div className="hidden print:flex gap-10 items-start">
+                <div className="w-[140px] h-[140px] relative shrink-0 rounded-xl overflow-hidden bg-muted border border-black/5">
                   <Image 
                     src={design.image_url} 
                     alt={design.design_id} 
                     fill 
                     className="object-cover"
-                    sizes="128px"
+                    sizes="140px"
                   />
                 </div>
                 <div className="flex-1 pt-1">
-                  <h3 className="text-lg font-bold tracking-tight text-black mb-3">{design.design_id}</h3>
-                  <div className="space-y-1">
+                  <h3 className="text-lg font-bold tracking-tight text-black mb-4">{design.design_id}</h3>
+                  <div className="space-y-2 border-t border-black/5 pt-3">
                     {design.sizes.map((size) => {
                       const orderSize = item.sizes.find(s => s.size_id === size.size_id);
                       const qty = orderSize?.quantity || 0;
                       if (qty === 0) return null;
                       return (
-                        <div key={size.size_id} className="flex justify-between items-center text-xs text-black/80">
-                          <span>{size.label}</span>
+                        <div key={size.size_id} className="flex justify-between items-center text-xs text-black/90">
+                          <span className="font-light">{size.label}</span>
                           <span className="font-bold">— {qty} pcs</span>
                         </div>
                       );

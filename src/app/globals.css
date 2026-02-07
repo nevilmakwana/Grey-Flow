@@ -113,6 +113,7 @@
     max-width: none !important;
     padding: 10mm 15mm !important;
     background: white !important;
+    display: block !important;
   }
 
   @page {
