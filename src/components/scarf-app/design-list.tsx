@@ -60,7 +60,6 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm truncate font-mono tracking-tight">{design.design_id}</p>
-                <p className="text-[10px] text-muted-foreground uppercase font-semibold">Ready Stock</p>
               </div>
               <div className="flex-shrink-0">
                 {isSelected ? (
