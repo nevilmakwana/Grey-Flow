@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -15,7 +14,8 @@ import {
   Trash2, 
   Settings as SettingsIcon,
   Printer,
-  Plus
+  Plus,
+  Zap
 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -37,30 +37,33 @@ export default function ScarfOrderApp() {
   const [isDraftsOpen, setIsDraftsOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      {/* Navigation Header */}
-      <header className="h-16 border-b bg-card flex items-center justify-between px-6 no-print">
+    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
+      {/* Navigation Header - Apple Glassmorphism Style */}
+      <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold text-xl">
-            S
+          <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-95">
+            <Zap className="w-6 h-6 fill-current" />
           </div>
-          <h1 className="font-headline font-bold text-xl tracking-tight">Scarf Order Pro</h1>
+          <div className="flex flex-col">
+            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight">Scarf Order Pro</h1>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim Enterprise</span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
-          <div className="h-6 w-px bg-border mx-2" />
-          <Button variant="ghost" size="sm" onClick={() => setIsDraftsOpen(true)} className="gap-2">
-            <History className="w-4 h-4" /> <span className="hidden sm:inline">Drafts</span>
+          <div className="h-4 w-px bg-border mx-2" />
+          <Button variant="ghost" size="sm" onClick={() => setIsDraftsOpen(true)} className="gap-2 rounded-full px-4 hover:bg-secondary">
+            <History className="w-4 h-4" /> <span className="hidden sm:inline">History</span>
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => setIsCsvOpen(true)} className="gap-2">
-            <FileUp className="w-4 h-4" /> <span className="hidden sm:inline">Bulk Import</span>
+          <Button variant="ghost" size="sm" onClick={() => setIsCsvOpen(true)} className="gap-2 rounded-full px-4 hover:bg-secondary">
+            <FileUp className="w-4 h-4" /> <span className="hidden sm:inline">Bulk</span>
           </Button>
-          <div className="h-6 w-px bg-border mx-2" />
-          <Button variant="outline" size="sm" onClick={clearOrder} className="text-destructive hover:bg-destructive/10">
-            <Trash2 className="w-4 h-4 mr-2" /> <span className="hidden sm:inline">Clear</span>
+          <div className="h-4 w-px bg-border mx-2" />
+          <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
+            <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline ml-2">Reset</span>
           </Button>
-          <Button variant="default" size="sm" onClick={saveAsDraft} className="bg-primary hover:bg-primary/90">
+          <Button variant="default" size="sm" onClick={saveAsDraft} className="rounded-full px-6 bg-primary shadow-md shadow-primary/10 hover:shadow-lg transition-all">
             Save Draft
           </Button>
         </div>
@@ -69,19 +72,21 @@ export default function ScarfOrderApp() {
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden">
         {/* Left Pane - Searchable Design List */}
-        <aside className="w-80 border-r bg-muted/30 flex flex-col no-print">
+        <aside className="w-80 border-r bg-muted/20 flex flex-col no-print transition-all duration-300">
           <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />
         </aside>
 
         {/* Right Pane - Order Panel */}
-        <section className="flex-1 overflow-y-auto bg-background">
-          <OrderPanel 
-            order={currentOrder} 
-            designs={DESIGNS} 
-            onUpdateQty={updateQuantity} 
-            onRemove={removeItem}
-            settings={settings}
-          />
+        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300">
+          <div className="h-full">
+            <OrderPanel 
+              order={currentOrder} 
+              designs={DESIGNS} 
+              onUpdateQty={updateQuantity} 
+              onRemove={removeItem}
+              settings={settings}
+            />
+          </div>
         </section>
       </main>
 
