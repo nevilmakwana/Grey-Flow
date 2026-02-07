@@ -1,33 +1,41 @@
 
 [
-  {
-    "design_id": "OG/SCF/6126",
-    "design_name": "Midnight Bloom",
-    "image_url": "https://picsum.photos/seed/scarf1/600/600",
-    "sizes": [
-      { "size_id": "S-REG", "label": "Regular (90x90)", "pieces_per_unit": 1, "rate_per_piece": 450 },
-      { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 650 }
-    ],
-    "default_note": "Hand wash recommended"
-  },
-  {
-    "design_id": "OG/SCF/6555",
-    "design_name": "Azure Waves",
-    "image_url": "https://picsum.photos/seed/scarf2/600/600",
-    "sizes": [
-      { "size_id": "S-SLM", "label": "Slim Wrap", "pieces_per_unit": 2, "rate_per_piece": 300 },
-      { "size_id": "S-STD", "label": "Standard", "pieces_per_unit": 1, "rate_per_piece": 400 }
-    ],
-    "default_note": "Premium silk finish"
-  },
-  {
-    "design_id": "OG/SCF/6999",
-    "design_name": "Crimson Geo",
-    "image_url": "https://picsum.photos/seed/scarf3/600/600",
-    "sizes": [
-      { "size_id": "S-REG", "label": "Regular", "pieces_per_unit": 1, "rate_per_piece": 500 },
-      { "size_id": "S-BUN", "label": "Bundle (3pcs)", "pieces_per_unit": 3, "rate_per_piece": 420 }
-    ],
-    "default_note": "Geometric pattern export quality"
-  }
+  { "design_id": "OG/SCF/6126", "image_url": "https://picsum.photos/seed/6126/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6127", "image_url": "https://picsum.photos/seed/6127/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6128", "image_url": "https://picsum.photos/seed/6128/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6129", "image_url": "https://picsum.photos/seed/6129/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6131", "image_url": "https://picsum.photos/seed/6131/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6132", "image_url": "https://picsum.photos/seed/6132/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6133", "image_url": "https://picsum.photos/seed/6133/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6134", "image_url": "https://picsum.photos/seed/6134/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6135", "image_url": "https://picsum.photos/seed/6135/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6136", "image_url": "https://picsum.photos/seed/6136/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6146", "image_url": "https://picsum.photos/seed/6146/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6148", "image_url": "https://picsum.photos/seed/6148/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6150", "image_url": "https://picsum.photos/seed/6150/600/600", "sizes": [{ "size_id": "S-SML", "label": "Small (90x90)", "pieces_per_unit": 1, "rate_per_piece": 0 }, { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6555", "image_url": "https://picsum.photos/seed/6555/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6600", "image_url": "https://picsum.photos/seed/6600/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6657", "image_url": "https://picsum.photos/seed/6657/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6658", "image_url": "https://picsum.photos/seed/6658/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6659", "image_url": "https://picsum.photos/seed/6659/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6660", "image_url": "https://picsum.photos/seed/6660/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6662", "image_url": "https://picsum.photos/seed/6662/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6665", "image_url": "https://picsum.photos/seed/6665/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6667", "image_url": "https://picsum.photos/seed/6667/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6668", "image_url": "https://picsum.photos/seed/6668/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6688", "image_url": "https://picsum.photos/seed/6688/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6689", "image_url": "https://picsum.photos/seed/6689/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6690", "image_url": "https://picsum.photos/seed/6690/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6771", "image_url": "https://picsum.photos/seed/6771/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6772", "image_url": "https://picsum.photos/seed/6772/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6773", "image_url": "https://picsum.photos/seed/6773/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6775", "image_url": "https://picsum.photos/seed/6775/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6777", "image_url": "https://picsum.photos/seed/6777/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6778", "image_url": "https://picsum.photos/seed/6778/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6779", "image_url": "https://picsum.photos/seed/6779/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6780", "image_url": "https://picsum.photos/seed/6780/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6781", "image_url": "https://picsum.photos/seed/6781/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6782", "image_url": "https://picsum.photos/seed/6782/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6783", "image_url": "https://picsum.photos/seed/6783/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" },
+  { "design_id": "OG/SCF/6784", "image_url": "https://picsum.photos/seed/6784/600/600", "sizes": [{ "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 0 }], "default_note": "Premium Scarf" }
 ]

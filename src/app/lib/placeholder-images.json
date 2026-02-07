@@ -1,29 +1,43 @@
 
 {
   "placeholderImages": [
-    {
-      "id": "scarf-1",
-      "description": "Abstract Silk Scarf",
-      "imageUrl": "https://picsum.photos/seed/scarf1/600/600",
-      "imageHint": "silk scarf abstract"
-    },
-    {
-      "id": "scarf-2",
-      "description": "Floral Cotton Scarf",
-      "imageUrl": "https://picsum.photos/seed/scarf2/600/600",
-      "imageHint": "floral scarf textile"
-    },
-    {
-      "id": "scarf-3",
-      "description": "Geometric Pashmina",
-      "imageUrl": "https://picsum.photos/seed/scarf3/600/600",
-      "imageHint": "geometric pattern textile"
-    },
-    {
-      "id": "scarf-4",
-      "description": "Solid Linen Wrap",
-      "imageUrl": "https://picsum.photos/seed/scarf4/600/600",
-      "imageHint": "linen fabric blue"
-    }
+    { "id": "scarf-6126", "description": "Scarf Design 6126", "imageUrl": "https://picsum.photos/seed/6126/600/600", "imageHint": "silk scarf" },
+    { "id": "scarf-6127", "description": "Scarf Design 6127", "imageUrl": "https://picsum.photos/seed/6127/600/600", "imageHint": "pattern textile" },
+    { "id": "scarf-6128", "description": "Scarf Design 6128", "imageUrl": "https://picsum.photos/seed/6128/600/600", "imageHint": "floral scarf" },
+    { "id": "scarf-6129", "description": "Scarf Design 6129", "imageUrl": "https://picsum.photos/seed/6129/600/600", "imageHint": "abstract scarf" },
+    { "id": "scarf-6131", "description": "Scarf Design 6131", "imageUrl": "https://picsum.photos/seed/6131/600/600", "imageHint": "silk fabric" },
+    { "id": "scarf-6132", "description": "Scarf Design 6132", "imageUrl": "https://picsum.photos/seed/6132/600/600", "imageHint": "geometric scarf" },
+    { "id": "scarf-6133", "description": "Scarf Design 6133", "imageUrl": "https://picsum.photos/seed/6133/600/600", "imageHint": "blue scarf" },
+    { "id": "scarf-6134", "description": "Scarf Design 6134", "imageUrl": "https://picsum.photos/seed/6134/600/600", "imageHint": "red scarf" },
+    { "id": "scarf-6135", "description": "Scarf Design 6135", "imageUrl": "https://picsum.photos/seed/6135/600/600", "imageHint": "green scarf" },
+    { "id": "scarf-6136", "description": "Scarf Design 6136", "imageUrl": "https://picsum.photos/seed/6136/600/600", "imageHint": "yellow scarf" },
+    { "id": "scarf-6146", "description": "Scarf Design 6146", "imageUrl": "https://picsum.photos/seed/6146/600/600", "imageHint": "printed scarf" },
+    { "id": "scarf-6148", "description": "Scarf Design 6148", "imageUrl": "https://picsum.photos/seed/6148/600/600", "imageHint": "cotton scarf" },
+    { "id": "scarf-6150", "description": "Scarf Design 6150", "imageUrl": "https://picsum.photos/seed/6150/600/600", "imageHint": "linen scarf" },
+    { "id": "scarf-6555", "description": "Scarf Design 6555", "imageUrl": "https://picsum.photos/seed/6555/600/600", "imageHint": "scarf pattern" },
+    { "id": "scarf-6600", "description": "Scarf Design 6600", "imageUrl": "https://picsum.photos/seed/6600/600/600", "imageHint": "luxury scarf" },
+    { "id": "scarf-6657", "description": "Scarf Design 6657", "imageUrl": "https://picsum.photos/seed/6657/600/600", "imageHint": "fancy scarf" },
+    { "id": "scarf-6658", "description": "Scarf Design 6658", "imageUrl": "https://picsum.photos/seed/6658/600/600", "imageHint": "casual scarf" },
+    { "id": "scarf-6659", "description": "Scarf Design 6659", "imageUrl": "https://picsum.photos/seed/6659/600/600", "imageHint": "wrap scarf" },
+    { "id": "scarf-6660", "description": "Scarf Design 6660", "imageUrl": "https://picsum.photos/seed/6660/600/600", "imageHint": "soft scarf" },
+    { "id": "scarf-6662", "description": "Scarf Design 6662", "imageUrl": "https://picsum.photos/seed/6662/600/600", "imageHint": "woven scarf" },
+    { "id": "scarf-6665", "description": "Scarf Design 6665", "imageUrl": "https://picsum.photos/seed/6665/600/600", "imageHint": "plain scarf" },
+    { "id": "scarf-6667", "description": "Scarf Design 6667", "imageUrl": "https://picsum.photos/seed/6667/600/600", "imageHint": "textured scarf" },
+    { "id": "scarf-6668", "description": "Scarf Design 6668", "imageUrl": "https://picsum.photos/seed/6668/600/600", "imageHint": "modern scarf" },
+    { "id": "scarf-6688", "description": "Scarf Design 6688", "imageUrl": "https://picsum.photos/seed/6688/600/600", "imageHint": "retro scarf" },
+    { "id": "scarf-6689", "description": "Scarf Design 6689", "imageUrl": "https://picsum.photos/seed/6689/600/600", "imageHint": "vintage scarf" },
+    { "id": "scarf-6690", "description": "Scarf Design 6690", "imageUrl": "https://picsum.photos/seed/6690/600/600", "imageHint": "classic scarf" },
+    { "id": "scarf-6771", "description": "Scarf Design 6771", "imageUrl": "https://picsum.photos/seed/6771/600/600", "imageHint": "striped scarf" },
+    { "id": "scarf-6772", "description": "Scarf Design 6772", "imageUrl": "https://picsum.photos/seed/6772/600/600", "imageHint": "dotted scarf" },
+    { "id": "scarf-6773", "description": "Scarf Design 6773", "imageUrl": "https://picsum.photos/seed/6773/600/600", "imageHint": "checked scarf" },
+    { "id": "scarf-6775", "description": "Scarf Design 6775", "imageUrl": "https://picsum.photos/seed/6775/600/600", "imageHint": "paisley scarf" },
+    { "id": "scarf-6777", "description": "Scarf Design 6777", "imageUrl": "https://picsum.photos/seed/6777/600/600", "imageHint": "boho scarf" },
+    { "id": "scarf-6778", "description": "Scarf Design 6778", "imageUrl": "https://picsum.photos/seed/6778/600/600", "imageHint": "ethnic scarf" },
+    { "id": "scarf-6779", "description": "Scarf Design 6779", "imageUrl": "https://picsum.photos/seed/6779/600/600", "imageHint": "tribal scarf" },
+    { "id": "scarf-6780", "description": "Scarf Design 6780", "imageUrl": "https://picsum.photos/seed/6780/600/600", "imageHint": "artsy scarf" },
+    { "id": "scarf-6781", "description": "Scarf Design 6781", "imageUrl": "https://picsum.photos/seed/6781/600/600", "imageHint": "minimal scarf" },
+    { "id": "scarf-6782", "description": "Scarf Design 6782", "imageUrl": "https://picsum.photos/seed/6782/600/600", "imageHint": "gradient scarf" },
+    { "id": "scarf-6783", "description": "Scarf Design 6783", "imageUrl": "https://picsum.photos/seed/6783/600/600", "imageHint": "vibrant scarf" },
+    { "id": "scarf-6784", "description": "Scarf Design 6784", "imageUrl": "https://picsum.photos/seed/6784/600/600", "imageHint": "colorful scarf" }
   ]
 }
