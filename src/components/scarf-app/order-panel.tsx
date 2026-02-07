@@ -93,6 +93,13 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
 
   const grandTotal = totals.small + totals.large;
 
+  // Function to blur input on Enter to prevent zoom issues and close keyboard
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
   if (order.items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-muted-foreground p-10">
@@ -136,7 +143,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* PRODUCT SECTION - Added pb-32 to allow scrolling above the floating dock */}
+      {/* PRODUCT SECTION */}
       <div className="space-y-4 p-4 md:p-8 print:p-0 print:space-y-10 pb-32">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
@@ -144,11 +151,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
 
           return (
             <div key={item.design_id} className="print-avoid-break group">
-              {/* COMPACT SCREEN CARD (Optimized for Mobile) */}
+              {/* COMPACT SCREEN CARD */}
               <Card className="no-print overflow-hidden border-border bg-card shadow-sm rounded-3xl transition-all hover:shadow-md">
                 <CardContent className="p-3 sm:p-0">
                   <div className="flex flex-row sm:flex-row items-center sm:items-stretch gap-4 sm:gap-0">
-                    {/* Responsive Thumbnail/Full Image */}
                     <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">
                       <Image 
                         src={design.image_url} 
@@ -172,7 +178,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                         </Button>
                       </div>
 
-                      {/* Desktop Table - Hidden on Mobile */}
+                      {/* Desktop Table */}
                       <div className="hidden sm:block rounded-2xl overflow-hidden border border-border bg-background/50">
                         <Table>
                           <TableHeader className="bg-muted/50 border-none">
@@ -198,7 +204,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                         const val = parseInt(e.target.value);
                                         onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                       }}
-                                      className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      onKeyDown={handleKeyDown}
+                                      className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none text-base sm:text-sm"
                                     />
                                   </TableCell>
                                 </TableRow>
@@ -208,7 +215,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                         </Table>
                       </div>
 
-                      {/* Mobile Grid - Hidden on Desktop */}
+                      {/* Mobile Grid */}
                       <div className="flex sm:hidden gap-2">
                         {design.sizes.map((size) => {
                           const orderSize = item.sizes.find(s => s.size_id === size.size_id);
@@ -227,7 +234,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                   const val = parseInt(e.target.value);
                                   onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                 }}
-                                className="w-full text-center h-8 rounded-lg border-2 font-bold bg-background text-foreground text-xs"
+                                onKeyDown={handleKeyDown}
+                                className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-foreground text-base"
                               />
                             </div>
                           );
@@ -238,7 +246,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                 </CardContent>
               </Card>
 
-              {/* MINIMAL PRINT BLOCK (Fixed for A4) */}
+              {/* MINIMAL PRINT BLOCK */}
               <div className="hidden print:flex gap-10 items-start">
                 <div className="w-[140px] h-[140px] relative shrink-0 rounded-xl overflow-hidden bg-muted border border-black/5">
                   <Image 
