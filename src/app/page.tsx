@@ -9,7 +9,6 @@ import { DraftsList } from '@/components/scarf-app/drafts-list';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { 
-  History, 
   Trash2,
   FileSpreadsheet
 } from 'lucide-react';
@@ -45,9 +44,6 @@ export default function ScarfOrderApp() {
         <div className="flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
           <div className="h-4 w-px bg-border mx-2" />
-          <Button variant="ghost" size="icon" onClick={() => setIsDraftsOpen(true)} className="rounded-full hover:bg-secondary">
-            <History className="w-4 h-4" />
-          </Button>
           <Button variant="ghost" size="icon" onClick={() => setIsCsvOpen(true)} className="rounded-full hover:bg-secondary">
             <FileSpreadsheet className="w-4 h-4" />
           </Button>
