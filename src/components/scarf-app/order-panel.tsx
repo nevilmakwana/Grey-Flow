@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -48,7 +47,9 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   };
 
   const handlePrint = () => {
-    window.print();
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   };
 
   const generateWhatsAppMessage = () => {
@@ -92,17 +93,17 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   const formattedDate = formatFullDate(order.created_at);
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-8 max-w-4xl mx-auto print-container">
       {/* Print-only header */}
-      <div className="hidden print:block mb-10 border-b pb-6">
+      <div className="hidden print:block mb-10 border-b-2 border-primary pb-6">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">{settings.company_name}</h1>
-            <p className="text-slate-500">Professional Textile Manufacturer</p>
+            <h1 className="text-4xl font-black tracking-tighter text-slate-900">{settings.company_name}</h1>
+            <p className="text-slate-500 font-medium uppercase tracking-wider text-xs">Professional Textile Enterprise</p>
           </div>
           <div className="text-right text-slate-900">
-            <p className="font-bold">Order ID: {order.id}</p>
-            <p>Date: {formattedDate}</p>
+            <p className="font-bold text-lg font-mono text-primary">{order.id}</p>
+            <p className="text-sm font-medium">{formattedDate}</p>
           </div>
         </div>
       </div>
@@ -119,19 +120,19 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="whitespace-nowrap rounded-full">
             <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
           </Button>
-          <Button variant="default" size="sm" onClick={handlePrint} className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap rounded-full">
+          <Button variant="default" size="sm" onClick={handlePrint} className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap rounded-full shadow-lg">
             <Printer className="w-4 h-4 mr-2" /> Print PDF
           </Button>
         </div>
       </div>
 
-      <div className="space-y-10">
+      <div className="space-y-6 md:space-y-10">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
 
           return (
-            <Card key={item.design_id} className="overflow-hidden border-border shadow-sm print:shadow-none print:border-slate-300 rounded-3xl">
+            <Card key={item.design_id} className="overflow-hidden border-border shadow-sm print:shadow-none print:border-slate-200 rounded-3xl print:rounded-2xl print-avoid-break">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row">
                   <div className="w-full md:w-48 bg-muted border-r relative aspect-square md:aspect-auto">
@@ -159,7 +160,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                     </div>
 
                     <Table className="text-sm">
-                      <TableHeader className="bg-muted/50">
+                      <TableHeader className="bg-muted/50 print:bg-slate-100">
                         <TableRow>
                           <TableHead className="w-full">Size/Label</TableHead>
                           <TableHead className="text-center min-w-[100px]">Qty</TableHead>
@@ -171,7 +172,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                           const qty = orderSize?.quantity || 0;
                           
                           return (
-                            <TableRow key={size.size_id}>
+                            <TableRow key={size.size_id} className="print:border-slate-100">
                               <TableCell className="font-medium">{size.label}</TableCell>
                               <TableCell className="text-center">
                                 <div className="flex justify-center no-print">
@@ -184,10 +185,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-20 text-center h-9 rounded-xl"
+                                    className="w-20 text-center h-9 rounded-xl focus:ring-primary"
                                   />
                                 </div>
-                                <span className="hidden print:inline">{qty}</span>
+                                <span className="hidden print:inline font-bold text-base">{qty}</span>
                               </TableCell>
                             </TableRow>
                           );
@@ -203,8 +204,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       </div>
 
       <div className="hidden print:block text-center text-sm text-slate-400 pt-10 border-t mt-20">
-        <p>Thank you for your business. This is an automatically generated order draft.</p>
-        <p>{settings.company_name} • Scarf Order Pro System</p>
+        <p className="font-medium text-slate-600">Thank you for your business. This is an automatically generated order draft.</p>
+        <p className="mt-1">{settings.company_name} • Scarf Order Pro System</p>
       </div>
     </div>
   );

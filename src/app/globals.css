@@ -65,21 +65,60 @@
 }
 
 @media print {
+  /* Hide UI elements */
   .no-print {
     display: none !important;
   }
+
+  /* Force display for print-only elements */
   .print-only {
     display: block !important;
   }
-  body {
+
+  /* Reset layout for full page printing */
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
     background: white !important;
-    padding: 0 !important;
+    color: black !important;
   }
+
+  /* Reset main layout containers to avoid scrolling issues in print */
+  main, 
+  section, 
+  div[class*="overflow-y-auto"], 
+  div[class*="overflow-hidden"],
+  #__next {
+    overflow: visible !important;
+    height: auto !important;
+    display: block !important;
+    position: static !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  /* Improve typography for print */
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   .print-container {
-    width: 210mm;
-    margin: 0 auto;
-    padding: 20mm;
-    background: white;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Avoid breaking design cards mid-page */
+  .print-avoid-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 }
 
