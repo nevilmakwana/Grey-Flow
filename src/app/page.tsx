@@ -10,6 +10,7 @@ import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
 import { ShoppingBag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 import {
   Sheet,
   SheetContent,
@@ -29,6 +30,7 @@ export default function ScarfOrderApp() {
   } = useOrder();
 
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -106,6 +108,38 @@ export default function ScarfOrderApp() {
       : "https://web.whatsapp.com/send";
       
     window.open(`${baseUrl}?text=${text}`, '_blank');
+  };
+
+  const handleNativeShare = async () => {
+    const text = generateWhatsAppMessage();
+    
+    // Use native share API if available (Mobile/Tablet)
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: `Order Request - ${settings.company_name}`,
+          text: text,
+        });
+        toast({
+          title: "Order Shared",
+          description: "Summary sent to platforms.",
+        });
+      } catch (err) {
+        // User cancelled share
+      }
+    } else {
+      // Desktop Fallback: Copy to clipboard and open Presentation View
+      try {
+        await navigator.clipboard.writeText(text);
+        toast({
+          title: "Copied to Clipboard",
+          description: "Order summary copied. Opening presentation view...",
+        });
+        setIsShareMode(true);
+      } catch (err) {
+        setIsShareMode(true);
+      }
+    }
   };
 
   const handleSelectDesign = (id: string) => {
@@ -193,7 +227,7 @@ export default function ScarfOrderApp() {
         onReset={clearOrder}
         onSearch={() => setIsSearchOpen(true)}
         onWhatsApp={shareToWhatsApp}
-        onShare={() => setIsShareMode(true)}
+        onShare={handleNativeShare}
         onPrint={handlePrint}
         hasItems={currentOrder.items.length > 0}
       />

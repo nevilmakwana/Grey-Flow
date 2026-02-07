@@ -80,7 +80,7 @@ export function FloatingDock({
                 <button 
                   onClick={onShare}
                   className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-primary/10 transition-all active:scale-95 group focus:outline-none"
-                  title="Presentation View"
+                  title="Share Order"
                 >
                   <Share2 className="h-4 w-4 text-primary" />
                 </button>
