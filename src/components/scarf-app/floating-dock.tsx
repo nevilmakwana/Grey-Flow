@@ -52,49 +52,54 @@ export function FloatingDock({
     );
   }
 
+  const showOrderActions = hasItems && (onWhatsApp || onShare || onPrint);
+
   return (
     <div className="fixed bottom-6 right-6 z-[100] no-print flex flex-row items-center gap-3">
       
-      {/* ORDER ACTIONS PILL - Only visible when items exist and handlers provided */}
-      {hasItems && (onWhatsApp || onShare || onPrint) && (
-        <div className="flex items-center bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-full p-1.5 h-12 transition-all duration-500 animate-in fade-in slide-in-from-right-4">
-          {onWhatsApp && (
+      {/* ORDER ACTIONS PILL */}
+      <div className={cn(
+        "flex items-center bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-full p-1.5 h-12 transition-all duration-500 ease-in-out transform",
+        showOrderActions 
+          ? "translate-x-0 opacity-100 scale-100" 
+          : "translate-x-12 opacity-0 scale-95 pointer-events-none w-0 overflow-hidden px-0"
+      )}>
+        {onWhatsApp && (
+          <button 
+            onClick={onWhatsApp}
+            className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-green-500/10 transition-all active:scale-95 group focus:outline-none"
+            title="Share on WhatsApp"
+          >
+            <MessageCircle className="h-4 w-4 text-green-500" />
+          </button>
+        )}
+        
+        {onShare && (
+          <>
+            {onWhatsApp && <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />}
             <button 
-              onClick={onWhatsApp}
-              className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-green-500/10 transition-all active:scale-95 group focus:outline-none"
-              title="Share on WhatsApp"
+              onClick={onShare}
+              className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-primary/10 transition-all active:scale-95 group focus:outline-none"
+              title="Presentation View"
             >
-              <MessageCircle className="h-4 w-4 text-green-500" />
+              <Share2 className="h-4 w-4 text-primary" />
             </button>
-          )}
-          
-          {onShare && (
-            <>
-              {onWhatsApp && <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />}
-              <button 
-                onClick={onShare}
-                className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-primary/10 transition-all active:scale-95 group focus:outline-none"
-                title="Presentation View"
-              >
-                <Share2 className="h-4 w-4 text-primary" />
-              </button>
-            </>
-          )}
+          </>
+        )}
 
-          {onPrint && (
-            <>
-              {(onWhatsApp || onShare) && <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />}
-              <button 
-                onClick={onPrint}
-                className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all active:scale-95 group focus:outline-none"
-                title="Print Order"
-              >
-                <Printer className="h-4 w-4 text-foreground" />
-              </button>
-            </>
-          )}
-        </div>
-      )}
+        {onPrint && (
+          <>
+            {(onWhatsApp || onShare) && <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />}
+            <button 
+              onClick={onPrint}
+              className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all active:scale-95 group focus:outline-none"
+              title="Print Order"
+            >
+              <Printer className="h-4 w-4 text-foreground" />
+            </button>
+          </>
+        )}
+      </div>
 
       {/* SYSTEM CONTROLS PILL */}
       <div className="flex items-center bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-full p-1.5 h-12 transition-all duration-300 hover:shadow-primary/5">
