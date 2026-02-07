@@ -20,7 +20,6 @@ export default function ScarfOrderApp() {
     addItem, 
     removeItem, 
     updateQuantity, 
-    saveAsDraft, 
     drafts, 
     loadDraft,
     clearOrder,
@@ -51,9 +50,6 @@ export default function ScarfOrderApp() {
           <div className="h-4 w-px bg-border mx-2" />
           <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
             <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline ml-2">Reset</span>
-          </Button>
-          <Button variant="default" size="sm" onClick={saveAsDraft} className="rounded-full px-6 bg-primary shadow-md shadow-primary/10 hover:shadow-lg transition-all">
-            Save Draft
           </Button>
         </div>
       </header>
