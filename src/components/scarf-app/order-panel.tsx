@@ -33,6 +33,20 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
 
+  const formatFullDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date).replace(',', '')
+      .replace(/\s(am|pm)/i, (match) => match.toUpperCase())
+      .replace(/(\d{4})\s/, '$1 | ');
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -40,7 +54,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   const generateWhatsAppMessage = () => {
     let msg = `*Order Request - ${settings.company_name}*\n`;
     msg += `Order ID: ${order.id}\n`;
-    msg += `Date: ${new Date(order.created_at).toLocaleDateString()}\n\n`;
+    msg += `Date: ${formatFullDate(order.created_at)}\n\n`;
 
     order.items.forEach(item => {
       const design = getDesignById(item.design_id);
@@ -75,6 +89,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
     );
   }
 
+  const formattedDate = formatFullDate(order.created_at);
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
       {/* Print-only header */}
@@ -86,7 +102,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           </div>
           <div className="text-right text-slate-900">
             <p className="font-bold">Order ID: {order.id}</p>
-            <p>Date: {new Date(order.created_at).toLocaleDateString()}</p>
+            <p>Date: {formattedDate}</p>
           </div>
         </div>
       </div>
@@ -94,7 +110,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 no-print gap-4">
         <div>
           <h2 className="text-2xl font-bold">Order Summary</h2>
-          <p className="text-sm text-muted-foreground">{order.id} • {new Date(order.created_at).toLocaleDateString()}</p>
+          <div className="flex flex-col mt-1">
+            <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
+            <span className="text-xs text-muted-foreground">{formattedDate}</span>
+          </div>
         </div>
         <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
           <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="whitespace-nowrap rounded-full">

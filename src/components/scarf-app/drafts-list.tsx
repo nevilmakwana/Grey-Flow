@@ -21,6 +21,20 @@ interface DraftsListProps {
 }
 
 export function DraftsList({ open, onClose, drafts, onLoad }: DraftsListProps) {
+  const formatFullDate = (isoString: string) => {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    }).format(date).replace(',', '')
+      .replace(/\s(am|pm)/i, (match) => match.toUpperCase())
+      .replace(/(\d{4})\s/, '$1 | ');
+  };
+
   return (
     <Dialog open={open} onOpenChange={(val) => !val && onClose()}>
       <DialogContent className="sm:max-w-[500px] rounded-3xl">
@@ -49,11 +63,11 @@ export function DraftsList({ open, onClose, drafts, onLoad }: DraftsListProps) {
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <ShoppingCart className="w-5 h-5" />
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-800">{draft.id}</p>
-                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <div className="flex flex-col">
+                    <p className="font-bold text-slate-800 font-mono text-sm">{draft.id}</p>
+                    <div className="flex items-center gap-2 text-[10px] text-slate-500 font-medium">
                       <Clock className="w-3 h-3" />
-                      {new Date(draft.created_at).toLocaleString()}
+                      {formatFullDate(draft.created_at)}
                     </div>
                   </div>
                 </div>
@@ -66,7 +80,7 @@ export function DraftsList({ open, onClose, drafts, onLoad }: DraftsListProps) {
                   }}
                   className="rounded-xl border-primary text-primary hover:bg-primary hover:text-white"
                 >
-                  Load Order
+                  Load
                 </Button>
               </div>
             ))

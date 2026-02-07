@@ -13,9 +13,18 @@ const DEFAULT_SETTINGS: AppSettings = {
   tax_percent: 0,
 };
 
+function generateOrderId() {
+  const now = new Date();
+  const yy = now.getFullYear().toString().slice(-2);
+  const mm = (now.getMonth() + 1).toString().padStart(2, '0');
+  const dd = now.getDate().toString().padStart(2, '0');
+  const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+  return `PO-${yy}${mm}${dd}-${random}`;
+}
+
 export function useOrder() {
   const [currentOrder, setCurrentOrder] = useState<Order>({
-    id: `ORD-${Date.now()}`,
+    id: generateOrderId(),
     items: [],
     created_at: new Date().toISOString(),
     status: 'draft',
@@ -94,7 +103,7 @@ export function useOrder() {
 
   const clearOrder = () => {
     setCurrentOrder({
-      id: `ORD-${Date.now()}`,
+      id: generateOrderId(),
       items: [],
       created_at: new Date().toISOString(),
       status: 'draft',
