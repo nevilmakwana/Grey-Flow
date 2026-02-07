@@ -212,7 +212,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-24 text-center h-11 rounded-2xl border-2 focus:ring-primary focus:border-primary font-bold text-lg"
+                                    className="w-24 text-center h-11 rounded-2xl border-2 focus:ring-primary focus:border-primary font-bold text-lg [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                   />
                                 </div>
                                 <span className="hidden print:inline font-black text-xl text-slate-900">{qty}</span>
