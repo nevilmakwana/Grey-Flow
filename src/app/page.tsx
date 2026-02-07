@@ -33,8 +33,8 @@ export default function ScarfOrderApp() {
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      {/* Navigation Header - Fixed position at the top */}
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shrink-0">
+      {/* Fixed Navigation Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shadow-sm">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">GreyFlow</h1>
@@ -58,7 +58,7 @@ export default function ScarfOrderApp() {
         </div>
       </header>
 
-      {/* Main Content Area - pt-16 to avoid being hidden under fixed header */}
+      {/* Main Content Area - Offset by fixed header height */}
       <main className="flex-1 flex overflow-hidden pt-16">
         {/* Left Pane - Searchable Design List */}
         <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
@@ -66,16 +66,14 @@ export default function ScarfOrderApp() {
         </aside>
 
         {/* Right Pane - Order Panel */}
-        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300 relative">
-          <div className="h-full">
-            <OrderPanel 
-              order={currentOrder} 
-              designs={DESIGNS} 
-              onUpdateQty={updateQuantity} 
-              onRemove={removeItem}
-              settings={settings}
-            />
-          </div>
+        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300">
+          <OrderPanel 
+            order={currentOrder} 
+            designs={DESIGNS} 
+            onUpdateQty={updateQuantity} 
+            onRemove={removeItem}
+            settings={settings}
+          />
         </section>
       </main>
 
