@@ -36,25 +36,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
 
-  const calculateSubtotal = () => {
-    return order.items.reduce((total, item) => {
-      const design = getDesignById(item.design_id);
-      if (!design) return total;
-      
-      const designSum = item.sizes.reduce((sum, s) => {
-        const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-        if (!sizeDef) return sum;
-        return sum + (s.quantity * sizeDef.pieces_per_unit * sizeDef.rate_per_piece);
-      }, 0);
-      
-      return total + designSum;
-    }, 0);
-  };
-
-  const subtotal = calculateSubtotal();
-  const taxAmount = (subtotal * order.tax_percent) / 100;
-  const grandTotal = subtotal + taxAmount;
-
   const handlePrint = () => {
     window.print();
   };
@@ -77,13 +58,11 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       msg += `\n`;
     });
 
-    msg += `*Grand Total: ${settings.currency} ${grandTotal.toLocaleString()}*`;
     return msg;
   };
 
   const copyMessage = () => {
     navigator.clipboard.writeText(generateWhatsAppMessage());
-    alert("Message copied to clipboard!");
   };
 
   const shareToWhatsApp = () => {
@@ -125,13 +104,13 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           <p className="text-sm text-muted-foreground">{order.id} • {new Date(order.created_at).toLocaleDateString()}</p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
-          <Button variant="outline" size="sm" onClick={copyMessage} className="whitespace-nowrap">
+          <Button variant="outline" size="sm" onClick={copyMessage} className="whitespace-nowrap rounded-full">
             <Copy className="w-4 h-4 mr-2" /> Copy
           </Button>
-          <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="whitespace-nowrap">
+          <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="whitespace-nowrap rounded-full">
             <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
           </Button>
-          <Button variant="default" size="sm" onClick={handlePrint} className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap">
+          <Button variant="default" size="sm" onClick={handlePrint} className="bg-foreground text-background hover:bg-foreground/90 whitespace-nowrap rounded-full">
             <Printer className="w-4 h-4 mr-2" /> Print PDF
           </Button>
         </div>
@@ -142,14 +121,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           const design = getDesignById(item.design_id);
           if (!design) return null;
 
-          const itemTotal = item.sizes.reduce((sum, s) => {
-            const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-            if (!sizeDef) return sum;
-            return sum + (s.quantity * sizeDef.pieces_per_unit * sizeDef.rate_per_piece);
-          }, 0);
-
           return (
-            <Card key={item.design_id} className="overflow-hidden border-border shadow-sm print:shadow-none print:border-slate-300">
+            <Card key={item.design_id} className="overflow-hidden border-border shadow-sm print:shadow-none print:border-slate-300 rounded-3xl">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row">
                   <div className="w-full md:w-48 bg-muted border-r relative aspect-square md:aspect-auto">
@@ -170,7 +143,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => onRemove(item.design_id)}
-                        className="text-muted-foreground hover:text-destructive no-print"
+                        className="text-muted-foreground hover:text-destructive no-print rounded-full"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -179,17 +152,14 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                     <Table className="text-sm">
                       <TableHeader className="bg-muted/50">
                         <TableRow>
-                          <TableHead className="w-48">Size/Label</TableHead>
-                          <TableHead className="text-center">Qty</TableHead>
-                          <TableHead className="text-right">Rate/Pc</TableHead>
-                          <TableHead className="text-right">Total</TableHead>
+                          <TableHead className="w-full">Size/Label</TableHead>
+                          <TableHead className="text-center min-w-[100px]">Qty</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {design.sizes.map((size) => {
                           const orderSize = item.sizes.find(s => s.size_id === size.size_id);
                           const qty = orderSize?.quantity || 0;
-                          const lineTotal = qty * size.pieces_per_unit * size.rate_per_piece;
                           
                           return (
                             <TableRow key={size.size_id}>
@@ -205,14 +175,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-16 text-center h-8"
+                                    className="w-20 text-center h-9 rounded-xl"
                                   />
                                 </div>
                                 <span className="hidden print:inline">{qty}</span>
-                              </TableCell>
-                              <TableCell className="text-right text-muted-foreground">{settings.currency} {size.rate_per_piece}</TableCell>
-                              <TableCell className="text-right font-semibold">
-                                {settings.currency} {lineTotal.toLocaleString()}
                               </TableCell>
                             </TableRow>
                           );
@@ -220,14 +186,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       </TableBody>
                     </Table>
                     
-                    <div className="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="mt-4">
                       <p className="text-sm text-muted-foreground italic">
                         {item.note || design.default_note}
                       </p>
-                      <div className="bg-primary/10 px-4 py-2 rounded-xl border border-primary/20">
-                        <span className="text-xs uppercase tracking-wider font-bold text-primary mr-3">Design Total</span>
-                        <span className="text-lg font-bold">{settings.currency} {itemTotal.toLocaleString()}</span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -237,28 +199,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      {/* Totals Summary Card */}
-      <div className="mt-12 mb-20 bg-primary text-primary-foreground rounded-3xl p-8 shadow-xl print:shadow-none print:border print:text-black print:bg-white print:rounded-none">
-        <div className="max-w-sm ml-auto space-y-4">
-          <div className="flex justify-between opacity-80 print:text-slate-600">
-            <span>Subtotal</span>
-            <span className="font-medium">{settings.currency} {subtotal.toLocaleString()}</span>
-          </div>
-          {order.tax_percent > 0 && (
-            <div className="flex justify-between opacity-80 print:text-slate-600">
-              <span>Tax ({order.tax_percent}%)</span>
-              <span className="font-medium">{settings.currency} {taxAmount.toLocaleString()}</span>
-            </div>
-          )}
-          <div className="h-px bg-primary-foreground/20 print:bg-slate-200" />
-          <div className="flex justify-between items-center pt-2">
-            <span className="text-xl font-bold">Grand Total</span>
-            <span className="text-3xl font-bold">{settings.currency} {grandTotal.toLocaleString()}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="hidden print:block text-center text-sm text-slate-400 pt-10 border-t">
+      <div className="hidden print:block text-center text-sm text-slate-400 pt-10 border-t mt-20">
         <p>Thank you for your business. This is an automatically generated order draft.</p>
         <p>{settings.company_name} • Scarf Order Pro System</p>
       </div>
