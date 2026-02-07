@@ -45,8 +45,8 @@ export default function ScarfOrderApp() {
         <div className="flex items-center gap-1 sm:gap-2">
           <ThemeToggle />
           <div className="h-4 w-px bg-border mx-2" />
-          <Button variant="ghost" size="sm" onClick={() => setIsDraftsOpen(true)} className="gap-2 rounded-full px-4 hover:bg-secondary">
-            <History className="w-4 h-4" /> <span className="hidden sm:inline">History</span>
+          <Button variant="ghost" size="icon" onClick={() => setIsDraftsOpen(true)} className="rounded-full hover:bg-secondary">
+            <History className="w-4 h-4" />
           </Button>
           <div className="h-4 w-px bg-border mx-2" />
           <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
