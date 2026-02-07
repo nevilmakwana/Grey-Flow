@@ -1,0 +1,29 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "scarf-1",
+      "description": "Abstract Silk Scarf",
+      "imageUrl": "https://picsum.photos/seed/scarf1/600/600",
+      "imageHint": "silk scarf abstract"
+    },
+    {
+      "id": "scarf-2",
+      "description": "Floral Cotton Scarf",
+      "imageUrl": "https://picsum.photos/seed/scarf2/600/600",
+      "imageHint": "floral scarf textile"
+    },
+    {
+      "id": "scarf-3",
+      "description": "Geometric Pashmina",
+      "imageUrl": "https://picsum.photos/seed/scarf3/600/600",
+      "imageHint": "geometric pattern textile"
+    },
+    {
+      "id": "scarf-4",
+      "description": "Solid Linen Wrap",
+      "imageUrl": "https://picsum.photos/seed/scarf4/600/600",
+      "imageHint": "linen fabric blue"
+    }
+  ]
+}

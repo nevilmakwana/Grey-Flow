@@ -1,0 +1,33 @@
+
+[
+  {
+    "design_id": "DS-001",
+    "design_name": "Midnight Bloom",
+    "image_url": "https://picsum.photos/seed/scarf1/600/600",
+    "sizes": [
+      { "size_id": "S-REG", "label": "Regular (90x90)", "pieces_per_unit": 1, "rate_per_piece": 450 },
+      { "size_id": "S-LGE", "label": "Large (120x120)", "pieces_per_unit": 1, "rate_per_piece": 650 }
+    ],
+    "default_note": "Hand wash recommended"
+  },
+  {
+    "design_id": "DS-002",
+    "design_name": "Azure Waves",
+    "image_url": "https://picsum.photos/seed/scarf2/600/600",
+    "sizes": [
+      { "size_id": "S-SLM", "label": "Slim Wrap", "pieces_per_unit": 2, "rate_per_piece": 300 },
+      { "size_id": "S-STD", "label": "Standard", "pieces_per_unit": 1, "rate_per_piece": 400 }
+    ],
+    "default_note": "Premium silk finish"
+  },
+  {
+    "design_id": "DS-003",
+    "design_name": "Crimson Geo",
+    "image_url": "https://picsum.photos/seed/scarf3/600/600",
+    "sizes": [
+      { "size_id": "S-REG", "label": "Regular", "pieces_per_unit": 1, "rate_per_piece": 500 },
+      { "size_id": "S-BUN", "label": "Bundle (3pcs)", "pieces_per_unit": 3, "rate_per_piece": 420 }
+    ],
+    "default_note": "Geometric pattern export quality"
+  }
+]
