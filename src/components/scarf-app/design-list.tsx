@@ -26,12 +26,12 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b bg-white">
+      <div className="p-4 border-b bg-card">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search designs..." 
-            className="pl-9 rounded-xl border-slate-200"
+            className="pl-9 rounded-xl border-border bg-background"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -48,10 +48,10 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
                 "w-full flex items-center gap-3 p-3 rounded-2xl transition-all text-left",
                 isSelected 
                   ? "bg-primary/20 ring-1 ring-primary" 
-                  : "bg-white border hover:bg-slate-100 hover:border-slate-300 shadow-sm"
+                  : "bg-card border border-border hover:bg-accent hover:border-accent shadow-sm"
               )}
             >
-              <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-slate-200 border">
+              <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
                 <Image 
                   src={design.image_url} 
                   alt={design.design_name} 
@@ -60,14 +60,14 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate text-slate-800">{design.design_name}</p>
-                <p className="text-xs text-slate-500 font-mono">{design.design_id}</p>
+                <p className="font-semibold text-sm truncate">{design.design_name}</p>
+                <p className="text-xs text-muted-foreground font-mono">{design.design_id}</p>
               </div>
               <div className="flex-shrink-0">
                 {isSelected ? (
                   <CheckCircle2 className="w-5 h-5 text-primary" />
                 ) : (
-                  <PlusCircle className="w-5 h-5 text-slate-300" />
+                  <PlusCircle className="w-5 h-5 text-muted-foreground/30" />
                 )}
               </div>
             </button>
@@ -75,7 +75,7 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
         })}
         {filteredDesigns.length === 0 && (
           <div className="text-center py-10">
-            <p className="text-slate-400 text-sm">No designs found</p>
+            <p className="text-muted-foreground text-sm">No designs found</p>
           </div>
         )}
       </div>

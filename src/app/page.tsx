@@ -8,6 +8,7 @@ import { OrderPanel } from '@/components/scarf-app/order-panel';
 import { CSVImport } from '@/components/scarf-app/csv-import';
 import { DraftsList } from '@/components/scarf-app/drafts-list';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { 
   FileUp, 
   History, 
@@ -38,24 +39,26 @@ export default function ScarfOrderApp() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
       {/* Navigation Header */}
-      <header className="h-16 border-b bg-white flex items-center justify-between px-6 no-print">
+      <header className="h-16 border-b bg-card flex items-center justify-between px-6 no-print">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-primary-foreground font-bold text-xl">
             S
           </div>
-          <h1 className="font-headline font-bold text-xl tracking-tight text-slate-800">Scarf Order Pro</h1>
+          <h1 className="font-headline font-bold text-xl tracking-tight">Scarf Order Pro</h1>
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <div className="h-6 w-px bg-border mx-2" />
           <Button variant="ghost" size="sm" onClick={() => setIsDraftsOpen(true)} className="gap-2">
-            <History className="w-4 h-4" /> Drafts
+            <History className="w-4 h-4" /> <span className="hidden sm:inline">Drafts</span>
           </Button>
           <Button variant="ghost" size="sm" onClick={() => setIsCsvOpen(true)} className="gap-2">
-            <FileUp className="w-4 h-4" /> Bulk Import
+            <FileUp className="w-4 h-4" /> <span className="hidden sm:inline">Bulk Import</span>
           </Button>
           <div className="h-6 w-px bg-border mx-2" />
           <Button variant="outline" size="sm" onClick={clearOrder} className="text-destructive hover:bg-destructive/10">
-            <Trash2 className="w-4 h-4 mr-2" /> Clear
+            <Trash2 className="w-4 h-4 mr-2" /> <span className="hidden sm:inline">Clear</span>
           </Button>
           <Button variant="default" size="sm" onClick={saveAsDraft} className="bg-primary hover:bg-primary/90">
             Save Draft
@@ -66,12 +69,12 @@ export default function ScarfOrderApp() {
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden">
         {/* Left Pane - Searchable Design List */}
-        <aside className="w-80 border-r bg-slate-50 flex flex-col no-print">
+        <aside className="w-80 border-r bg-muted/30 flex flex-col no-print">
           <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />
         </aside>
 
         {/* Right Pane - Order Panel */}
-        <section className="flex-1 overflow-y-auto bg-white">
+        <section className="flex-1 overflow-y-auto bg-background">
           <OrderPanel 
             order={currentOrder} 
             designs={DESIGNS} 
