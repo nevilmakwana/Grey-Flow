@@ -10,7 +10,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 221.2 83.2% 53.3%; /* Apple Blue */
+    --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -65,22 +65,15 @@
 }
 
 @media print {
-  /* Hide all non-printable UI */
-  .no-print, 
-  button, 
-  nav, 
-  header, 
-  aside {
+  .no-print {
     display: none !important;
   }
 
-  /* Force background colors to print */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Reset layout for full page printing */
   html, body {
     height: auto !important;
     overflow: visible !important;
@@ -91,11 +84,7 @@
     padding: 0 !important;
   }
 
-  /* Deep reset of all scrolling containers */
-  main, 
-  section, 
-  div, 
-  article {
+  main, section, div, article {
     overflow: visible !important;
     height: auto !important;
     max-height: none !important;
@@ -110,7 +99,7 @@
   .print-container {
     width: 100% !important;
     max-width: none !important;
-    padding: 15mm !important;
+    padding: 10mm 15mm !important;
     background: white !important;
   }
 
@@ -119,21 +108,9 @@
     margin: 10mm;
   }
 
-  /* Avoid breaking content elements mid-page */
   .print-avoid-break {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-  }
-
-  /* Table specific print styles */
-  table {
-    page-break-inside: auto;
-    width: 100% !important;
-    border-collapse: collapse !important;
-  }
-  tr {
-    page-break-inside: avoid;
-    page-break-after: auto;
   }
   
   .print-only {

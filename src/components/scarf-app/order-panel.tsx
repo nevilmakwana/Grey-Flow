@@ -153,22 +153,21 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
 
   return (
     <div className="max-w-4xl mx-auto print-container p-0">
-      {/* Printable Header */}
-      <div className="hidden print:flex justify-between items-end mb-10 border-b-4 border-foreground pb-8 px-4 md:px-8 pt-8">
+      {/* MINIMAL PRINT HEADER */}
+      <div className="hidden print:flex justify-between items-start mb-12 border-b border-black/10 pb-6">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-foreground">{settings.company_name}</h1>
-          <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Professional Textile Order Draft</p>
+          <h1 className="text-sm font-light uppercase tracking-[0.1em] text-muted-foreground">Grey Exim</h1>
+          <p className="text-xs mt-1 text-muted-foreground">Print Order</p>
         </div>
         <div className="text-right">
-          <div className="bg-foreground text-background px-4 py-2 rounded-xl inline-block mb-2">
-            <p className="text-[10px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Order ID</p>
-            <p className="font-mono text-lg font-bold">{order.id}</p>
-          </div>
-          <p className="text-xs font-semibold text-muted-foreground">{formatFullDate(order.created_at)}</p>
+          <h2 className="text-xl font-bold tracking-tight text-black">{order.id}</h2>
+          <p className="text-[10px] text-muted-foreground mt-1 uppercase tracking-wider">
+            {formatFullDate(order.created_at)}
+          </p>
         </div>
       </div>
 
-      {/* Screen Header - Sticky within the scrolling container */}
+      {/* SCREEN-ONLY HEADER */}
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md py-4 px-4 md:px-8 no-print border-b border-border/50">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -181,7 +180,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             </div>
           </div>
           
-          {/* Redesigned Segmented Control for Actions */}
           <div className="flex items-center bg-muted/50 rounded-full border border-border p-1 shadow-sm h-11 w-full sm:w-32 transition-all hover:shadow-md">
             <button 
               onClick={shareToWhatsApp} 
@@ -202,125 +200,161 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      <div className="space-y-6 p-4 md:p-8">
+      {/* PRODUCT SECTION */}
+      <div className="space-y-6 p-4 md:p-8 print:p-0 print:space-y-10">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
 
           return (
-            <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
-              <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row h-auto">
-                  {/* Square Image Container - Strict 1:1 Aspect Ratio */}
-                  <div className="w-full md:w-64 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border overflow-hidden">
-                    <Image 
-                      src={design.image_url} 
-                      alt={design.design_id} 
-                      fill 
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 256px"
-                    />
-                  </div>
-                  <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="space-y-1">
+            <div key={item.design_id} className="print-avoid-break group">
+              {/* DESKTOP/SCREEN CARD */}
+              <Card className="no-print overflow-hidden border-border bg-card shadow-sm rounded-3xl transition-all hover:shadow-md">
+                <CardContent className="p-0">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 overflow-hidden">
+                      <Image 
+                        src={design.image_url} 
+                        alt={design.design_id} 
+                        fill 
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 224px"
+                      />
+                    </div>
+                    <div className="flex-1 p-6 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-start mb-4">
                           <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                          <div className="h-1.5 w-12 bg-primary rounded-full" />
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={() => onRemove(item.design_id)}
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-9 w-9"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </Button>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          onClick={() => onRemove(item.design_id)}
-                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-9 w-9"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
-                      </div>
 
-                      <div className="rounded-2xl overflow-hidden border border-border bg-background/50">
-                        <Table>
-                          <TableHeader className="bg-muted/50 print:bg-muted border-none">
-                            <TableRow className="hover:bg-transparent border-none">
-                              <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
-                              <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {design.sizes.map((size) => {
-                              const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                              const qty = orderSize?.quantity || 0;
-                              
-                              return (
-                                <TableRow key={size.size_id} className="hover:bg-transparent border-border">
-                                  <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
-                                  <TableCell className="text-center py-3">
-                                    <div className="flex justify-center no-print">
+                        <div className="rounded-2xl overflow-hidden border border-border bg-background/50">
+                          <Table>
+                            <TableHeader className="bg-muted/50 border-none">
+                              <TableRow className="hover:bg-transparent border-none">
+                                <TableHead className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
+                                <TableHead className="text-center font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {design.sizes.map((size) => {
+                                const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                                const qty = orderSize?.quantity || 0;
+                                return (
+                                  <TableRow key={size.size_id} className="hover:bg-transparent border-border">
+                                    <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
+                                    <TableCell className="text-center py-3">
                                       <Input 
                                         type="number" 
                                         min="0"
-                                        step="1"
                                         value={qty === 0 ? "" : qty}
                                         onChange={(e) => {
                                           const val = parseInt(e.target.value);
                                           onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                         }}
-                                        className="w-24 text-center h-10 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
+                                        className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground"
                                       />
-                                    </div>
-                                    <span className="hidden print:inline font-black text-2xl text-foreground">{qty}</span>
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                          </TableBody>
-                        </Table>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })}
+                            </TableBody>
+                          </Table>
+                        </div>
                       </div>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* MINIMAL PRINT BLOCK */}
+              <div className="hidden print:flex gap-8 items-start">
+                <div className="w-32 h-32 relative shrink-0 rounded-xl overflow-hidden bg-muted">
+                  <Image 
+                    src={design.image_url} 
+                    alt={design.design_id} 
+                    fill 
+                    className="object-cover"
+                    sizes="128px"
+                  />
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex-1 pt-1">
+                  <h3 className="text-lg font-bold tracking-tight text-black mb-3">{design.design_id}</h3>
+                  <div className="space-y-1">
+                    {design.sizes.map((size) => {
+                      const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                      const qty = orderSize?.quantity || 0;
+                      if (qty === 0) return null;
+                      return (
+                        <div key={size.size_id} className="flex justify-between items-center text-xs text-black/80">
+                          <span>{size.label}</span>
+                          <span className="font-bold">— {qty} pcs</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
           );
         })}
 
-        {/* Compact Summary Section */}
-        <div className="mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12 transition-all">
+        {/* SUMMARY SECTION */}
+        <div className="no-print mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border transition-all">
           <div className="flex items-center gap-2 mb-3">
             <div className="p-2 bg-foreground text-background rounded-xl">
               <Hash className="w-4 h-4" />
             </div>
             <h3 className="text-lg font-black uppercase tracking-tight text-foreground">Consolidated Summary</h3>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm">
               <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-0.5">Small Scarf Total</span>
               <span className="text-2xl font-black text-foreground">{totals.small}</span>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase">50x50 cm</span>
             </div>
-            <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm">
               <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-0.5">Large Scarf Total</span>
               <span className="text-2xl font-black text-foreground">{totals.large}</span>
-              <span className="text-[10px] text-muted-foreground font-bold uppercase">90x90 cm</span>
             </div>
-            <div className="flex flex-col p-3 bg-foreground text-background rounded-2xl shadow-lg shadow-foreground/5 print:bg-foreground print:shadow-none">
+            <div className="flex flex-col p-3 bg-foreground text-background rounded-2xl">
               <span className="text-[10px] font-black uppercase opacity-60 tracking-[0.1em] mb-0.5">Net Grand Total</span>
               <span className="text-2xl font-black">{grandTotal}</span>
-              <span className="text-[10px] opacity-60 font-bold uppercase">Total Units Requested</span>
+            </div>
+          </div>
+        </div>
+
+        {/* MINIMAL PRINT SUMMARY */}
+        <div className="hidden print:block mt-16 pt-8 border-t border-black/10">
+          <h3 className="text-xs font-light uppercase tracking-[0.2em] text-muted-foreground mb-4">Order Summary</h3>
+          <div className="space-y-2 max-w-xs">
+            <div className="flex justify-between text-xs font-medium">
+              <span>Small (50×50 cm)</span>
+              <span>{totals.small} pcs</span>
+            </div>
+            <div className="flex justify-between text-xs font-medium">
+              <span>Large (90×90 cm)</span>
+              <span>{totals.large} pcs</span>
+            </div>
+            <div className="flex justify-between text-sm font-bold border-t border-black/10 pt-2 mt-2">
+              <span>Total Units</span>
+              <span>{grandTotal} pcs</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Printable Footer */}
-      <div className="hidden print:block text-center pt-10 mt-10 border-t-2 border-border px-8 pb-8">
-        <p className="font-bold text-xl text-foreground">Thank you for your business.</p>
-        <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">This is an official order draft generated via GreyFlow</p>
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <div className="w-10 h-10 bg-foreground rounded-xl" />
-          <span className="font-black text-lg tracking-tighter text-foreground">{settings.company_name}</span>
-        </div>
+      {/* PRINT FOOTER */}
+      <div className="hidden print:block mt-20 pt-10 border-t border-black/5 text-center">
+        <p className="text-[9px] text-muted-foreground font-light tracking-wide">
+          This is a system-generated print order via <span className="font-medium">GreyFlow</span>
+        </p>
       </div>
     </div>
   );
