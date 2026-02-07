@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -21,8 +22,10 @@ import {
 export default function ScarfOrderApp() {
   const { 
     currentOrder, 
-    addItem, 
-    removeItem, 
+    addFabricGroup,
+    removeFabricGroup,
+    addItemToGroup, 
+    removeItemFromGroup, 
     updateQuantity, 
     clearOrder,
     DESIGNS,
@@ -34,8 +37,7 @@ export default function ScarfOrderApp() {
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-
-  // --- Handlers for Floating Dock ---
+  const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
@@ -54,7 +56,7 @@ export default function ScarfOrderApp() {
         minute: '2-digit',
         hour12: true
       }).format(date).replace(',', '')
-        .replace(/\sat\s/i, ' ') // Explicitly remove "at" if it appears in the formatted string
+        .replace(/\sat\s/i, ' ')
         .replace(/\s(am|pm)/i, (match) => match.toUpperCase())
         .replace(/(\d{4})\s/, '$1 | ');
     };
@@ -66,26 +68,32 @@ export default function ScarfOrderApp() {
     let totalSmall = 0;
     let totalLarge = 0;
 
-    currentOrder.items.forEach(item => {
-      const design = DESIGNS.find(d => d.design_id === item.design_id);
-      if (!design) return;
+    currentOrder.fabricGroups.forEach(group => {
+      if (group.items.length === 0) return;
+      msg += `*Fabric: ${group.fabric_id}*\n`;
       
-      let hasQty = false;
-      let itemLine = `*SKU: ${design.design_id}*\n`;
-      
-      item.sizes.forEach(s => {
-        if (s.quantity > 0) {
-          const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-          itemLine += `• ${sizeDef?.label}: ${s.quantity}\n`;
-          hasQty = true;
-          if (s.size_id === 'S-SML') totalSmall += s.quantity;
-          if (s.size_id === 'S-LGE') totalLarge += s.quantity;
+      group.items.forEach(item => {
+        const design = DESIGNS.find(d => d.design_id === item.design_id);
+        if (!design) return;
+        
+        let hasQty = false;
+        let itemLine = `• SKU: ${design.design_id}\n`;
+        
+        item.sizes.forEach(s => {
+          if (s.quantity > 0) {
+            const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
+            itemLine += `  - ${sizeDef?.label}: ${s.quantity}\n`;
+            hasQty = true;
+            if (s.size_id === 'S-SML') totalSmall += s.quantity;
+            if (s.size_id === 'S-LGE') totalLarge += s.quantity;
+          }
+        });
+        
+        if (hasQty) {
+          msg += itemLine;
         }
       });
-      
-      if (hasQty) {
-        msg += itemLine + `\n`;
-      }
+      msg += `\n`;
     });
 
     msg += `*--- SUMMARY ---*\n`;
@@ -98,44 +106,26 @@ export default function ScarfOrderApp() {
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(generateWhatsAppMessage());
-    
-    // Detect mobile/tablet to use the most direct app link (api.whatsapp.com)
-    // while falling back to web.whatsapp.com for desktop users.
     const isMobileDevice = typeof navigator !== 'undefined' && 
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    const baseUrl = isMobileDevice 
-      ? "https://api.whatsapp.com/send" 
-      : "https://web.whatsapp.com/send";
-      
+    const baseUrl = isMobileDevice ? "https://api.whatsapp.com/send" : "https://web.whatsapp.com/send";
     window.open(`${baseUrl}?text=${text}`, '_blank');
   };
 
   const handleNativeShare = async () => {
     const text = generateWhatsAppMessage();
-    
-    // Use native share API if available (Mobile/Tablet)
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
           title: `Order Request - ${settings.company_name}`,
           text: text,
         });
-        toast({
-          title: "Order Shared",
-          description: "Summary sent to platforms.",
-        });
-      } catch (err) {
-        // User cancelled share
-      }
+        toast({ title: "Order Shared", description: "Summary sent successfully." });
+      } catch (err) {}
     } else {
-      // Desktop Fallback: Copy to clipboard and open Presentation View
       try {
         await navigator.clipboard.writeText(text);
-        toast({
-          title: "Copied to Clipboard",
-          description: "Order summary copied. Opening presentation view...",
-        });
+        toast({ title: "Copied to Clipboard", description: "Opening presentation view..." });
         setIsShareMode(true);
       } catch (err) {
         setIsShareMode(true);
@@ -144,13 +134,23 @@ export default function ScarfOrderApp() {
   };
 
   const handleSelectDesign = (id: string) => {
-    addItem(id);
-    if (isMobile) {
-      setIsSearchOpen(false);
+    if (activeGroupId) {
+      addItemToGroup(activeGroupId, id);
+      if (isMobile) setIsSearchOpen(false);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "No Fabric Selected",
+        description: "Please select or add a fabric group first."
+      });
     }
   };
 
-  // If Share Mode is active, render only the presentation view
+  const handleOpenSearchForGroup = (groupId: string) => {
+    setActiveGroupId(groupId);
+    setIsSearchOpen(true);
+  };
+
   if (isShareMode) {
     return (
       <div className="min-h-screen bg-background text-foreground">
@@ -165,48 +165,44 @@ export default function ScarfOrderApp() {
     );
   }
 
+  const hasItems = currentOrder.fabricGroups.some(g => g.items.length > 0);
+
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      {/* Fixed Navigation Header */}
       <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">GreyFlow</h1>
-          </div>
-        </div>
+        <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
       </header>
 
-      {/* Main Content Area - Offset by fixed header height */}
       <main className="flex-1 flex overflow-hidden pt-16">
-        {/* Desktop Sidebar - Hidden on Mobile */}
         {!isMobile && (
-          <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
+          <aside className="w-64 border-r bg-muted/20 flex flex-col no-print shrink-0">
             <DesignList 
               designs={DESIGNS} 
               onSelect={handleSelectDesign} 
-              selectedIds={currentOrder.items.map(i => i.design_id)} 
+              selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
             />
           </aside>
         )}
 
-        {/* Right Pane - Order Panel (Full width on mobile) */}
-        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300">
+        <section className="flex-1 overflow-y-auto bg-background">
           <OrderPanel 
             order={currentOrder} 
             designs={DESIGNS} 
             onUpdateQty={updateQuantity} 
-            onRemove={removeItem}
+            onRemoveItem={removeItemFromGroup}
+            onAddGroup={addFabricGroup}
+            onRemoveGroup={removeFabricGroup}
+            onAddDesignToGroup={handleOpenSearchForGroup}
             settings={settings}
           />
         </section>
       </main>
 
-      {/* Mobile Search Sheet */}
       {isMobile && (
         <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
           <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
             <SheetHeader className="p-4 border-b">
-              <SheetTitle className="text-left font-black tracking-tight flex items-center gap-2">
+              <SheetTitle className="text-left font-black flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5" />
                 Select Design
               </SheetTitle>
@@ -215,32 +211,33 @@ export default function ScarfOrderApp() {
               <DesignList 
                 designs={DESIGNS} 
                 onSelect={handleSelectDesign} 
-                selectedIds={currentOrder.items.map(i => i.design_id)} 
+                selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
               />
             </div>
           </SheetContent>
         </Sheet>
       )}
 
-      {/* Floating Action Dock - Apple-inspired minimal control center */}
       <FloatingDock 
         onReset={clearOrder}
         onSearch={() => setIsSearchOpen(true)}
         onWhatsApp={shareToWhatsApp}
         onShare={handleNativeShare}
         onPrint={handlePrint}
-        hasItems={currentOrder.items.length > 0}
+        hasItems={hasItems}
       />
 
-      {/* Dialogs */}
       <CSVImport 
         open={isCsvOpen} 
         onClose={() => setIsCsvOpen(false)} 
         designs={DESIGNS} 
         onImport={(matchedData) => {
+          // Default to a Satin group if none exists, or ask user?
+          // For simplicity, create a group for imported items
+          const groupId = addFabricGroup('Satin');
           matchedData.forEach(m => {
-            addItem(m.design_id);
-            updateQuantity(m.design_id, m.size_id, m.quantity);
+            addItemToGroup(groupId, m.design_id);
+            updateQuantity(groupId, m.design_id, m.size_id, m.quantity);
           });
           setIsCsvOpen(false);
         }}

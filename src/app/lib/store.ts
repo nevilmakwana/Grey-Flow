@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Order, OrderItem, AppSettings, Design } from './types';
+import { Order, OrderItem, AppSettings, Design, FabricGroup } from './types';
 import designData from '../data/designs.json';
 
 const DESIGNS = designData as Design[];
@@ -24,7 +25,7 @@ function generateOrderId() {
 export function useOrder() {
   const [currentOrder, setCurrentOrder] = useState<Order>({
     id: generateOrderId(),
-    items: [],
+    fabricGroups: [],
     created_at: new Date().toISOString(),
     status: 'draft',
     tax_percent: DEFAULT_SETTINGS.tax_percent,
@@ -33,7 +34,6 @@ export function useOrder() {
 
   const [drafts, setDrafts] = useState<Order[]>([]);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const savedDrafts = localStorage.getItem('scarf_order_drafts');
     if (savedDrafts) {
@@ -46,46 +46,85 @@ export function useOrder() {
     setDrafts(newDrafts);
   };
 
-  const addItem = (designId: string) => {
-    if (currentOrder.items.find(item => item.design_id === designId)) {
-      return; // Already in cart
-    }
-    
+  const addFabricGroup = (fabricId: string) => {
+    const newGroup: FabricGroup = {
+      id: `group-${Date.now()}`,
+      fabric_id: fabricId,
+      items: []
+    };
+    setCurrentOrder(prev => ({
+      ...prev,
+      fabricGroups: [...prev.fabricGroups, newGroup]
+    }));
+    return newGroup.id;
+  };
+
+  const removeFabricGroup = (groupId: string) => {
+    setCurrentOrder(prev => ({
+      ...prev,
+      fabricGroups: prev.fabricGroups.filter(g => g.id !== groupId)
+    }));
+  };
+
+  const addItemToGroup = (groupId: string, designId: string) => {
     const design = DESIGNS.find(d => d.design_id === designId);
     if (!design) return;
 
-    const newItem: OrderItem = {
-      design_id: designId,
-      sizes: design.sizes.map(s => ({ size_id: s.size_id, quantity: 0 })),
-      note: design.default_note
-    };
-
     setCurrentOrder(prev => ({
       ...prev,
-      items: [...prev.items, newItem]
-    }));
-  };
-
-  const removeItem = (designId: string) => {
-    setCurrentOrder(prev => ({
-      ...prev,
-      items: prev.items.filter(item => item.design_id !== designId)
-    }));
-  };
-
-  const updateQuantity = (designId: string, sizeId: string, quantity: number) => {
-    setCurrentOrder(prev => ({
-      ...prev,
-      items: prev.items.map(item => {
-        if (item.design_id === designId) {
+      fabricGroups: prev.fabricGroups.map(group => {
+        if (group.id === groupId) {
+          if (group.items.find(item => item.design_id === designId)) return group;
           return {
-            ...item,
-            sizes: item.sizes.map(s => 
-              s.size_id === sizeId ? { ...s, quantity } : s
-            )
+            ...group,
+            items: [...group.items, {
+              design_id: designId,
+              sizes: design.sizes.map(s => ({ size_id: s.size_id, quantity: 0 })),
+              note: design.default_note
+            }]
           };
         }
-        return item;
+        return group;
+      })
+    }));
+  };
+
+  const removeItemFromGroup = (groupId: string, designId: string) => {
+    setCurrentOrder(prev => ({
+      ...prev,
+      fabricGroups: prev.fabricGroups.map(group => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.filter(item => item.design_id !== designId)
+          };
+        }
+        return group;
+      })
+    }));
+  };
+
+  const updateQuantity = (groupId: string, designId: string, sizeId: string, quantity: number) => {
+    setCurrentOrder(prev => ({
+      ...prev,
+      fabricGroups: prev.fabricGroups.map(group => {
+        if (group.id === groupId) {
+          return {
+            ...group,
+            items: group.items.map(item => {
+              if (item.design_id === designId) {
+                return {
+                  ...item,
+                  sizes: item.sizes.map(s => 
+                    s.size_id === sizeId ? { ...s, quantity } : s
+                  )
+                };
+              }
+              return item;
+            })
+          };
+        }
+        return group;
       })
     }));
   };
@@ -93,7 +132,6 @@ export function useOrder() {
   const saveAsDraft = () => {
     const updatedDrafts = [currentOrder, ...drafts.filter(d => d.id !== currentOrder.id)];
     saveToLocalStorage(updatedDrafts);
-    alert("Order saved as draft!");
   };
 
   const loadDraft = (order: Order) => {
@@ -103,7 +141,7 @@ export function useOrder() {
   const clearOrder = () => {
     setCurrentOrder({
       id: generateOrderId(),
-      items: [],
+      fabricGroups: [],
       created_at: new Date().toISOString(),
       status: 'draft',
       tax_percent: DEFAULT_SETTINGS.tax_percent,
@@ -113,8 +151,10 @@ export function useOrder() {
 
   return {
     currentOrder,
-    addItem,
-    removeItem,
+    addFabricGroup,
+    removeFabricGroup,
+    addItemToGroup,
+    removeItemFromGroup,
     updateQuantity,
     saveAsDraft,
     drafts,

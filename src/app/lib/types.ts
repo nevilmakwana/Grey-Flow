@@ -8,7 +8,7 @@ export interface Size {
 
 export interface Design {
   design_id: string;
-  design_name: string;
+  design_name?: string;
   image_url: string;
   sizes: Size[];
   default_note: string;
@@ -25,9 +25,15 @@ export interface OrderItem {
   note?: string;
 }
 
+export interface FabricGroup {
+  id: string;
+  fabric_id: 'Satin' | 'Cotton' | string;
+  items: OrderItem[];
+}
+
 export interface Order {
   id: string;
-  items: OrderItem[];
+  fabricGroups: FabricGroup[];
   created_at: string;
   status: 'draft' | 'saved';
   tax_percent: number;
