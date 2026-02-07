@@ -14,8 +14,7 @@ import {
   Trash2, 
   Settings as SettingsIcon,
   Printer,
-  Plus,
-  Zap
+  Plus
 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -41,9 +40,6 @@ export default function ScarfOrderApp() {
       {/* Navigation Header - Apple Glassmorphism Style */}
       <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-95">
-            <Zap className="w-6 h-6 fill-current" />
-          </div>
           <div className="flex flex-col">
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight">Scarf Order Pro</h1>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim Enterprise</span>
