@@ -268,30 +268,30 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      {/* Summary Section - Final Totals */}
-      <div className="mt-12 p-8 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[6px] print:mt-12">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-3 bg-foreground text-background rounded-2xl">
-            <Hash className="w-5 h-5" />
+      {/* Summary Section - Final Totals - Reduced height by 50% via padding/spacing */}
+      <div className="mt-8 p-4 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-8">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="p-2 bg-foreground text-background rounded-xl">
+            <Hash className="w-4 h-4" />
           </div>
-          <h3 className="text-2xl font-black uppercase tracking-tight text-foreground">Consolidated Summary</h3>
+          <h3 className="text-lg font-black uppercase tracking-tight text-foreground">Consolidated Summary</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex flex-col p-6 bg-card rounded-[1.5rem] border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-2">Small Scarf Total</span>
-            <span className="text-3xl font-black text-foreground">{totals.small}</span>
-            <span className="text-[11px] text-muted-foreground font-bold uppercase mt-1">50x50 cm</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Small Scarf Total</span>
+            <span className="text-2xl font-black text-foreground">{totals.small}</span>
+            <span className="text-[10px] text-muted-foreground font-bold uppercase">50x50 cm</span>
           </div>
-          <div className="flex flex-col p-6 bg-card rounded-[1.5rem] border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-2">Large Scarf Total</span>
-            <span className="text-3xl font-black text-foreground">{totals.large}</span>
-            <span className="text-[11px] text-muted-foreground font-bold uppercase mt-1">90x90 cm</span>
+          <div className="flex flex-col p-3 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.1em] mb-1">Large Scarf Total</span>
+            <span className="text-2xl font-black text-foreground">{totals.large}</span>
+            <span className="text-[10px] text-muted-foreground font-bold uppercase">90x90 cm</span>
           </div>
-          <div className="flex flex-col p-6 bg-foreground text-background rounded-[1.5rem] shadow-xl shadow-foreground/5 print:bg-foreground print:shadow-none">
-            <span className="text-[10px] font-black uppercase opacity-60 tracking-[0.2em] mb-2">Net Grand Total</span>
-            <span className="text-3xl font-black">{grandTotal}</span>
-            <span className="text-[11px] opacity-60 font-bold uppercase mt-1">Total Units Requested</span>
+          <div className="flex flex-col p-3 bg-foreground text-background rounded-2xl shadow-lg shadow-foreground/5 print:bg-foreground print:shadow-none">
+            <span className="text-[9px] font-black uppercase opacity-60 tracking-[0.1em] mb-1">Net Grand Total</span>
+            <span className="text-2xl font-black">{grandTotal}</span>
+            <span className="text-[10px] opacity-60 font-bold uppercase">Total Units Requested</span>
           </div>
         </div>
       </div>
