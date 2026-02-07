@@ -31,7 +31,6 @@ export default function ScarfOrderApp() {
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim LLP</span>
           </div>
         </div>
-        {/* Buttons have been moved to the FloatingDock for a cleaner UI */}
       </header>
 
       {/* Main Content Area - Offset by fixed header height */}
@@ -55,11 +54,10 @@ export default function ScarfOrderApp() {
 
       {/* Floating Action Dock - Apple-inspired minimal control */}
       <FloatingDock 
-        onOpenCsv={() => setIsCsvOpen(true)}
         onReset={clearOrder}
       />
 
-      {/* Dialogs */}
+      {/* Dialogs - Hidden but kept for logic stability */}
       <CSVImport 
         open={isCsvOpen} 
         onClose={() => setIsCsvOpen(false)} 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Moon, Sun, Calculator, Trash2 } from 'lucide-react';
+import { Moon, Sun, Trash2 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { 
   DropdownMenu, 
@@ -9,18 +9,16 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
 
 interface FloatingDockProps {
-  onOpenCsv: () => void;
   onReset: () => void;
 }
 
 /**
  * A floating action dock inspired by Apple's minimal UI.
- * Provides quick access to settings, tools, and actions.
+ * Provides quick access to settings and destructive actions.
  */
-export function FloatingDock({ onOpenCsv, onReset }: FloatingDockProps) {
+export function FloatingDock({ onReset }: FloatingDockProps) {
   const { setTheme } = useTheme();
 
   return (
@@ -44,17 +42,6 @@ export function FloatingDock({ onOpenCsv, onReset }: FloatingDockProps) {
             <DropdownMenuItem onClick={() => setTheme("system")} className="rounded-xl px-4 py-2">System</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />
-
-        {/* Calculator Segment (CSV Import) */}
-        <button 
-          onClick={onOpenCsv}
-          className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all active:scale-90 focus:outline-none group"
-          title="Bulk Import Tools"
-        >
-          <Calculator className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-        </button>
 
         <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />
 
