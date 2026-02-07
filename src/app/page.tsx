@@ -95,7 +95,17 @@ export default function ScarfOrderApp() {
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(generateWhatsAppMessage());
-    window.open(`https://web.whatsapp.com/send?text=${text}`, '_blank');
+    
+    // Detect mobile/tablet to use the most direct app link (api.whatsapp.com)
+    // while falling back to web.whatsapp.com for desktop users.
+    const isMobileDevice = typeof navigator !== 'undefined' && 
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    const baseUrl = isMobileDevice 
+      ? "https://api.whatsapp.com/send" 
+      : "https://web.whatsapp.com/send";
+      
+    window.open(`${baseUrl}?text=${text}`, '_blank');
   };
 
   const handleSelectDesign = (id: string) => {
