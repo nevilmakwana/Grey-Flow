@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -24,6 +23,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 function LiveClock() {
   const [time, setTime] = useState<Date | null>(null);
@@ -60,6 +60,7 @@ function LiveClock() {
 interface OrderPanelProps {
   order: Order;
   designs: Design[];
+  highlightedDesignId: string | null;
   onUpdateQty: (groupId: string, designId: string, sizeId: string, qty: number) => void;
   onRemoveItem: (groupId: string, designId: string) => void;
   onAddGroup: (fabricId: string) => void;
@@ -71,6 +72,7 @@ interface OrderPanelProps {
 export function OrderPanel({ 
   order, 
   designs, 
+  highlightedDesignId,
   onUpdateQty, 
   onRemoveItem, 
   onAddGroup, 
@@ -80,14 +82,6 @@ export function OrderPanel({
 }: OrderPanelProps) {
   
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
-
-  const formatFullDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return new Intl.DateTimeFormat('en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', hour12: true
-    }).format(date).replace(',', '').replace(/\s(am|pm)/i, (match) => match.toUpperCase()).replace(/(\d{4})\s/, '$1 | ');
-  };
 
   const totals = order.fabricGroups.reduce((acc, group) => {
     group.items.forEach(item => {
@@ -104,6 +98,16 @@ export function OrderPanel({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
   };
+
+  // Scroll to highlighted design
+  useEffect(() => {
+    if (highlightedDesignId) {
+      const element = document.getElementById(`design-card-${highlightedDesignId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [highlightedDesignId]);
 
   if (order.fabricGroups.length === 0) {
     return (
@@ -134,7 +138,7 @@ export function OrderPanel({
   }
 
   return (
-    <div className="max-w-4xl mx-auto pb-40">
+    <div className="max-w-4xl mx-auto pb-64">
       {/* SCREEN HEADER */}
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md py-4 px-6 md:px-8 no-print border-b">
         <div className="flex justify-between items-center">
@@ -194,9 +198,17 @@ export function OrderPanel({
               {group.items.map((item) => {
                 const design = getDesignById(item.design_id);
                 if (!design) return null;
+                const isHighlighted = highlightedDesignId === item.design_id;
 
                 return (
-                  <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm rounded-[2rem] transition-all hover:shadow-md">
+                  <Card 
+                    key={item.design_id} 
+                    id={`design-card-${item.design_id}`}
+                    className={cn(
+                      "overflow-hidden border-border bg-card shadow-sm rounded-[2rem] transition-all duration-300 hover:shadow-md scroll-mt-32",
+                      isHighlighted && "animate-highlight"
+                    )}
+                  >
                     <CardContent className="p-3 sm:p-0">
                       <div className="flex flex-row items-center sm:items-stretch gap-4 sm:gap-0">
                         <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">

@@ -74,6 +74,16 @@
   .glass {
     @apply bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-sm;
   }
+
+  @keyframes highlight-pulse {
+    0% { @apply ring-0 ring-primary/0 bg-card; }
+    30% { @apply ring-[6px] ring-primary/20 bg-primary/5 shadow-xl shadow-primary/10; }
+    100% { @apply ring-0 ring-primary/0 bg-card; }
+  }
+
+  .animate-highlight {
+    animation: highlight-pulse 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
 }
 
 @media print {

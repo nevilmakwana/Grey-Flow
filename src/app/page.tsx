@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -38,6 +37,7 @@ export default function ScarfOrderApp() {
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
+  const [highlightedDesignId, setHighlightedDesignId] = useState<string | null>(null);
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
@@ -136,7 +136,18 @@ export default function ScarfOrderApp() {
   const handleSelectDesign = (id: string) => {
     if (activeGroupId) {
       addItemToGroup(activeGroupId, id);
-      if (isMobile) setIsSearchOpen(false);
+      setHighlightedDesignId(null);
+      
+      // Trigger scroll after state update
+      setTimeout(() => {
+        setHighlightedDesignId(id);
+        if (isMobile) setIsSearchOpen(false);
+      }, 50);
+
+      // Clear highlight after animation completes
+      setTimeout(() => {
+        setHighlightedDesignId(null);
+      }, 1500);
     } else {
       toast({
         variant: "destructive",
@@ -188,6 +199,7 @@ export default function ScarfOrderApp() {
           <OrderPanel 
             order={currentOrder} 
             designs={DESIGNS} 
+            highlightedDesignId={highlightedDesignId}
             onUpdateQty={updateQuantity} 
             onRemoveItem={removeItemFromGroup}
             onAddGroup={addFabricGroup}
@@ -232,8 +244,6 @@ export default function ScarfOrderApp() {
         onClose={() => setIsCsvOpen(false)} 
         designs={DESIGNS} 
         onImport={(matchedData) => {
-          // Default to a Satin group if none exists, or ask user?
-          // For simplicity, create a group for imported items
           const groupId = addFabricGroup('Satin');
           matchedData.forEach(m => {
             addItemToGroup(groupId, m.design_id);
