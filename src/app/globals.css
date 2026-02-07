@@ -65,14 +65,19 @@
 }
 
 @media print {
-  /* Hide UI elements */
-  .no-print {
+  /* Hide all non-printable UI */
+  .no-print, 
+  button, 
+  nav, 
+  header, 
+  aside {
     display: none !important;
   }
 
-  /* Force display for print-only elements */
-  .print-only {
-    display: block !important;
+  /* Force background colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   /* Reset layout for full page printing */
@@ -81,44 +86,57 @@
     overflow: visible !important;
     background: white !important;
     color: black !important;
+    font-size: 12pt;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Reset main layout containers to avoid scrolling issues in print */
+  /* Deep reset of all scrolling containers */
   main, 
   section, 
-  div[class*="overflow-y-auto"], 
-  div[class*="overflow-hidden"],
-  #__next {
+  div, 
+  article {
     overflow: visible !important;
     height: auto !important;
+    max-height: none !important;
     display: block !important;
     position: static !important;
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .print-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 20mm !important;
+    background: white !important;
   }
 
   @page {
     size: A4;
-    margin: 15mm;
+    margin: 0; /* Let print-container handle padding for precision */
   }
 
-  /* Improve typography for print */
-  body {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .print-container {
-    width: 100%;
-    max-width: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  /* Avoid breaking design cards mid-page */
+  /* Avoid breaking content elements mid-page */
   .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Table specific print styles */
+  table {
+    page-break-inside: auto;
+    width: 100% !important;
+  }
+  tr {
     page-break-inside: avoid;
-    break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  .print-only {
+    display: block !important;
   }
 }
 
