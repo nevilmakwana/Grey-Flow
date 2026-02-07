@@ -1,7 +1,7 @@
 
 [
   {
-    "design_id": "DS-001",
+    "design_id": "OG/SCF/6126",
     "design_name": "Midnight Bloom",
     "image_url": "https://picsum.photos/seed/scarf1/600/600",
     "sizes": [
@@ -11,7 +11,7 @@
     "default_note": "Hand wash recommended"
   },
   {
-    "design_id": "DS-002",
+    "design_id": "OG/SCF/6555",
     "design_name": "Azure Waves",
     "image_url": "https://picsum.photos/seed/scarf2/600/600",
     "sizes": [
@@ -21,7 +21,7 @@
     "default_note": "Premium silk finish"
   },
   {
-    "design_id": "DS-003",
+    "design_id": "OG/SCF/6999",
     "design_name": "Crimson Geo",
     "image_url": "https://picsum.photos/seed/scarf3/600/600",
     "sizes": [

@@ -19,7 +19,6 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
 
   const filteredDesigns = useMemo(() => {
     return designs.filter(d => 
-      d.design_name.toLowerCase().includes(search.toLowerCase()) ||
       d.design_id.toLowerCase().includes(search.toLowerCase())
     );
   }, [designs, search]);
@@ -30,7 +29,7 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Search designs..." 
+            placeholder="Search SKU ID..." 
             className="pl-9 rounded-xl border-border bg-background"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -54,14 +53,14 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
               <div className="relative w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-muted border border-border">
                 <Image 
                   src={design.image_url} 
-                  alt={design.design_name} 
+                  alt={design.design_id} 
                   fill 
                   className="object-cover"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm truncate">{design.design_name}</p>
-                <p className="text-xs text-muted-foreground font-mono">{design.design_id}</p>
+                <p className="font-bold text-sm truncate font-mono tracking-tight">{design.design_id}</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-semibold">Ready Stock</p>
               </div>
               <div className="flex-shrink-0">
                 {isSelected ? (
@@ -75,7 +74,7 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
         })}
         {filteredDesigns.length === 0 && (
           <div className="text-center py-10">
-            <p className="text-muted-foreground text-sm">No designs found</p>
+            <p className="text-muted-foreground text-sm">No SKUs found</p>
           </div>
         )}
       </div>

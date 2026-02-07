@@ -8,10 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
-  Share2, 
   Printer, 
-  MessageCircle,
-  AlertCircle 
+  MessageCircle 
 } from 'lucide-react';
 import Image from 'next/image';
 import { 
@@ -47,7 +45,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
     order.items.forEach(item => {
       const design = getDesignById(item.design_id);
       if (!design) return;
-      msg += `*${design.design_name} (${design.design_id})*\n`;
+      msg += `*SKU: ${design.design_id}*\n`;
       item.sizes.forEach(s => {
         if (s.quantity > 0) {
           const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
@@ -71,8 +69,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
           <Printer className="w-10 h-10 opacity-20" />
         </div>
-        <h3 className="text-xl font-medium mb-2">No designs in order</h3>
-        <p className="max-w-xs text-center">Select designs from the left panel to start building your order request.</p>
+        <h3 className="text-xl font-medium mb-2">No items in order</h3>
+        <p className="max-w-xs text-center">Select SKUs from the left panel to start building your order request.</p>
       </div>
     );
   }
@@ -120,7 +118,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                   <div className="w-full md:w-48 bg-muted border-r relative aspect-square md:aspect-auto">
                     <Image 
                       src={design.image_url} 
-                      alt={design.design_name} 
+                      alt={design.design_id} 
                       fill 
                       className="object-cover"
                     />
@@ -128,8 +126,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                   <div className="flex-1 p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-lg font-bold">{design.design_name}</h3>
-                        <p className="text-sm font-mono text-muted-foreground">{design.design_id}</p>
+                        <h3 className="text-lg font-bold font-mono tracking-tight">{design.design_id}</h3>
+                        <p className="text-[10px] uppercase font-bold text-primary tracking-widest mt-1">Design Specifications</p>
                       </div>
                       <Button 
                         variant="ghost" 
