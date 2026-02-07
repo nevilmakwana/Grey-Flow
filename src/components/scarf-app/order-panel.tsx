@@ -8,7 +8,8 @@ import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
   Printer, 
-  MessageCircle 
+  MessageCircle,
+  Hash
 } from 'lucide-react';
 import Image from 'next/image';
 import { 
@@ -46,6 +47,17 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       .replace(/(\d{4})\s/, '$1 | ');
   };
 
+  // Calculate Totals
+  const totals = order.items.reduce((acc, item) => {
+    item.sizes.forEach(s => {
+      if (s.size_id === 'S-SML') acc.small += s.quantity;
+      if (s.size_id === 'S-LGE') acc.large += s.quantity;
+    });
+    return acc;
+  }, { small: 0, large: 0 });
+
+  const grandTotal = totals.small + totals.large;
+
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
       window.print();
@@ -61,14 +73,21 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       const design = getDesignById(item.design_id);
       if (!design) return;
       msg += `*SKU: ${design.design_id}*\n`;
+      let hasQty = false;
       item.sizes.forEach(s => {
         if (s.quantity > 0) {
           const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-          msg += `• ${sizeDef?.label}: ${s.quantity} units\n`;
+          msg += `• ${sizeDef?.label}: ${s.quantity}\n`;
+          hasQty = true;
         }
       });
-      msg += `\n`;
+      if (hasQty) msg += `\n`;
     });
+
+    msg += `*--- SUMMARY ---*\n`;
+    if (totals.small > 0) msg += `Small Scarf Total: ${totals.small}\n`;
+    if (totals.large > 0) msg += `Large Scarf Total: ${totals.large}\n`;
+    msg += `*Grand Total: ${grandTotal} Pcs*`;
 
     return msg;
   };
@@ -141,6 +160,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       alt={design.design_id} 
                       fill 
                       className="object-cover"
+                      data-ai-hint="textile pattern"
                     />
                   </div>
                   <div className="flex-1 p-6">
@@ -203,7 +223,33 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      <div className="hidden print:block text-center text-sm text-slate-400 pt-10 border-t mt-20">
+      {/* Totals Summary Section */}
+      <div className="mt-12 p-8 bg-muted/30 rounded-3xl border border-dashed border-border print:bg-white print:border-slate-300 print:mt-10">
+        <div className="flex items-center gap-2 mb-6">
+          <Hash className="w-5 h-5 text-primary" />
+          <h3 className="text-lg font-bold uppercase tracking-tight">Order Totals</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex flex-col p-4 bg-background rounded-2xl border shadow-sm print:shadow-none">
+            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-1">Small Total</span>
+            <span className="text-2xl font-black">{totals.small}</span>
+            <span className="text-[10px] text-muted-foreground">50x50 cm</span>
+          </div>
+          <div className="flex flex-col p-4 bg-background rounded-2xl border shadow-sm print:shadow-none">
+            <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-1">Large Total</span>
+            <span className="text-2xl font-black">{totals.large}</span>
+            <span className="text-[10px] text-muted-foreground">120x120 cm</span>
+          </div>
+          <div className="flex flex-col p-4 bg-primary text-primary-foreground rounded-2xl shadow-lg shadow-primary/20 print:bg-slate-900 print:shadow-none">
+            <span className="text-[10px] font-bold uppercase opacity-80 tracking-widest mb-1">Grand Total</span>
+            <span className="text-2xl font-black">{grandTotal}</span>
+            <span className="text-[10px] opacity-80 font-medium">Total Quantity</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden print:block text-center text-sm text-slate-400 pt-10 border-t mt-12">
         <p className="font-medium text-slate-600">Thank you for your business. This is an automatically generated order draft.</p>
         <p className="mt-1">{settings.company_name} • Scarf Order Pro System</p>
       </div>
