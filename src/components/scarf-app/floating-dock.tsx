@@ -1,18 +1,19 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Moon, Sun, Trash2 } from 'lucide-react';
+import { Moon, Sun, Trash2, Search } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
 interface FloatingDockProps {
   onReset: () => void;
+  onSearch?: () => void;
 }
 
 /**
  * A floating action dock inspired by Apple's minimal UI.
  * Provides quick access to settings and destructive actions.
  */
-export function FloatingDock({ onReset }: FloatingDockProps) {
+export function FloatingDock({ onReset, onSearch }: FloatingDockProps) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -30,6 +31,12 @@ export function FloatingDock({ onReset }: FloatingDockProps) {
     return (
       <div className="fixed bottom-6 right-6 z-[100] no-print">
         <div className="flex items-center bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-full p-1.5 h-12">
+          {onSearch && (
+            <>
+              <div className="h-9 w-9" />
+              <div className="w-px h-4 bg-border/50 mx-1.5" />
+            </>
+          )}
           <div className="h-9 w-9" />
           <div className="w-px h-4 bg-border/50 mx-1.5" />
           <div className="h-9 w-9" />
@@ -42,6 +49,21 @@ export function FloatingDock({ onReset }: FloatingDockProps) {
     <div className="fixed bottom-6 right-6 z-[100] no-print">
       <div className="flex items-center bg-background/80 backdrop-blur-xl border border-border/50 shadow-2xl rounded-full p-1.5 h-12 transition-all duration-300 hover:shadow-primary/5">
         
+        {/* Search Action (Mainly for Mobile) */}
+        {onSearch && (
+          <>
+            <button 
+              onClick={onSearch}
+              className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all active:scale-95 focus:outline-none group"
+              title="Search Designs"
+              aria-label="Search Designs"
+            >
+              <Search className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+            </button>
+            <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />
+          </>
+        )}
+
         {/* Animated Theme Toggle Button */}
         <button 
           onClick={toggleTheme}

@@ -8,9 +8,8 @@ import { CSVImport } from '@/components/scarf-app/csv-import';
 import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
-import { Search, ShoppingBag } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -66,18 +65,6 @@ export default function ScarfOrderApp() {
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim LLP</span>
           </div>
         </div>
-
-        {/* Mobile Search Trigger */}
-        {isMobile && (
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setIsSearchOpen(true)}
-            className="rounded-full hover:bg-muted"
-          >
-            <Search className="w-5 h-5" />
-          </Button>
-        )}
       </header>
 
       {/* Main Content Area - Offset by fixed header height */}
@@ -130,6 +117,7 @@ export default function ScarfOrderApp() {
       {/* Floating Action Dock - Apple-inspired minimal control */}
       <FloatingDock 
         onReset={clearOrder}
+        onSearch={isMobile ? () => setIsSearchOpen(true) : undefined}
       />
 
       {/* Dialogs */}
