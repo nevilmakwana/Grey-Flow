@@ -211,14 +211,14 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
               {/* DESKTOP/SCREEN CARD */}
               <Card className="no-print overflow-hidden border-border bg-card shadow-sm rounded-3xl transition-all hover:shadow-md">
                 <CardContent className="p-0">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 overflow-hidden">
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="w-full sm:w-48 bg-muted relative aspect-square shrink-0 overflow-hidden">
                       <Image 
                         src={design.image_url} 
                         alt={design.design_id} 
                         fill 
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 224px"
+                        sizes="(max-width: 640px) 100vw, 192px"
                       />
                     </div>
                     <div className="flex-1 p-6 flex flex-col justify-between">
@@ -259,7 +259,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                           const val = parseInt(e.target.value);
                                           onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                         }}
-                                        className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground"
+                                        className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       />
                                     </TableCell>
                                   </TableRow>
