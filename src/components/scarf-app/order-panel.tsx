@@ -175,12 +175,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                         })}
                       </TableBody>
                     </Table>
-                    
-                    <div className="mt-4">
-                      <p className="text-sm text-muted-foreground italic">
-                        {item.note || design.default_note}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </CardContent>
