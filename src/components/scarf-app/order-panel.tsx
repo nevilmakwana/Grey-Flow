@@ -137,81 +137,108 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       </div>
 
       {/* PRODUCT SECTION - Added pb-32 to allow scrolling above the floating dock */}
-      <div className="space-y-6 p-4 md:p-8 print:p-0 print:space-y-10 pb-32">
+      <div className="space-y-4 p-4 md:p-8 print:p-0 print:space-y-10 pb-32">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
 
           return (
             <div key={item.design_id} className="print-avoid-break group">
-              {/* DESKTOP/SCREEN CARD */}
+              {/* COMPACT SCREEN CARD (Optimized for Mobile) */}
               <Card className="no-print overflow-hidden border-border bg-card shadow-sm rounded-3xl transition-all hover:shadow-md">
-                <CardContent className="p-0">
-                  <div className="flex flex-col sm:flex-row">
-                    <div className="w-full sm:w-48 aspect-square relative shrink-0 overflow-hidden bg-muted">
+                <CardContent className="p-3 sm:p-0">
+                  <div className="flex flex-row sm:flex-row items-center sm:items-stretch gap-4 sm:gap-0">
+                    {/* Responsive Thumbnail/Full Image */}
+                    <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">
                       <Image 
                         src={design.image_url} 
                         alt={design.design_id} 
                         fill 
                         className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 192px"
+                        sizes="(max-width: 640px) 80px, 192px"
                       />
                     </div>
-                    <div className="flex-1 p-6 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => onRemove(item.design_id)}
-                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-9 w-9"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </Button>
-                        </div>
+                    
+                    <div className="flex-1 min-w-0 flex flex-col justify-center sm:p-6">
+                      <div className="flex justify-between items-center mb-2 sm:mb-4">
+                        <h3 className="text-base sm:text-xl font-black font-mono tracking-tighter text-foreground truncate">{design.design_id}</h3>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => onRemove(item.design_id)}
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8 sm:h-9 sm:w-9 shrink-0"
+                        >
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:w-5" />
+                        </Button>
+                      </div>
 
-                        <div className="rounded-2xl overflow-hidden border border-border bg-background/50">
-                          <Table>
-                            <TableHeader className="bg-muted/50 border-none">
-                              <TableRow className="hover:bg-transparent border-none">
-                                <TableHead className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
-                                <TableHead className="text-center font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {design.sizes.map((size) => {
-                                const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                                const qty = orderSize?.quantity || 0;
-                                return (
-                                  <TableRow key={size.size_id} className="hover:bg-transparent border-border">
-                                    <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
-                                    <TableCell className="text-center py-3">
-                                      <Input 
-                                        type="number" 
-                                        min="0"
-                                        inputMode="numeric"
-                                        value={qty === 0 ? "" : qty}
-                                        onChange={(e) => {
-                                          const val = parseInt(e.target.value);
-                                          onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
-                                        }}
-                                        className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      />
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            </TableBody>
-                          </Table>
-                        </div>
+                      {/* Desktop Table - Hidden on Mobile */}
+                      <div className="hidden sm:block rounded-2xl overflow-hidden border border-border bg-background/50">
+                        <Table>
+                          <TableHeader className="bg-muted/50 border-none">
+                            <TableRow className="hover:bg-transparent border-none">
+                              <TableHead className="font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
+                              <TableHead className="text-center font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {design.sizes.map((size) => {
+                              const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                              const qty = orderSize?.quantity || 0;
+                              return (
+                                <TableRow key={size.size_id} className="hover:bg-transparent border-border">
+                                  <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
+                                  <TableCell className="text-center py-3">
+                                    <Input 
+                                      type="number" 
+                                      min="0"
+                                      inputMode="numeric"
+                                      value={qty === 0 ? "" : qty}
+                                      onChange={(e) => {
+                                        const val = parseInt(e.target.value);
+                                        onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
+                                      }}
+                                      className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
+
+                      {/* Mobile Grid - Hidden on Desktop */}
+                      <div className="flex sm:hidden gap-2">
+                        {design.sizes.map((size) => {
+                          const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                          const qty = orderSize?.quantity || 0;
+                          return (
+                            <div key={size.size_id} className="flex-1 flex flex-col">
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">
+                                {size.label.includes('Small') ? 'Small' : 'Large'}
+                              </span>
+                              <Input 
+                                type="number" 
+                                min="0"
+                                inputMode="numeric"
+                                value={qty === 0 ? "" : qty}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value);
+                                  onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
+                                }}
+                                className="w-full text-center h-8 rounded-lg border-2 font-bold bg-background text-foreground text-xs"
+                              />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* MINIMAL PRINT BLOCK - FIXED IMAGE SIZE */}
+              {/* MINIMAL PRINT BLOCK (Fixed for A4) */}
               <div className="hidden print:flex gap-10 items-start">
                 <div className="w-[140px] h-[140px] relative shrink-0 rounded-xl overflow-hidden bg-muted border border-black/5">
                   <Image 
