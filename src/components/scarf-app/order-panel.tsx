@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -239,7 +240,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           <div className="flex flex-col p-4 bg-background rounded-2xl border shadow-sm print:shadow-none">
             <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest mb-1">Large Total</span>
             <span className="text-2xl font-black">{totals.large}</span>
-            <span className="text-[10px] text-muted-foreground">120x120 cm</span>
+            <span className="text-[10px] text-muted-foreground">90x90 cm</span>
           </div>
           <div className="flex flex-col p-4 bg-primary text-primary-foreground rounded-2xl shadow-lg shadow-primary/20 print:bg-slate-900 print:shadow-none">
             <span className="text-[10px] font-bold uppercase opacity-80 tracking-widest mb-1">Grand Total</span>
