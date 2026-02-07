@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -8,7 +7,7 @@ import designData from '../data/designs.json';
 const DESIGNS = designData as Design[];
 
 const DEFAULT_SETTINGS: AppSettings = {
-  company_name: "Grey Exim",
+  company_name: "Grey Exim LLP",
   currency: "INR",
   tax_percent: 0,
 };
