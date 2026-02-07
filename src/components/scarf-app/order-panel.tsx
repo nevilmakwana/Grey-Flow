@@ -22,14 +22,6 @@ import {
   TableRow 
 } from '@/components/ui/table';
 
-interface OrderPanelProps {
-  order: Order;
-  designs: Design[];
-  onUpdateQty: (designId: string, sizeId: string, qty: number) => void;
-  onRemove: (designId: string) => void;
-  settings: AppSettings;
-}
-
 /**
  * Live Clock Component
  * Displays the current date and time with a blinking colon.
@@ -66,6 +58,14 @@ function LiveClock() {
       {minutes} {ampm}
     </span>
   );
+}
+
+interface OrderPanelProps {
+  order: Order;
+  designs: Design[];
+  onUpdateQty: (designId: string, sizeId: string, qty: number) => void;
+  onRemove: (designId: string) => void;
+  settings: AppSettings;
 }
 
 export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: OrderPanelProps) {
@@ -154,52 +154,52 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
 
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto print-container">
-      {/* Printable Header */}
-      <div className="hidden print:flex justify-between items-end mb-8 border-b-2 border-foreground pb-6">
+      {/* Printable Header - Apple Inspired */}
+      <div className="hidden print:flex justify-between items-end mb-10 border-b-4 border-foreground pb-8">
         <div>
           <h1 className="text-4xl font-black tracking-tight text-foreground">{settings.company_name}</h1>
-          <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[9px] mt-1">Professional Textile Order Draft</p>
+          <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[10px] mt-2">Professional Textile Order Draft</p>
         </div>
         <div className="text-right">
-          <div className="bg-foreground text-background px-3 py-1.5 rounded-lg inline-block mb-2">
-            <p className="text-[9px] font-bold uppercase tracking-widest opacity-70">Order ID</p>
-            <p className="font-mono text-base font-bold">{order.id}</p>
+          <div className="bg-foreground text-background px-4 py-2 rounded-xl inline-block mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest opacity-70 mb-0.5">Order ID</p>
+            <p className="font-mono text-lg font-bold">{order.id}</p>
           </div>
           <p className="text-xs font-semibold text-muted-foreground">{formatFullDate(order.created_at)}</p>
         </div>
       </div>
 
       {/* Screen Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 no-print gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 no-print gap-4">
         <div>
-          <h2 className="text-2xl font-black tracking-tight text-foreground">Order Summary</h2>
-          <div className="flex flex-col mt-1">
-            <span className="font-mono text-xs font-bold text-primary">{order.id}</span>
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">
+          <h2 className="text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
+          <div className="flex flex-col mt-2">
+            <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
+            <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
               <LiveClock />
             </span>
           </div>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
-          <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-9">
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-10 px-6">
             <MessageCircle className="w-4 h-4 mr-2 text-green-500" /> WhatsApp
           </Button>
-          <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-9">
+          <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-10 px-6">
             <Printer className="w-4 h-4 mr-2" /> Print PDF
           </Button>
         </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
 
           return (
-            <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-2xl print:rounded-xl print-avoid-break transition-all hover:shadow-md">
+            <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  <div className="w-full md:w-24 bg-muted border-r border-border relative aspect-square md:aspect-auto">
+                  <div className="w-full md:w-32 bg-muted border-r border-border relative aspect-square md:aspect-auto">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
@@ -208,27 +208,27 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       data-ai-hint="textile pattern"
                     />
                   </div>
-                  <div className="flex-1 p-3">
-                    <div className="flex justify-between items-start mb-2">
+                  <div className="flex-1 p-5">
+                    <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-base font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                        <div className="h-1 w-8 bg-primary mt-1 rounded-full" />
+                        <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
+                        <div className="h-1.5 w-10 bg-primary mt-1.5 rounded-full" />
                       </div>
                       <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => onRemove(item.design_id)}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-8 w-8"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-10 w-10"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-5 h-5" />
                       </Button>
                     </div>
 
-                    <Table className="text-xs">
-                      <TableHeader className="bg-muted/30 print:bg-muted border-none">
+                    <Table>
+                      <TableHeader className="bg-muted/40 print:bg-muted border-none">
                         <TableRow className="hover:bg-transparent border-none">
-                          <TableHead className="w-full font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Size Specifications</TableHead>
-                          <TableHead className="text-center min-w-[80px] font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Quantity</TableHead>
+                          <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specifications</TableHead>
+                          <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -238,8 +238,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                           
                           return (
                             <TableRow key={size.size_id} className="hover:bg-transparent border-border/50">
-                              <TableCell className="font-bold py-1.5 text-foreground">{size.label}</TableCell>
-                              <TableCell className="text-center py-1.5">
+                              <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
+                              <TableCell className="text-center py-3">
                                 <div className="flex justify-center no-print">
                                   <Input 
                                     type="number" 
@@ -250,10 +250,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-20 text-center h-8 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
+                                    className="w-24 text-center h-10 rounded-2xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
                                   />
                                 </div>
-                                <span className="hidden print:inline font-black text-lg text-foreground">{qty}</span>
+                                <span className="hidden print:inline font-black text-2xl text-foreground">{qty}</span>
                               </TableCell>
                             </TableRow>
                           );
@@ -268,41 +268,41 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      {/* Summary Section */}
-      <div className="mt-8 p-6 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-4 print:mt-10">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="p-2 bg-foreground text-background rounded-xl">
-            <Hash className="w-4 h-4" />
+      {/* Summary Section - Final Totals */}
+      <div className="mt-12 p-8 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[6px] print:mt-12">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="p-3 bg-foreground text-background rounded-2xl">
+            <Hash className="w-5 h-5" />
           </div>
-          <h3 className="text-lg font-black uppercase tracking-tight text-foreground">Order Totals</h3>
+          <h3 className="text-2xl font-black uppercase tracking-tight text-foreground">Consolidated Summary</h3>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-1.5">Small Scarf Total</span>
-            <span className="text-2xl font-black text-foreground">{totals.small}</span>
-            <span className="text-[10px] text-muted-foreground font-bold uppercase">50x50 CM</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="flex flex-col p-6 bg-card rounded-[1.5rem] border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-2">Small Scarf Total</span>
+            <span className="text-3xl font-black text-foreground">{totals.small}</span>
+            <span className="text-[11px] text-muted-foreground font-bold uppercase mt-1">50x50 cm</span>
           </div>
-          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
-            <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-1.5">Large Scarf Total</span>
-            <span className="text-2xl font-black text-foreground">{totals.large}</span>
-            <span className="text-[10px] text-muted-foreground font-bold uppercase">90x90 CM</span>
+          <div className="flex flex-col p-6 bg-card rounded-[1.5rem] border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+            <span className="text-[10px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-2">Large Scarf Total</span>
+            <span className="text-3xl font-black text-foreground">{totals.large}</span>
+            <span className="text-[11px] text-muted-foreground font-bold uppercase mt-1">90x90 cm</span>
           </div>
-          <div className="flex flex-col p-4 bg-foreground text-background rounded-2xl shadow-xl shadow-foreground/5 print:bg-foreground print:shadow-none">
-            <span className="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-1.5">Net Grand Total</span>
-            <span className="text-2xl font-black">{grandTotal}</span>
-            <span className="text-[10px] opacity-60 font-bold uppercase">Units Requested</span>
+          <div className="flex flex-col p-6 bg-foreground text-background rounded-[1.5rem] shadow-xl shadow-foreground/5 print:bg-foreground print:shadow-none">
+            <span className="text-[10px] font-black uppercase opacity-60 tracking-[0.2em] mb-2">Net Grand Total</span>
+            <span className="text-3xl font-black">{grandTotal}</span>
+            <span className="text-[11px] opacity-60 font-bold uppercase mt-1">Total Units Requested</span>
           </div>
         </div>
       </div>
 
       {/* Printable Footer */}
-      <div className="hidden print:block text-center pt-8 mt-8 border-t-2 border-border">
-        <p className="font-bold text-base text-foreground">Thank you for your business.</p>
-        <p className="text-muted-foreground text-[9px] mt-0.5 uppercase tracking-widest font-bold">This is an official order draft generated via Scarf Order Pro</p>
-        <div className="mt-4 flex items-center justify-center gap-1.5">
-          <div className="w-6 h-6 bg-foreground rounded-md" />
-          <span className="font-black text-xs tracking-tighter text-foreground">{settings.company_name}</span>
+      <div className="hidden print:block text-center pt-10 mt-10 border-t-2 border-border">
+        <p className="font-bold text-lg text-foreground">Thank you for your business.</p>
+        <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">This is an official order draft generated via Scarf Order Pro</p>
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <div className="w-8 h-8 bg-foreground rounded-lg" />
+          <span className="font-black text-sm tracking-tighter text-foreground">{settings.company_name}</span>
         </div>
       </div>
     </div>

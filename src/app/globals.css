@@ -86,7 +86,7 @@
     overflow: visible !important;
     background: white !important;
     color: black !important;
-    font-size: 12pt;
+    font-size: 11pt;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -110,13 +110,13 @@
   .print-container {
     width: 100% !important;
     max-width: none !important;
-    padding: 20mm !important;
+    padding: 15mm !important;
     background: white !important;
   }
 
   @page {
     size: A4;
-    margin: 0; /* Let print-container handle padding for precision */
+    margin: 10mm;
   }
 
   /* Avoid breaking content elements mid-page */
@@ -129,6 +129,7 @@
   table {
     page-break-inside: auto;
     width: 100% !important;
+    border-collapse: collapse !important;
   }
   tr {
     page-break-inside: avoid;
