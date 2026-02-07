@@ -9,7 +9,6 @@ import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
   Share2, 
-  Copy, 
   Printer, 
   MessageCircle,
   AlertCircle 
@@ -61,10 +60,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
     return msg;
   };
 
-  const copyMessage = () => {
-    navigator.clipboard.writeText(generateWhatsAppMessage());
-  };
-
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(generateWhatsAppMessage());
     window.open(`https://web.whatsapp.com/send?text=${text}`, '_blank');
@@ -104,9 +99,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           <p className="text-sm text-muted-foreground">{order.id} • {new Date(order.created_at).toLocaleDateString()}</p>
         </div>
         <div className="flex gap-2 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
-          <Button variant="outline" size="sm" onClick={copyMessage} className="whitespace-nowrap rounded-full">
-            <Copy className="w-4 h-4 mr-2" /> Copy
-          </Button>
           <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="whitespace-nowrap rounded-full">
             <MessageCircle className="w-4 h-4 mr-2" /> WhatsApp
           </Button>
