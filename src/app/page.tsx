@@ -8,6 +8,15 @@ import { CSVImport } from '@/components/scarf-app/csv-import';
 import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
+import { Search, ShoppingBag } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 
 export default function ScarfOrderApp() {
   const { 
@@ -20,8 +29,10 @@ export default function ScarfOrderApp() {
     settings
   } = useOrder();
 
+  const isMobile = useIsMobile();
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [isShareMode, setIsShareMode] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // If Share Mode is active, render only the presentation view
   if (isShareMode) {
@@ -38,6 +49,13 @@ export default function ScarfOrderApp() {
     );
   }
 
+  const handleSelectDesign = (id: string) => {
+    addItem(id);
+    if (isMobile) {
+      setIsSearchOpen(false);
+    }
+  };
+
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
       {/* Fixed Navigation Header */}
@@ -48,16 +66,34 @@ export default function ScarfOrderApp() {
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim LLP</span>
           </div>
         </div>
+
+        {/* Mobile Search Trigger */}
+        {isMobile && (
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsSearchOpen(true)}
+            className="rounded-full hover:bg-muted"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+        )}
       </header>
 
       {/* Main Content Area - Offset by fixed header height */}
       <main className="flex-1 flex overflow-hidden pt-16">
-        {/* Left Pane - Searchable Design List */}
-        <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
-          <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />
-        </aside>
+        {/* Desktop Sidebar - Hidden on Mobile */}
+        {!isMobile && (
+          <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
+            <DesignList 
+              designs={DESIGNS} 
+              onSelect={handleSelectDesign} 
+              selectedIds={currentOrder.items.map(i => i.design_id)} 
+            />
+          </aside>
+        )}
 
-        {/* Right Pane - Order Panel */}
+        {/* Right Pane - Order Panel (Full width on mobile) */}
         <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300">
           <OrderPanel 
             order={currentOrder} 
@@ -69,6 +105,27 @@ export default function ScarfOrderApp() {
           />
         </section>
       </main>
+
+      {/* Mobile Search Sheet */}
+      {isMobile && (
+        <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+          <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
+            <SheetHeader className="p-4 border-b">
+              <SheetTitle className="text-left font-black tracking-tight flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5" />
+                Select Design
+              </SheetTitle>
+            </SheetHeader>
+            <div className="flex-1 overflow-hidden">
+              <DesignList 
+                designs={DESIGNS} 
+                onSelect={handleSelectDesign} 
+                selectedIds={currentOrder.items.map(i => i.design_id)} 
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+      )}
 
       {/* Floating Action Dock - Apple-inspired minimal control */}
       <FloatingDock 
