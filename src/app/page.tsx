@@ -9,12 +9,8 @@ import { DraftsList } from '@/components/scarf-app/drafts-list';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { 
-  FileUp, 
   History, 
-  Trash2, 
-  Settings as SettingsIcon,
-  Printer,
-  Plus
+  Trash2
 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -41,7 +37,7 @@ export default function ScarfOrderApp() {
       <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight">Scarf Order Pro</h1>
+            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">Scarf Order Pro</h1>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim Enterprise</span>
           </div>
         </div>
@@ -51,9 +47,6 @@ export default function ScarfOrderApp() {
           <div className="h-4 w-px bg-border mx-2" />
           <Button variant="ghost" size="sm" onClick={() => setIsDraftsOpen(true)} className="gap-2 rounded-full px-4 hover:bg-secondary">
             <History className="w-4 h-4" /> <span className="hidden sm:inline">History</span>
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => setIsCsvOpen(true)} className="gap-2 rounded-full px-4 hover:bg-secondary">
-            <FileUp className="w-4 h-4" /> <span className="hidden sm:inline">Bulk</span>
           </Button>
           <div className="h-4 w-px bg-border mx-2" />
           <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
