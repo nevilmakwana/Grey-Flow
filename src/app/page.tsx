@@ -172,7 +172,6 @@ export default function ScarfOrderApp() {
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">GreyFlow</h1>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim</span>
           </div>
         </div>
       </header>
