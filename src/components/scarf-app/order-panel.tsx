@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -169,24 +170,26 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* Screen Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 no-print gap-4">
-        <div>
-          <h2 className="text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
-          <div className="flex flex-col mt-2">
-            <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
-            <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
-              <LiveClock />
-            </span>
+      {/* Screen Header - Frozen (Sticky) with Scroll */}
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 -mt-4 md:-mt-8 mb-8 py-4 no-print border-b border-border/50">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
+            <div className="flex flex-col mt-2">
+              <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
+              <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">
+                <LiveClock />
+              </span>
+            </div>
           </div>
-        </div>
-        <div className="flex gap-3 w-full sm:w-auto">
-          <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-10 px-6">
-            <MessageCircle className="w-4 h-4 mr-2 text-green-500" /> WhatsApp
-          </Button>
-          <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-10 px-6">
-            <Printer className="w-4 h-4 mr-2" /> Print PDF
-          </Button>
+          <div className="flex gap-3 w-full sm:w-auto">
+            <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-10 px-6">
+              <MessageCircle className="w-4 h-4 mr-2 text-green-500" /> WhatsApp
+            </Button>
+            <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-10 px-6">
+              <Printer className="w-4 h-4 mr-2" /> Print PDF
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -268,7 +271,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      {/* Summary Section - Final Totals - Reduced height by 50% via padding/spacing */}
+      {/* Summary Section - Final Totals */}
       <div className="mt-8 p-4 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-8">
         <div className="flex items-center gap-2 mb-3">
           <div className="p-2 bg-foreground text-background rounded-xl">
