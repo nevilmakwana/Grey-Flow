@@ -10,8 +10,8 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: 'Scarf Order Pro - Professional Textile Ordering',
-  description: 'Streamlined scarf order generation for Grey Exim',
+  title: 'GreyFlow - Professional Textile Ordering',
+  description: 'Streamlined order generation for Grey Exim LLP',
 };
 
 export default function RootLayout({

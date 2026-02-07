@@ -24,7 +24,6 @@ import {
 
 /**
  * Live Clock Component
- * Displays the current date and time with a blinking colon.
  */
 function LiveClock() {
   const [time, setTime] = useState<Date | null>(null);
@@ -39,7 +38,7 @@ function LiveClock() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!time) return <span className="opacity-0">Loading Clock...</span>;
+  if (!time) return <span className="opacity-0">Loading...</span>;
 
   const day = time.getDate().toString().padStart(2, '0');
   const month = time.toLocaleString('en-GB', { month: 'short' });
@@ -146,15 +145,15 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-6">
           <ShoppingBag className="w-10 h-10 opacity-20" />
         </div>
-        <h3 className="text-xl font-medium mb-2">No items in order</h3>
+        <h3 className="text-xl font-medium mb-2 text-foreground">No items in order</h3>
         <p className="max-w-xs text-center">Select SKUs from the left panel to start building your order request.</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto print-container p-0 md:p-0">
-      {/* Printable Header - hidden screen */}
+    <div className="max-w-4xl mx-auto print-container p-0">
+      {/* Printable Header */}
       <div className="hidden print:flex justify-between items-end mb-10 border-b-4 border-foreground pb-8 px-4 md:px-8 pt-8">
         <div>
           <h1 className="text-4xl font-black tracking-tight text-foreground">{settings.company_name}</h1>
@@ -169,8 +168,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* Screen Header - Frozen Sticky Bar */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 px-4 md:px-8 no-print border-b border-border/50">
+      {/* Screen Header */}
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur py-4 px-4 md:px-8 no-print border-b border-border/50">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
@@ -201,14 +200,12 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  {/* Fixed Aspect Ratio Container (1:1 Square) */}
-                  <div className="w-full md:w-40 bg-muted border-r border-border relative aspect-square shrink-0">
+                  <div className="w-full md:w-48 bg-muted border-r border-border relative aspect-square shrink-0">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
                       fill 
                       className="object-cover"
-                      data-ai-hint="textile pattern"
                     />
                   </div>
                   <div className="flex-1 p-4 md:p-6">
@@ -272,7 +269,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           );
         })}
 
-        {/* Summary Section - Final Totals */}
+        {/* Summary Section */}
         <div className="mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12 transition-all">
           <div className="flex items-center gap-2 mb-3">
             <div className="p-2 bg-foreground text-background rounded-xl">
@@ -304,7 +301,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
       {/* Printable Footer */}
       <div className="hidden print:block text-center pt-10 mt-10 border-t-2 border-border px-8 pb-8">
         <p className="font-bold text-xl text-foreground">Thank you for your business.</p>
-        <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">This is an official order draft generated via Scarf Order Pro</p>
+        <p className="text-muted-foreground text-[10px] mt-1 uppercase tracking-widest font-bold">This is an official order draft generated via GreyFlow</p>
         <div className="mt-8 flex items-center justify-center gap-3">
           <div className="w-10 h-10 bg-foreground rounded-xl" />
           <span className="font-black text-lg tracking-tighter text-foreground">{settings.company_name}</span>
