@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/table';
 
 /**
- * Live Clock Component
+ * Live Clock Component with Blinking Colon
  */
 function LiveClock() {
   const [time, setTime] = useState<Date | null>(null);
@@ -168,7 +168,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* Screen Header */}
+      {/* Screen Header - Sticky */}
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur py-4 px-4 md:px-8 no-print border-b border-border/50">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -191,7 +191,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      <div className="space-y-4 p-4 md:p-8">
+      <div className="space-y-6 p-4 md:p-8">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
@@ -200,67 +200,71 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  <div className="w-full md:w-48 bg-muted border-r border-border relative aspect-square shrink-0">
+                  {/* Square Image Container */}
+                  <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
                       fill 
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 224px"
                     />
                   </div>
-                  <div className="flex-1 p-4 md:p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                        <div className="h-1.5 w-12 bg-primary rounded-full" />
+                  <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="space-y-1">
+                          <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
+                          <div className="h-1.5 w-12 bg-primary rounded-full" />
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          onClick={() => onRemove(item.design_id)}
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-9 w-9"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </Button>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => onRemove(item.design_id)}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-9 w-9"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </Button>
-                    </div>
 
-                    <div className="rounded-2xl overflow-hidden border border-border bg-background/50">
-                      <Table>
-                        <TableHeader className="bg-muted/50 print:bg-muted border-none">
-                          <TableRow className="hover:bg-transparent border-none">
-                            <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
-                            <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {design.sizes.map((size) => {
-                            const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                            const qty = orderSize?.quantity || 0;
-                            
-                            return (
-                              <TableRow key={size.size_id} className="hover:bg-transparent border-border">
-                                <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
-                                <TableCell className="text-center py-3">
-                                  <div className="flex justify-center no-print">
-                                    <Input 
-                                      type="number" 
-                                      min="0"
-                                      step="1"
-                                      value={qty === 0 ? "" : qty}
-                                      onChange={(e) => {
-                                        const val = parseInt(e.target.value);
-                                        onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
-                                      }}
-                                      className="w-24 text-center h-10 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
-                                    />
-                                  </div>
-                                  <span className="hidden print:inline font-black text-2xl text-foreground">{qty}</span>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
+                      <div className="rounded-2xl overflow-hidden border border-border bg-background/50">
+                        <Table>
+                          <TableHeader className="bg-muted/50 print:bg-muted border-none">
+                            <TableRow className="hover:bg-transparent border-none">
+                              <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specs</TableHead>
+                              <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {design.sizes.map((size) => {
+                              const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                              const qty = orderSize?.quantity || 0;
+                              
+                              return (
+                                <TableRow key={size.size_id} className="hover:bg-transparent border-border">
+                                  <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
+                                  <TableCell className="text-center py-3">
+                                    <div className="flex justify-center no-print">
+                                      <Input 
+                                        type="number" 
+                                        min="0"
+                                        step="1"
+                                        value={qty === 0 ? "" : qty}
+                                        onChange={(e) => {
+                                          const val = parseInt(e.target.value);
+                                          onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
+                                        }}
+                                        className="w-24 text-center h-10 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
+                                      />
+                                    </div>
+                                    <span className="hidden print:inline font-black text-2xl text-foreground">{qty}</span>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -269,7 +273,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           );
         })}
 
-        {/* Summary Section */}
+        {/* Compact Summary Section */}
         <div className="mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12 transition-all">
           <div className="flex items-center gap-2 mb-3">
             <div className="p-2 bg-foreground text-background rounded-xl">
