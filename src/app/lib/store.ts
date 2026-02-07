@@ -7,7 +7,7 @@ import designData from '../data/designs.json';
 const DESIGNS = designData as Design[];
 
 const DEFAULT_SETTINGS: AppSettings = {
-  company_name: "Grey Exim LLP",
+  company_name: "Grey Exim",
   currency: "INR",
   tax_percent: 0,
 };

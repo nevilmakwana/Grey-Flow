@@ -54,6 +54,7 @@ export default function ScarfOrderApp() {
         minute: '2-digit',
         hour12: true
       }).format(date).replace(',', '')
+        .replace(/\sat\s/i, ' ') // Explicitly remove "at" if it appears in the formatted string
         .replace(/\s(am|pm)/i, (match) => match.toUpperCase())
         .replace(/(\d{4})\s/, '$1 | ');
     };
@@ -171,7 +172,7 @@ export default function ScarfOrderApp() {
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">GreyFlow</h1>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim LLP</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim</span>
           </div>
         </div>
       </header>
