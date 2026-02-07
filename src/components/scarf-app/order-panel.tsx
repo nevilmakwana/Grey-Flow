@@ -38,7 +38,7 @@ function LiveClock() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!time) return <span className="opacity-0">Loading...</span>;
+  if (!time) return <span className="opacity-0 text-muted-foreground text-[10px]">Loading...</span>;
 
   const day = time.getDate().toString().padStart(2, '0');
   const month = time.toLocaleString('en-GB', { month: 'short' });
@@ -51,7 +51,7 @@ function LiveClock() {
   const minutes = time.getMinutes().toString().padStart(2, '0');
 
   return (
-    <span className="inline-flex items-center">
+    <span className="inline-flex items-center text-muted-foreground font-medium">
       {day} {month} {year} | {hours}
       <span className={`${blink ? 'opacity-100' : 'opacity-20'} transition-opacity duration-100 mx-0.5`}>:</span>
       {minutes} {ampm}
@@ -175,7 +175,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
             <div className="flex flex-col mt-1">
               <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
-              <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">
+              <span className="text-[10px] uppercase tracking-wider mt-0.5">
                 <LiveClock />
               </span>
             </div>
@@ -200,8 +200,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  {/* Square Image Container */}
-                  <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border">
+                  {/* Square Image Container - Enforce 1:1 Aspect Ratio */}
+                  <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border overflow-hidden">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
@@ -273,7 +273,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           );
         })}
 
-        {/* Compact Summary Section */}
+        {/* Compact Summary Section - Reduced Height as requested */}
         <div className="mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12 transition-all">
           <div className="flex items-center gap-2 mb-3">
             <div className="p-2 bg-foreground text-background rounded-xl">
