@@ -190,6 +190,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       <Input 
                                         type="number" 
                                         min="0"
+                                        inputMode="numeric"
                                         value={qty === 0 ? "" : qty}
                                         onChange={(e) => {
                                           const val = parseInt(e.target.value);
