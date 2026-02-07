@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -25,7 +24,8 @@ export function DesignList({ designs, onSelect, selectedIds }: DesignListProps) 
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b bg-card">
+      {/* Search bar sticky to the top of the sidebar area */}
+      <div className="sticky top-0 z-10 p-4 border-b bg-background/80 backdrop-blur">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 

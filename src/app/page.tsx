@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { 
   History, 
-  Trash2
+  Trash2,
+  FileSpreadsheet
 } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 
@@ -31,9 +32,9 @@ export default function ScarfOrderApp() {
   const [isDraftsOpen, setIsDraftsOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      {/* Navigation Header - Fixed Sticky */}
-      <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shrink-0">
+    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
+      {/* Navigation Header - Fixed position at the top */}
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shrink-0">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
             <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">GreyFlow</h1>
@@ -47,6 +48,9 @@ export default function ScarfOrderApp() {
           <Button variant="ghost" size="icon" onClick={() => setIsDraftsOpen(true)} className="rounded-full hover:bg-secondary">
             <History className="w-4 h-4" />
           </Button>
+          <Button variant="ghost" size="icon" onClick={() => setIsCsvOpen(true)} className="rounded-full hover:bg-secondary">
+            <FileSpreadsheet className="w-4 h-4" />
+          </Button>
           <div className="h-4 w-px bg-border mx-2" />
           <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
             <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline ml-2">Reset</span>
@@ -54,8 +58,8 @@ export default function ScarfOrderApp() {
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex overflow-hidden">
+      {/* Main Content Area - pt-16 to avoid being hidden under fixed header */}
+      <main className="flex-1 flex overflow-hidden pt-16">
         {/* Left Pane - Searchable Design List */}
         <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
           <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />

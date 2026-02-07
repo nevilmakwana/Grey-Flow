@@ -168,8 +168,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* Screen Header - Sticky */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur py-4 px-4 md:px-8 no-print border-b border-border/50">
+      {/* Screen Header - Sticky within the scrolling container */}
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md py-4 px-4 md:px-8 no-print border-b border-border/50">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground">Order Summary</h2>
@@ -200,14 +200,14 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  {/* Square Image Container - Enforce 1:1 Aspect Ratio */}
-                  <div className="w-full md:w-56 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border overflow-hidden">
+                  {/* Square Image Container - Strict 1:1 Aspect Ratio */}
+                  <div className="w-full md:w-64 bg-muted relative aspect-square shrink-0 border-b md:border-b-0 md:border-r border-border overflow-hidden">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
                       fill 
                       className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 224px"
+                      sizes="(max-width: 768px) 100vw, 256px"
                     />
                   </div>
                   <div className="flex-1 p-4 md:p-6 flex flex-col justify-between">
@@ -273,7 +273,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           );
         })}
 
-        {/* Compact Summary Section - Reduced Height as requested */}
+        {/* Compact Summary Section */}
         <div className="mt-8 p-4 bg-muted/50 rounded-[2rem] border-2 border-border print:bg-background print:border-foreground print:border-[4px] print:mt-12 transition-all">
           <div className="flex items-center gap-2 mb-3">
             <div className="p-2 bg-foreground text-background rounded-xl">
