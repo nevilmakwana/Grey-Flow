@@ -180,13 +180,24 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
               </span>
             </div>
           </div>
-          <div className="flex gap-3 w-full sm:w-auto">
-            <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-9 px-6 text-foreground">
-              <MessageCircle className="w-4 h-4 mr-2 text-green-500" /> WhatsApp
-            </Button>
-            <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-9 px-6">
-              <Printer className="w-4 h-4 mr-2" /> Print PDF
-            </Button>
+          
+          {/* Redesigned Segmented Control for Actions */}
+          <div className="flex items-center bg-muted/50 rounded-full border border-border p-1 shadow-sm h-11 w-full sm:w-32 transition-all hover:shadow-md">
+            <button 
+              onClick={shareToWhatsApp} 
+              className="flex-1 h-full flex items-center justify-center rounded-l-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none focus:ring-2 focus:ring-primary/20"
+              title="Share on WhatsApp"
+            >
+              <MessageCircle className="w-5 h-5 text-green-500 group-hover:scale-110 transition-transform" />
+            </button>
+            <div className="w-px h-5 bg-border/60 shrink-0" />
+            <button 
+              onClick={handlePrint} 
+              className="flex-1 h-full flex items-center justify-center rounded-r-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none focus:ring-2 focus:ring-primary/20"
+              title="Print PDF"
+            >
+              <Printer className="w-5 h-5 text-foreground group-hover:scale-110 transition-transform" />
+            </button>
           </div>
         </div>
       </div>
