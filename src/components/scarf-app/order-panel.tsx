@@ -183,17 +183,17 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             </div>
           </div>
           <div className="flex gap-3 w-full sm:w-auto">
-            <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-10 px-6">
+            <Button variant="outline" size="sm" onClick={shareToWhatsApp} className="flex-1 sm:flex-none rounded-full border-2 hover:bg-secondary font-bold h-9 px-6">
               <MessageCircle className="w-4 h-4 mr-2 text-green-500" /> WhatsApp
             </Button>
-            <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-10 px-6">
+            <Button variant="default" size="sm" onClick={handlePrint} className="flex-1 sm:flex-none bg-foreground text-background hover:opacity-90 rounded-full shadow-lg transition-all active:scale-95 font-bold h-9 px-6">
               <Printer className="w-4 h-4 mr-2" /> Print PDF
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
@@ -202,7 +202,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-3xl print:rounded-2xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
-                  <div className="w-full md:w-32 bg-muted border-r border-border relative aspect-square md:aspect-auto">
+                  {/* Fixed Aspect Ratio Container (1:1 Square) */}
+                  <div className="w-full md:w-28 bg-muted border-r border-border relative aspect-square shrink-0">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
@@ -211,27 +212,27 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       data-ai-hint="textile pattern"
                     />
                   </div>
-                  <div className="flex-1 p-5">
-                    <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1 p-3">
+                    <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="text-xl font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
-                        <div className="h-1.5 w-10 bg-primary mt-1.5 rounded-full" />
+                        <h3 className="text-lg font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
+                        <div className="h-1 w-8 bg-primary mt-1 rounded-full" />
                       </div>
                       <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => onRemove(item.design_id)}
-                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-10 w-10"
+                        className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 no-print rounded-full h-8 w-8"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
 
                     <Table>
                       <TableHeader className="bg-muted/40 print:bg-muted border-none">
                         <TableRow className="hover:bg-transparent border-none">
-                          <TableHead className="w-full font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Size Specifications</TableHead>
-                          <TableHead className="text-center min-w-[100px] font-bold uppercase tracking-widest text-[10px] text-muted-foreground py-2 h-auto">Quantity</TableHead>
+                          <TableHead className="w-full font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Size Specs</TableHead>
+                          <TableHead className="text-center min-w-[80px] font-bold uppercase tracking-widest text-[9px] text-muted-foreground py-1 h-auto">Qty</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -241,8 +242,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                           
                           return (
                             <TableRow key={size.size_id} className="hover:bg-transparent border-border/50">
-                              <TableCell className="font-bold py-3 text-foreground text-sm">{size.label}</TableCell>
-                              <TableCell className="text-center py-3">
+                              <TableCell className="font-bold py-1.5 text-foreground text-xs">{size.label}</TableCell>
+                              <TableCell className="text-center py-1.5">
                                 <div className="flex justify-center no-print">
                                   <Input 
                                     type="number" 
@@ -253,10 +254,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-24 text-center h-10 rounded-2xl border-2 focus:ring-primary focus:border-primary font-bold text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
+                                    className="w-20 text-center h-8 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
                                   />
                                 </div>
-                                <span className="hidden print:inline font-black text-2xl text-foreground">{qty}</span>
+                                <span className="hidden print:inline font-black text-xl text-foreground">{qty}</span>
                               </TableCell>
                             </TableRow>
                           );
