@@ -32,11 +32,11 @@ export default function ScarfOrderApp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      {/* Navigation Header - Apple Glassmorphism Style */}
-      <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
+      {/* Navigation Header - Fixed Sticky */}
+      <header className="sticky top-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shrink-0">
         <div className="flex items-center gap-3">
           <div className="flex flex-col">
-            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">Scarf Order Pro</h1>
+            <h1 className="font-headline font-bold text-lg leading-tight tracking-tight text-foreground">Scarf Order Pro</h1>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim Enterprise</span>
           </div>
         </div>
@@ -56,13 +56,13 @@ export default function ScarfOrderApp() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden">
-        {/* Left Pane - Searchable Design List (Width reduced by 20%) */}
-        <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300">
+        {/* Left Pane - Searchable Design List (Sticky search bar already handled inside) */}
+        <aside className="w-64 border-r bg-muted/20 flex flex-col no-print transition-all duration-300 shrink-0">
           <DesignList designs={DESIGNS} onSelect={addItem} selectedIds={currentOrder.items.map(i => i.design_id)} />
         </aside>
 
-        {/* Right Pane - Order Panel */}
-        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300">
+        {/* Right Pane - Order Panel (With its own sticky header) */}
+        <section className="flex-1 overflow-y-auto bg-background transition-colors duration-300 relative">
           <div className="h-full">
             <OrderPanel 
               order={currentOrder} 
