@@ -33,6 +33,78 @@ export default function ScarfOrderApp() {
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // --- Handlers for Floating Dock ---
+
+  const handlePrint = () => {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
+  };
+
+  const generateWhatsAppMessage = () => {
+    const formatFullDate = (isoString: string) => {
+      const date = new Date(isoString);
+      return new Intl.DateTimeFormat('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }).format(date).replace(',', '')
+        .replace(/\s(am|pm)/i, (match) => match.toUpperCase())
+        .replace(/(\d{4})\s/, '$1 | ');
+    };
+
+    let msg = `*Order Request - ${settings.company_name}*\n`;
+    msg += `Order ID: ${currentOrder.id}\n`;
+    msg += `Date: ${formatFullDate(new Date().toISOString())}\n\n`;
+
+    let totalSmall = 0;
+    let totalLarge = 0;
+
+    currentOrder.items.forEach(item => {
+      const design = DESIGNS.find(d => d.design_id === item.design_id);
+      if (!design) return;
+      
+      let hasQty = false;
+      let itemLine = `*SKU: ${design.design_id}*\n`;
+      
+      item.sizes.forEach(s => {
+        if (s.quantity > 0) {
+          const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
+          itemLine += `• ${sizeDef?.label}: ${s.quantity}\n`;
+          hasQty = true;
+          if (s.size_id === 'S-SML') totalSmall += s.quantity;
+          if (s.size_id === 'S-LGE') totalLarge += s.quantity;
+        }
+      });
+      
+      if (hasQty) {
+        msg += itemLine + `\n`;
+      }
+    });
+
+    msg += `*--- SUMMARY ---*\n`;
+    if (totalSmall > 0) msg += `Small Scarf Total: ${totalSmall}\n`;
+    if (totalLarge > 0) msg += `Large Scarf Total: ${totalLarge}\n`;
+    msg += `*Grand Total: ${totalSmall + totalLarge} Pcs*`;
+
+    return msg;
+  };
+
+  const shareToWhatsApp = () => {
+    const text = encodeURIComponent(generateWhatsAppMessage());
+    window.open(`https://web.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
+  const handleSelectDesign = (id: string) => {
+    addItem(id);
+    if (isMobile) {
+      setIsSearchOpen(false);
+    }
+  };
+
   // If Share Mode is active, render only the presentation view
   if (isShareMode) {
     return (
@@ -47,13 +119,6 @@ export default function ScarfOrderApp() {
       </div>
     );
   }
-
-  const handleSelectDesign = (id: string) => {
-    addItem(id);
-    if (isMobile) {
-      setIsSearchOpen(false);
-    }
-  };
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
@@ -88,7 +153,6 @@ export default function ScarfOrderApp() {
             onUpdateQty={updateQuantity} 
             onRemove={removeItem}
             settings={settings}
-            onShare={() => setIsShareMode(true)}
           />
         </section>
       </main>
@@ -114,10 +178,14 @@ export default function ScarfOrderApp() {
         </Sheet>
       )}
 
-      {/* Floating Action Dock - Apple-inspired minimal control */}
+      {/* Floating Action Dock - Apple-inspired minimal control center */}
       <FloatingDock 
         onReset={clearOrder}
-        onSearch={isMobile ? () => setIsSearchOpen(true) : undefined}
+        onSearch={() => setIsSearchOpen(true)}
+        onWhatsApp={shareToWhatsApp}
+        onShare={() => setIsShareMode(true)}
+        onPrint={handlePrint}
+        hasItems={currentOrder.items.length > 0}
       />
 
       {/* Dialogs */}

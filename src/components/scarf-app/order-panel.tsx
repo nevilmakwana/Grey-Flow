@@ -7,11 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
-  Printer, 
-  MessageCircle,
   Hash,
-  ShoppingBag,
-  Share2
+  ShoppingBag
 } from 'lucide-react';
 import Image from 'next/image';
 import { 
@@ -66,10 +63,9 @@ interface OrderPanelProps {
   onUpdateQty: (designId: string, sizeId: string, qty: number) => void;
   onRemove: (designId: string) => void;
   settings: AppSettings;
-  onShare: () => void;
 }
 
-export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings, onShare }: OrderPanelProps) {
+export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: OrderPanelProps) {
   
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
 
@@ -96,50 +92,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings, on
   }, { small: 0, large: 0 });
 
   const grandTotal = totals.small + totals.large;
-
-  const handlePrint = () => {
-    if (typeof window !== 'undefined') {
-      window.print();
-    }
-  };
-
-  const generateWhatsAppMessage = () => {
-    let msg = `*Order Request - ${settings.company_name}*\n`;
-    msg += `Order ID: ${order.id}\n`;
-    msg += `Date: ${formatFullDate(new Date().toISOString())}\n\n`;
-
-    order.items.forEach(item => {
-      const design = getDesignById(item.design_id);
-      if (!design) return;
-      
-      let hasQty = false;
-      let itemLine = `*SKU: ${design.design_id}*\n`;
-      
-      item.sizes.forEach(s => {
-        if (s.quantity > 0) {
-          const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-          itemLine += `• ${sizeDef?.label}: ${s.quantity}\n`;
-          hasQty = true;
-        }
-      });
-      
-      if (hasQty) {
-        msg += itemLine + `\n`;
-      }
-    });
-
-    msg += `*--- SUMMARY ---*\n`;
-    if (totals.small > 0) msg += `Small Scarf Total: ${totals.small}\n`;
-    if (totals.large > 0) msg += `Large Scarf Total: ${totals.large}\n`;
-    msg += `*Grand Total: ${grandTotal} Pcs*`;
-
-    return msg;
-  };
-
-  const shareToWhatsApp = () => {
-    const text = encodeURIComponent(generateWhatsAppMessage());
-    window.open(`https://web.whatsapp.com/send?text=${text}`, '_blank');
-  };
 
   if (order.items.length === 0) {
     return (
@@ -180,32 +132,6 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings, on
                 <LiveClock />
               </span>
             </div>
-          </div>
-          
-          <div className="flex items-center bg-muted/50 rounded-full border border-border p-1 shadow-sm h-11 w-full sm:w-44 transition-all hover:shadow-md">
-            <button 
-              onClick={shareToWhatsApp} 
-              className="flex-1 h-full flex items-center justify-center rounded-l-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
-              title="Share on WhatsApp"
-            >
-              <MessageCircle className="w-5 h-5 text-green-500 group-hover:scale-110 transition-transform" />
-            </button>
-            <div className="w-px h-5 bg-border/60 shrink-0" />
-            <button 
-              onClick={onShare} 
-              className="flex-1 h-full flex items-center justify-center hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
-              title="Clean Share View"
-            >
-              <Share2 className="w-5 h-5 text-primary group-hover:scale-110 transition-transform" />
-            </button>
-            <div className="w-px h-5 bg-border/60 shrink-0" />
-            <button 
-              onClick={handlePrint} 
-              className="flex-1 h-full flex items-center justify-center rounded-r-full hover:bg-background/80 transition-all active:scale-90 group focus:outline-none"
-              title="Print PDF"
-            >
-              <Printer className="w-5 h-5 text-foreground group-hover:scale-110 transition-transform" />
-            </button>
           </div>
         </div>
       </div>
