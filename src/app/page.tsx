@@ -5,13 +5,7 @@ import { useOrder } from './lib/store';
 import { DesignList } from '@/components/scarf-app/design-list';
 import { OrderPanel } from '@/components/scarf-app/order-panel';
 import { CSVImport } from '@/components/scarf-app/csv-import';
-import { DraftsList } from '@/components/scarf-app/drafts-list';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { 
-  Trash2,
-  FileSpreadsheet
-} from 'lucide-react';
+import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { Toaster } from '@/components/ui/toaster';
 
 export default function ScarfOrderApp() {
@@ -20,15 +14,12 @@ export default function ScarfOrderApp() {
     addItem, 
     removeItem, 
     updateQuantity, 
-    drafts, 
-    loadDraft,
     clearOrder,
     DESIGNS,
     settings
   } = useOrder();
 
   const [isCsvOpen, setIsCsvOpen] = useState(false);
-  const [isDraftsOpen, setIsDraftsOpen] = useState(false);
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
@@ -40,18 +31,7 @@ export default function ScarfOrderApp() {
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Grey Exim LLP</span>
           </div>
         </div>
-
-        <div className="flex items-center gap-1 sm:gap-2">
-          <ThemeToggle />
-          <div className="h-4 w-px bg-border mx-2" />
-          <Button variant="ghost" size="icon" onClick={() => setIsCsvOpen(true)} className="rounded-full hover:bg-secondary">
-            <FileSpreadsheet className="w-4 h-4" />
-          </Button>
-          <div className="h-4 w-px bg-border mx-2" />
-          <Button variant="outline" size="sm" onClick={clearOrder} className="rounded-full text-destructive hover:bg-destructive/10 border-destructive/20 transition-colors">
-            <Trash2 className="w-4 h-4" /> <span className="hidden sm:inline ml-2">Reset</span>
-          </Button>
-        </div>
+        {/* Buttons have been moved to the FloatingDock for a cleaner UI */}
       </header>
 
       {/* Main Content Area - Offset by fixed header height */}
@@ -73,6 +53,12 @@ export default function ScarfOrderApp() {
         </section>
       </main>
 
+      {/* Floating Action Dock - Apple-inspired minimal control */}
+      <FloatingDock 
+        onOpenCsv={() => setIsCsvOpen(true)}
+        onReset={clearOrder}
+      />
+
       {/* Dialogs */}
       <CSVImport 
         open={isCsvOpen} 
@@ -87,13 +73,6 @@ export default function ScarfOrderApp() {
         }}
       />
       
-      <DraftsList 
-        open={isDraftsOpen} 
-        onClose={() => setIsDraftsOpen(false)} 
-        drafts={drafts} 
-        onLoad={loadDraft} 
-      />
-
       <Toaster />
     </div>
   );
