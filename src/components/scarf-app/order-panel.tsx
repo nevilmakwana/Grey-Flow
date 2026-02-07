@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Order, Design, AppSettings } from '@/app/lib/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,44 @@ interface OrderPanelProps {
   onUpdateQty: (designId: string, sizeId: string, qty: number) => void;
   onRemove: (designId: string) => void;
   settings: AppSettings;
+}
+
+/**
+ * Live Clock Component
+ * Displays the current date and time with a blinking colon.
+ */
+function LiveClock() {
+  const [time, setTime] = useState<Date | null>(null);
+  const [blink, setBlink] = useState(true);
+
+  useEffect(() => {
+    setTime(new Date());
+    const interval = setInterval(() => {
+      setTime(new Date());
+      setBlink((b) => !b);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!time) return <span className="opacity-0">Loading Clock...</span>;
+
+  const day = time.getDate().toString().padStart(2, '0');
+  const month = time.toLocaleString('en-GB', { month: 'short' });
+  const year = time.getFullYear();
+  
+  let hours = time.getHours();
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const minutes = time.getMinutes().toString().padStart(2, '0');
+
+  return (
+    <span className="inline-flex items-center">
+      {day} {month} {year} | {hours}
+      <span className={`${blink ? 'opacity-100' : 'opacity-20'} transition-opacity duration-100 mx-0.5`}>:</span>
+      {minutes} {ampm}
+    </span>
+  );
 }
 
 export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: OrderPanelProps) {
@@ -67,7 +105,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
   const generateWhatsAppMessage = () => {
     let msg = `*Order Request - ${settings.company_name}*\n`;
     msg += `Order ID: ${order.id}\n`;
-    msg += `Date: ${formatFullDate(order.created_at)}\n\n`;
+    msg += `Date: ${formatFullDate(new Date().toISOString())}\n\n`;
 
     order.items.forEach(item => {
       const design = getDesignById(item.design_id);
@@ -114,13 +152,12 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
     );
   }
 
-  const formattedDate = formatFullDate(order.created_at);
-
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto print-container">
+      {/* Printable Header */}
       <div className="hidden print:flex justify-between items-end mb-8 border-b-2 border-foreground pb-6">
         <div>
-          <h1 className="text-4xl font-black tracking-tight">{settings.company_name}</h1>
+          <h1 className="text-4xl font-black tracking-tight text-foreground">{settings.company_name}</h1>
           <p className="text-muted-foreground font-bold uppercase tracking-[0.2em] text-[9px] mt-1">Professional Textile Order Draft</p>
         </div>
         <div className="text-right">
@@ -128,16 +165,19 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
             <p className="text-[9px] font-bold uppercase tracking-widest opacity-70">Order ID</p>
             <p className="font-mono text-base font-bold">{order.id}</p>
           </div>
-          <p className="text-xs font-semibold text-muted-foreground">{formattedDate}</p>
+          <p className="text-xs font-semibold text-muted-foreground">{formatFullDate(order.created_at)}</p>
         </div>
       </div>
 
+      {/* Screen Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 no-print gap-4">
         <div>
-          <h2 className="text-2xl font-black tracking-tight">Order Summary</h2>
+          <h2 className="text-2xl font-black tracking-tight text-foreground">Order Summary</h2>
           <div className="flex flex-col mt-1">
             <span className="font-mono text-xs font-bold text-primary">{order.id}</span>
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">{formattedDate}</span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">
+              <LiveClock />
+            </span>
           </div>
         </div>
         <div className="flex gap-2 w-full sm:w-auto">
@@ -156,10 +196,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
           if (!design) return null;
 
           return (
-            <Card key={item.design_id} className="overflow-hidden border-border shadow-sm print:shadow-none print:border-border rounded-2xl print:rounded-xl print-avoid-break transition-all hover:shadow-md">
+            <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm print:shadow-none print:border-border rounded-2xl print:rounded-xl print-avoid-break transition-all hover:shadow-md">
               <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row">
-                  <div className="w-full md:w-32 bg-muted border-r border-border relative aspect-square md:aspect-auto">
+                <div className="flex flex-col md:flex-row h-auto">
+                  <div className="w-full md:w-24 bg-muted border-r border-border relative aspect-square md:aspect-auto">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
@@ -168,10 +208,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                       data-ai-hint="textile pattern"
                     />
                   </div>
-                  <div className="flex-1 p-3 md:p-4">
+                  <div className="flex-1 p-3">
                     <div className="flex justify-between items-start mb-2">
                       <div>
-                        <h3 className="text-lg font-black font-mono tracking-tighter">{design.design_id}</h3>
+                        <h3 className="text-base font-black font-mono tracking-tighter text-foreground">{design.design_id}</h3>
                         <div className="h-1 w-8 bg-primary mt-1 rounded-full" />
                       </div>
                       <Button 
@@ -198,8 +238,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                           
                           return (
                             <TableRow key={size.size_id} className="hover:bg-transparent border-border/50">
-                              <TableCell className="font-bold py-2">{size.label}</TableCell>
-                              <TableCell className="text-center py-2">
+                              <TableCell className="font-bold py-1.5 text-foreground">{size.label}</TableCell>
+                              <TableCell className="text-center py-1.5">
                                 <div className="flex justify-center no-print">
                                   <Input 
                                     type="number" 
@@ -210,10 +250,10 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
                                       const val = parseInt(e.target.value);
                                       onUpdateQty(item.design_id, size.size_id, isNaN(val) ? 0 : val);
                                     }}
-                                    className="w-20 text-center h-8 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                    className="w-20 text-center h-8 rounded-xl border-2 focus:ring-primary focus:border-primary font-bold text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-background text-foreground"
                                   />
                                 </div>
-                                <span className="hidden print:inline font-black text-lg">{qty}</span>
+                                <span className="hidden print:inline font-black text-lg text-foreground">{qty}</span>
                               </TableCell>
                             </TableRow>
                           );
@@ -228,39 +268,41 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         })}
       </div>
 
-      <div className="mt-8 p-6 md:p-8 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-4 print:mt-10">
+      {/* Summary Section */}
+      <div className="mt-8 p-6 bg-muted/50 rounded-[1.5rem] border-2 border-border print:bg-background print:border-foreground print:border-4 print:mt-10">
         <div className="flex items-center gap-2 mb-6">
           <div className="p-2 bg-foreground text-background rounded-xl">
             <Hash className="w-4 h-4" />
           </div>
-          <h3 className="text-lg font-black uppercase tracking-tight">Consolidated Summary</h3>
+          <h3 className="text-lg font-black uppercase tracking-tight text-foreground">Order Totals</h3>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex flex-col p-4 bg-background rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
             <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-1.5">Small Scarf Total</span>
-            <span className="text-2xl font-black">{totals.small}</span>
-            <span className="text-[10px] text-muted-foreground font-bold">50x50 cm</span>
+            <span className="text-2xl font-black text-foreground">{totals.small}</span>
+            <span className="text-[10px] text-muted-foreground font-bold uppercase">50x50 CM</span>
           </div>
-          <div className="flex flex-col p-4 bg-background rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
+          <div className="flex flex-col p-4 bg-card rounded-2xl border-2 border-border shadow-sm print:shadow-none transition-all hover:border-primary/20">
             <span className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.2em] mb-1.5">Large Scarf Total</span>
-            <span className="text-2xl font-black">{totals.large}</span>
-            <span className="text-[10px] text-muted-foreground font-bold">90x90 cm</span>
+            <span className="text-2xl font-black text-foreground">{totals.large}</span>
+            <span className="text-[10px] text-muted-foreground font-bold uppercase">90x90 CM</span>
           </div>
           <div className="flex flex-col p-4 bg-foreground text-background rounded-2xl shadow-xl shadow-foreground/5 print:bg-foreground print:shadow-none">
             <span className="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-1.5">Net Grand Total</span>
             <span className="text-2xl font-black">{grandTotal}</span>
-            <span className="text-[10px] opacity-60 font-bold">Total Units Requested</span>
+            <span className="text-[10px] opacity-60 font-bold uppercase">Units Requested</span>
           </div>
         </div>
       </div>
 
+      {/* Printable Footer */}
       <div className="hidden print:block text-center pt-8 mt-8 border-t-2 border-border">
-        <p className="font-bold text-base">Thank you for your business.</p>
+        <p className="font-bold text-base text-foreground">Thank you for your business.</p>
         <p className="text-muted-foreground text-[9px] mt-0.5 uppercase tracking-widest font-bold">This is an official order draft generated via Scarf Order Pro</p>
         <div className="mt-4 flex items-center justify-center gap-1.5">
           <div className="w-6 h-6 bg-foreground rounded-md" />
-          <span className="font-black text-xs tracking-tighter">{settings.company_name}</span>
+          <span className="font-black text-xs tracking-tighter text-foreground">{settings.company_name}</span>
         </div>
       </div>
     </div>
