@@ -202,7 +202,7 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
               <CardContent className="p-0">
                 <div className="flex flex-col md:flex-row h-auto">
                   {/* Fixed Aspect Ratio Container (1:1 Square) */}
-                  <div className="w-full md:w-32 bg-muted border-r border-border relative aspect-square shrink-0">
+                  <div className="w-full md:w-40 bg-muted border-r border-border relative aspect-square shrink-0">
                     <Image 
                       src={design.image_url} 
                       alt={design.design_id} 
