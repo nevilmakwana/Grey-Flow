@@ -136,8 +136,8 @@ export function OrderPanel({ order, designs, onUpdateQty, onRemove, settings }: 
         </div>
       </div>
 
-      {/* PRODUCT SECTION */}
-      <div className="space-y-6 p-4 md:p-8 print:p-0 print:space-y-10">
+      {/* PRODUCT SECTION - Added pb-32 to allow scrolling above the floating dock */}
+      <div className="space-y-6 p-4 md:p-8 print:p-0 print:space-y-10 pb-32">
         {order.items.map((item) => {
           const design = getDesignById(item.design_id);
           if (!design) return null;
