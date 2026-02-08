@@ -129,14 +129,16 @@ export function OrderPanel({
         <div className="flex gap-4 w-full max-w-md">
           <Button 
             onClick={() => onAddGroup('Satin')} 
-            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-primary/10 text-muted-foreground hover:text-primary border-2 border-border hover:border-primary/20 transition-all"
+            variant="muted"
+            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-primary/10 text-muted-foreground hover:text-primary border-2 border-transparent hover:border-primary/20 transition-all"
           >
             <span className="text-xl font-black">Satin</span>
             <span className="text-[10px] uppercase tracking-widest opacity-70">Premium Fabric</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
-            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-secondary text-muted-foreground hover:text-foreground border-2 border-border transition-all"
+            variant="muted"
+            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-secondary text-muted-foreground hover:text-foreground border-2 border-transparent transition-all"
           >
             <span className="text-xl font-black">Cotton</span>
             <span className="text-[10px] uppercase tracking-widest opacity-70">Casual Comfort</span>
@@ -246,12 +248,20 @@ export function OrderPanel({
                         isHighlighted && "animate-highlight"
                       )}
                     >
-                      <CardContent className="p-3 sm:p-0">
-                        <div className="flex flex-row items-center sm:items-stretch gap-4 sm:gap-0">
-                          <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">
-                            <Image src={design.image_url} alt={design.design_id} fill className="object-cover" sizes="(max-width: 640px) 80px, 192px" />
+                      <CardContent className="p-0">
+                        <div className="flex flex-row items-stretch">
+                          {/* Enforced 1:1 Aspect Ratio Image */}
+                          <div className="w-24 h-24 sm:w-48 sm:h-48 relative shrink-0 overflow-hidden bg-muted border-r aspect-square">
+                            <Image 
+                              src={design.image_url} 
+                              alt={design.design_id} 
+                              fill 
+                              className="object-cover" 
+                              sizes="(max-width: 640px) 96px, 192px" 
+                            />
                           </div>
-                          <div className="flex-1 min-w-0 flex flex-col justify-center sm:p-6">
+                          
+                          <div className="flex-1 min-w-0 flex flex-col justify-center px-4 py-3 sm:p-6">
                             <div className="flex justify-between items-center mb-2 sm:mb-4">
                               <h3 className="text-base sm:text-xl font-black tracking-tighter truncate">{design.design_id}</h3>
                               <Button variant="ghost" size="icon" onClick={() => onRemoveItem(group.id, item.design_id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8">
@@ -259,9 +269,15 @@ export function OrderPanel({
                               </Button>
                             </div>
                             
+                            {/* Desktop Input Table */}
                             <div className="hidden sm:block rounded-2xl overflow-hidden border border-border bg-background/50">
                               <Table>
-                                <TableHeader className="bg-muted/50"><TableRow><TableHead className="font-bold uppercase tracking-widest text-[10px] h-8">Size Specs</TableHead><TableHead className="text-center font-bold uppercase tracking-widest text-[10px] h-8">Quantity</TableHead></TableRow></TableHeader>
+                                <TableHeader className="bg-muted/50">
+                                  <TableRow>
+                                    <TableHead className="font-bold uppercase tracking-widest text-[10px] h-8">Size Specs</TableHead>
+                                    <TableHead className="text-center font-bold uppercase tracking-widest text-[10px] h-8">Quantity</TableHead>
+                                  </TableRow>
+                                </TableHeader>
                                 <TableBody>
                                   {design.sizes.map((size) => {
                                     const orderSize = item.sizes.find(s => s.size_id === size.size_id);
@@ -270,7 +286,15 @@ export function OrderPanel({
                                       <TableRow key={size.size_id} className="border-border">
                                         <TableCell className="font-bold py-3 text-sm">{size.label}</TableCell>
                                         <TableCell className="text-center py-3">
-                                          <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-base sm:text-sm" />
+                                          <Input 
+                                            type="number" 
+                                            min="0" 
+                                            inputMode="numeric" 
+                                            value={qty || ""} 
+                                            onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
+                                            onKeyDown={handleKeyDown} 
+                                            className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-base" 
+                                          />
                                         </TableCell>
                                       </TableRow>
                                     );
@@ -279,14 +303,25 @@ export function OrderPanel({
                               </Table>
                             </div>
 
-                            <div className="flex sm:hidden gap-2">
+                            {/* Mobile Input Grid */}
+                            <div className="flex sm:hidden gap-3">
                               {design.sizes.map((size) => {
                                 const orderSize = item.sizes.find(s => s.size_id === size.size_id);
                                 const qty = orderSize?.quantity || 0;
                                 return (
                                   <div key={size.size_id} className="flex-1 flex flex-col">
-                                    <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">{size.label.includes('Small') ? 'Small' : 'Large'}</span>
-                                    <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-base" />
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">
+                                      {size.label.includes('Small') ? 'Small' : 'Large'}
+                                    </span>
+                                    <Input 
+                                      type="number" 
+                                      min="0" 
+                                      inputMode="numeric" 
+                                      value={qty || ""} 
+                                      onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
+                                      onKeyDown={handleKeyDown} 
+                                      className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-base" 
+                                    />
                                   </div>
                                 );
                               })}
