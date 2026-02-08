@@ -5,7 +5,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Tag, Info } from 'lucide-react';
+import { Plus, Trash2, Tag, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SearchableDesignSelect } from './searchable-design-select';
 
@@ -119,27 +119,28 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Worker Name</Label>
+          <Label className="text-[10px] font-black uppercase tracking-wider text-muted-foreground ml-1">Worker Name</Label>
           <div className="relative">
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-border bg-muted/20 px-4 py-2 text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer"
+              className="flex h-11 w-full rounded-lg border border-border bg-background px-4 py-2 text-sm font-bold ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer pr-10"
             >
               <option value="">Select Worker</option>
               <option value="Nayna">Nayna</option>
               <option value="Ramila">Ramila</option>
               <option value="Vilas">Vilas</option>
             </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Issue Date</Label>
+          <Label className="text-[10px] font-black uppercase tracking-wider text-muted-foreground ml-1">Issue Date</Label>
           <Input 
             type="date" 
             value={date} 
             onChange={e => setDate(e.target.value)}
-            className="rounded-lg h-11 bg-muted/20 border-border focus-visible:ring-primary/20 font-medium px-4"
+            className="rounded-lg h-11 bg-background border-border focus-visible:ring-primary/20 font-bold px-4"
           />
         </div>
       </div>
@@ -147,7 +148,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Small Scarf Section */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Small (50×50 cm)</h3>
           </div>
@@ -161,7 +162,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Design..."
+                      placeholder="Select Small Design..."
                     />
                   </div>
                   <Input 
@@ -185,7 +186,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
         {/* Large Scarf Section */}
         <div className="space-y-3">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Large (90×90 cm)</h3>
           </div>
@@ -199,7 +200,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Design..."
+                      placeholder="Select Large Design..."
                     />
                   </div>
                   <Input 
