@@ -163,7 +163,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Small SKU..."
+                      placeholder="Select Finished Design..."
                     />
                   </div>
                   <Input 
@@ -201,7 +201,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Large SKU..."
+                      placeholder="Select Finished Design..."
                     />
                   </div>
                   <Input 
