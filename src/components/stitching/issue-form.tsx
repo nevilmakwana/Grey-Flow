@@ -50,10 +50,15 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
   };
 
   const generateMessage = (entry: StitchingEntry) => {
-    let msg = `📅 Date: ${entry.date}\n`;
+    // Format date to DD-MM-YYYY for Indian standard
+    const [y, m, d] = entry.date.split('-');
+    const formattedDate = `${d}-${m}-${y}`;
+
+    let msg = `📅 Date: ${formattedDate}\n`;
     msg += `🧣 *Issued for stitching today*\n\n`;
     const smalls = entry.items.filter(i => i.size_id === 'S-SML' && i.quantity > 0);
     const larges = entry.items.filter(i => i.size_id === 'S-LGE' && i.quantity > 0);
+    
     if (smalls.length > 0) {
       msg += `*Small (50×50 cm)*\n`;
       smalls.forEach(i => msg += `• ${i.design_id}: ${i.quantity} pcs\n`);
@@ -62,6 +67,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       msg += `\n*Large (90×90 cm)*\n`;
       larges.forEach(i => msg += `• ${i.design_id}: ${i.quantity} pcs\n`);
     }
+    
     const totals = calculateTotals();
     msg += `\nTotal S: ${totals.small} pcs | L: ${totals.large} pcs\n`;
     msg += `\n*Satin Label (Issued Today):*\n`;
@@ -131,7 +137,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Small Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />
@@ -169,7 +174,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
           </div>
         </div>
 
-        {/* Large Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />

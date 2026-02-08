@@ -34,7 +34,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     return Array.from(new Set([...defaults, ...existing]));
   }, [allEntries]);
 
-  // Calculate current label balance based on past ledger history
   const historicalBalance = useMemo(() => {
     if (!workerName) return { small: 0, large: 0 };
     
@@ -87,7 +86,11 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   };
 
   const generateMessage = (entry: StitchingEntry) => {
-    let msg = `📅 Date: ${entry.date}\n`;
+    // Format date to DD-MM-YYYY for Indian standard
+    const [y, m, d] = entry.date.split('-');
+    const formattedDate = `${d}-${m}-${y}`;
+
+    let msg = `📅 Date: ${formattedDate}\n`;
     msg += `✅ *Ready scarves received today*\n\n`;
     const items = entry.items.filter(i => i.quantity > 0);
     items.forEach(i => msg += `• ${i.design_id} (${i.size_id === 'S-SML' ? 'S' : 'L'}): ${i.quantity} pcs\n`);
@@ -153,7 +156,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Received Small Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-green-600 rounded-full" />
@@ -191,7 +193,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
           </div>
         </div>
 
-        {/* Received Large Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-green-600 rounded-full" />
@@ -262,9 +263,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
               </div>
             </div>
           </div>
-          <p className="mt-4 text-[9px] text-muted-foreground font-medium text-center">
-            * This represents the labels the worker should have after this receipt.
-          </p>
         </div>
       )}
 
