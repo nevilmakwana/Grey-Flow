@@ -79,17 +79,23 @@ export default function ScarfOrderApp() {
       if (group.items.length === 0) return;
       msg += `*Fabric: ${group.fabric_id}*\n`;
       
-      group.items.forEach(item => {
+      // Sort items by design_id ascending
+      const sortedItems = [...group.items].sort((a, b) => 
+        a.design_id.localeCompare(b.design_id)
+      );
+
+      sortedItems.forEach(item => {
         const design = DESIGNS.find(d => d.design_id === item.design_id);
         if (!design) return;
         
         let hasQty = false;
-        let itemLine = `• SKU: ${design.design_id}\n`;
+        let itemLine = `▫️ *${design.design_id}*\n`;
         
         item.sizes.forEach(s => {
           if (s.quantity > 0) {
-            const sizeDef = design.sizes.find(sd => sd.size_id === s.size_id);
-            itemLine += `  - ${sizeDef?.label}: ${s.quantity}\n`;
+            // Clean labels for WhatsApp (e.g., "Small (50x50 cm)" -> "Small")
+            const cleanLabel = s.size_id === 'S-SML' ? 'Small' : 'Large';
+            itemLine += `  • ${cleanLabel}: ${s.quantity}\n`;
             hasQty = true;
             if (s.size_id === 'S-SML') totalSmall += s.quantity;
             if (s.size_id === 'S-LGE') totalLarge += s.quantity;
