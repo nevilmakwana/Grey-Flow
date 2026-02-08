@@ -129,18 +129,16 @@ export function OrderPanel({
           <Button 
             onClick={() => onAddGroup('Satin')} 
             variant="outline"
-            className="flex-1 h-16 rounded-lg flex flex-col gap-0.5 bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-8 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
             <span className="text-lg font-bold">Satin</span>
-            <span className="text-[10px] font-medium text-muted-foreground">Premium Silk</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
             variant="outline"
-            className="flex-1 h-16 rounded-lg flex flex-col gap-0.5 bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-8 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
             <span className="text-lg font-bold">Cotton</span>
-            <span className="text-[10px] font-medium text-muted-foreground">Daily Comfort</span>
           </Button>
         </div>
       </div>
