@@ -305,25 +305,25 @@ export function OrderPanel({
           );
         })}
 
-        <div className="mt-16 p-8 bg-card rounded-xl border border-border stripe-shadow">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2 bg-primary/10 text-primary rounded-md">
-              <Hash className="w-5 h-5" />
+        <div className="mt-8 p-4 bg-card rounded-xl border border-border stripe-shadow">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="p-1.5 bg-primary/10 text-primary rounded-md">
+              <Hash className="w-4 h-4" />
             </div>
-            <h3 className="text-xl font-bold">Consolidated Summary</h3>
+            <h3 className="text-base font-bold">Consolidated Summary</h3>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 bg-muted/20 border border-border/50 rounded-lg">
-              <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest block mb-2">Small Total</span>
-              <span className="text-3xl font-bold">{totals.small}</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="p-3 bg-muted/20 border border-border/50 rounded-lg">
+              <span className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest block mb-1">Small Total</span>
+              <span className="text-xl font-bold">{totals.small}</span>
             </div>
-            <div className="p-6 bg-muted/20 border border-border/50 rounded-lg">
-              <span className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest block mb-2">Large Total</span>
-              <span className="text-3xl font-bold">{totals.large}</span>
+            <div className="p-3 bg-muted/20 border border-border/50 rounded-lg">
+              <span className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest block mb-1">Large Total</span>
+              <span className="text-xl font-bold">{totals.large}</span>
             </div>
-            <div className="p-6 bg-primary text-primary-foreground rounded-lg stripe-shadow">
-              <span className="text-[10px] font-bold uppercase opacity-80 tracking-widest block mb-2">Net Grand Total</span>
-              <span className="text-3xl font-bold">{grandTotal}</span>
+            <div className="p-3 bg-primary text-primary-foreground rounded-lg stripe-shadow">
+              <span className="text-[9px] font-bold uppercase opacity-80 tracking-widest block mb-1">Net Grand Total</span>
+              <span className="text-xl font-bold">{grandTotal}</span>
             </div>
           </div>
         </div>
