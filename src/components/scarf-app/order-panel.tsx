@@ -206,15 +206,6 @@ export function OrderPanel({
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    onClick={() => onAddDesignToGroup(group.id)}
-                    className="h-8 w-8 text-primary hover:bg-primary/10"
-                    title="Add Design"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
                     onClick={() => onRemoveGroup(group.id)}
                     className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/5"
                   >
