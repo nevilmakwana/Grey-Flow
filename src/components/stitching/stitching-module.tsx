@@ -6,9 +6,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IssueForm } from './issue-form';
 import { ReceiveForm } from './receive-form';
-import { WorkerLedger } from './worker-ledger';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Scissors, ArrowUpRight, ArrowDownLeft, BookOpen } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 interface StitchingModuleProps {
   designs: Design[];
@@ -40,15 +38,12 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 h-16 bg-card border-none rounded-[2rem] p-1.5 shadow-sm mb-12">
+          <TabsList className="grid w-full grid-cols-2 h-16 bg-card border-none rounded-[2rem] p-1.5 shadow-sm mb-12">
             <TabsTrigger value="issue" className="rounded-[1.5rem] data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-xl transition-all font-bold">
               <ArrowUpRight className="w-4 h-4 mr-2" /> Issue
             </TabsTrigger>
             <TabsTrigger value="receive" className="rounded-[1.5rem] data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all font-bold">
               <ArrowDownLeft className="w-4 h-4 mr-2" /> Receive
-            </TabsTrigger>
-            <TabsTrigger value="ledger" className="rounded-[1.5rem] data-[state=active]:bg-card data-[state=active]:text-primary data-[state=active]:ring-2 data-[state=active]:ring-primary transition-all font-bold">
-              <BookOpen className="w-4 h-4 mr-2" /> Ledger
             </TabsTrigger>
           </TabsList>
 
@@ -58,10 +53,6 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
 
           <TabsContent value="receive" className="animate-in fade-in slide-in-from-bottom-4">
             <ReceiveForm designs={designs} allEntries={entries} onSave={saveEntry} />
-          </TabsContent>
-
-          <TabsContent value="ledger" className="animate-in fade-in slide-in-from-bottom-4">
-            <WorkerLedger entries={entries} />
           </TabsContent>
         </Tabs>
       </div>
