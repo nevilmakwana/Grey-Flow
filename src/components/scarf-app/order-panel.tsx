@@ -292,10 +292,10 @@ export function OrderPanel({
                   );
                 })}
 
-                {/* Trailing Add Design Option */}
+                {/* Trailing Add Design Option - Only visible on small screens */}
                 <button 
                   onClick={() => onAddDesignToGroup(group.id)}
-                  className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg transition-all group h-24 sm:h-28 bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary no-print"
+                  className="md:hidden flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg transition-all group h-24 sm:h-28 bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary no-print"
                 >
                   <Plus className="w-5 h-5" />
                   <span className="text-sm font-bold">Add Design</span>
