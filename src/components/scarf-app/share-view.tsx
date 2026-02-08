@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -52,7 +51,7 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
           <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground">Print Order Request</span>
           <h1 className="text-5xl font-black tracking-tighter">Order Summary</h1>
           <div className="flex flex-col items-center gap-1">
-            <span className="font-mono text-xl font-bold text-primary">{order.id}</span>
+            <span className="text-xl font-bold text-primary">{order.id}</span>
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {formatFullDate(order.created_at)}</span>
               <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
@@ -81,7 +80,7 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
                             <Image src={design.image_url} alt={design.design_id} fill className="object-cover" sizes="(max-width: 640px) 100vw, 160px" />
                           </div>
                           <div className="flex-1 p-8 flex flex-col justify-center">
-                            <h3 className="text-2xl font-black font-mono tracking-tighter mb-4">{design.design_id}</h3>
+                            <h3 className="text-2xl font-black tracking-tighter mb-4">{design.design_id}</h3>
                             <div className="space-y-3">
                               {design.sizes.map((size) => {
                                 const orderSize = item.sizes.find(s => s.size_id === size.size_id);

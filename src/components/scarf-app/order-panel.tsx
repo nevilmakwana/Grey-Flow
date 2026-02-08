@@ -153,7 +153,7 @@ export function OrderPanel({
           <div>
             <h2 className="text-2xl md:text-3xl font-black tracking-tight">Order Request</h2>
             <div className="flex flex-col mt-1">
-              <span className="font-mono text-sm font-bold text-primary">{order.id}</span>
+              <span className="text-sm font-bold text-primary">{order.id}</span>
               <span className="text-[10px] uppercase tracking-wider mt-0.5"><LiveClock /></span>
             </div>
           </div>
@@ -264,7 +264,7 @@ export function OrderPanel({
                           </div>
                           <div className="flex-1 min-w-0 flex flex-col justify-center sm:p-6">
                             <div className="flex justify-between items-center mb-2 sm:mb-4">
-                              <h3 className="text-base sm:text-xl font-black font-mono tracking-tighter truncate">{design.design_id}</h3>
+                              <h3 className="text-base sm:text-xl font-black tracking-tighter truncate">{design.design_id}</h3>
                               <Button variant="ghost" size="icon" onClick={() => onRemoveItem(group.id, item.design_id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8">
                                 <Trash2 className="w-4 h-4" />
                               </Button>
