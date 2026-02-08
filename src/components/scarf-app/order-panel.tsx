@@ -261,8 +261,8 @@ export function OrderPanel({
                             />
                           </div>
                           
-                          <div className="flex-1 min-w-0 flex flex-col justify-center px-4 py-3 sm:p-6">
-                            <div className="flex justify-between items-center mb-2 sm:mb-4">
+                          <div className="flex-1 min-w-0 flex flex-col justify-center px-4 py-2 sm:p-6">
+                            <div className="flex justify-between items-center mb-1 sm:mb-4">
                               <h3 className="text-base sm:text-xl font-black tracking-tighter truncate">{design.design_id}</h3>
                               <Button variant="ghost" size="icon" onClick={() => onRemoveItem(group.id, item.design_id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8">
                                 <Trash2 className="w-4 h-4" />
@@ -310,7 +310,7 @@ export function OrderPanel({
                                 const qty = orderSize?.quantity || 0;
                                 return (
                                   <div key={size.size_id} className="flex-1 flex flex-col">
-                                    <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase truncate">
                                       {size.label.includes('Small') ? 'Small' : 'Large'}
                                     </span>
                                     <Input 
@@ -320,7 +320,7 @@ export function OrderPanel({
                                       value={qty || ""} 
                                       onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
                                       onKeyDown={handleKeyDown} 
-                                      className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-base" 
+                                      className="w-full text-center h-9 rounded-lg border-2 font-bold bg-background text-base" 
                                     />
                                   </div>
                                 );
