@@ -146,7 +146,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Received Small Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">

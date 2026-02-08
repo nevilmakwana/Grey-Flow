@@ -130,7 +130,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Small Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
