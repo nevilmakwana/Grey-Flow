@@ -10,7 +10,7 @@ import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { StitchingModule } from '@/components/stitching/stitching-module';
 import { Toaster } from '@/components/ui/toaster';
-import { ShoppingBag, Scissors, Printer, Menu, X } from 'lucide-react';
+import { ShoppingBag, Scissors, Menu, X, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -258,25 +258,25 @@ export default function ScarfOrderApp() {
                   <Menu className="w-6 h-6" />
                 </button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-full sm:w-[350px] p-0 border-none bg-background/95 backdrop-blur-xl">
-                <SheetHeader className="p-6 border-b text-left">
-                  {/* Removed SheetTitle as requested */}
-                </SheetHeader>
-                <div className="flex flex-col p-4 gap-3">
+              <SheetContent side="right" className="w-[280px] p-0 border-none bg-background/95 backdrop-blur-xl flex flex-col">
+                <div className="flex-1 flex flex-col p-6 pt-20 gap-2">
                   <button 
                     onClick={() => {
                       setActiveModule('orders');
                       setIsMobileMenuOpen(false);
                     }}
                     className={cn(
-                      "flex items-center gap-4 p-5 rounded-3xl text-xl font-bold transition-all border",
+                      "flex items-center justify-between p-4 rounded-2xl text-sm font-semibold transition-all group",
                       activeModule === 'orders' 
-                        ? "bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20" 
-                        : "bg-muted/30 border-transparent hover:bg-muted/50"
+                        ? "bg-primary/10 text-primary shadow-sm" 
+                        : "bg-transparent text-muted-foreground hover:bg-muted/50"
                     )}
                   >
-                    <ShoppingBag className="w-6 h-6" />
-                    Print Order
+                    <div className="flex items-center gap-3">
+                      <ShoppingBag className="w-5 h-5" />
+                      Print Order
+                    </div>
+                    <ChevronRight className={cn("w-4 h-4 transition-transform", activeModule === 'orders' && "translate-x-1")} />
                   </button>
                   <button 
                     onClick={() => {
@@ -284,18 +284,21 @@ export default function ScarfOrderApp() {
                       setIsMobileMenuOpen(false);
                     }}
                     className={cn(
-                      "flex items-center gap-4 p-5 rounded-3xl text-xl font-bold transition-all border",
+                      "flex items-center justify-between p-4 rounded-2xl text-sm font-semibold transition-all group",
                       activeModule === 'stitching' 
-                        ? "bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20" 
-                        : "bg-muted/30 border-transparent hover:bg-muted/50"
+                        ? "bg-primary/10 text-primary shadow-sm" 
+                        : "bg-transparent text-muted-foreground hover:bg-muted/50"
                     )}
                   >
-                    <Scissors className="w-6 h-6" />
-                    Stitching
+                    <div className="flex items-center gap-3">
+                      <Scissors className="w-5 h-5" />
+                      Stitching
+                    </div>
+                    <ChevronRight className={cn("w-4 h-4 transition-transform", activeModule === 'stitching' && "translate-x-1")} />
                   </button>
                 </div>
-                <div className="absolute bottom-10 left-0 right-0 text-center">
-                  <p className="text-[10px] text-muted-foreground font-bold tracking-[0.3em] uppercase opacity-50">Professional Textile Workspace</p>
+                <div className="p-8 border-t bg-muted/5 mt-auto">
+                  <p className="text-[10px] text-muted-foreground font-bold tracking-[0.2em] uppercase opacity-40 text-center">GreyFlow Workspace</p>
                 </div>
               </SheetContent>
             </Sheet>
