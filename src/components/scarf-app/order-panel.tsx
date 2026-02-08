@@ -120,14 +120,14 @@ export function OrderPanel({
         <div className="flex gap-4 w-full max-w-md">
           <Button 
             onClick={() => onAddGroup('Satin')} 
-            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-primary/10 hover:bg-primary/20 text-primary border-2 border-primary/20 transition-all"
+            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-primary/10 text-muted-foreground hover:text-primary border-2 border-border hover:border-primary/20 transition-all"
           >
             <span className="text-xl font-black">Satin</span>
             <span className="text-[10px] uppercase tracking-widest opacity-70">Premium Fabric</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
-            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-secondary/80 hover:bg-secondary text-foreground border-2 border-border transition-all"
+            className="flex-1 h-24 rounded-3xl flex flex-col gap-2 bg-muted/40 hover:bg-secondary text-muted-foreground hover:text-foreground border-2 border-border transition-all"
           >
             <span className="text-xl font-black">Cotton</span>
             <span className="text-[10px] uppercase tracking-widest opacity-70">Casual Comfort</span>
