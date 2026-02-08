@@ -138,28 +138,28 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label className="text-[10px] font-black uppercase tracking-wider text-muted-foreground ml-1">Worker Name</Label>
-          <div className="relative">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Worker Selection</Label>
+          <div className="relative group">
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-border bg-background px-4 py-2 text-sm font-bold ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer pr-10"
+              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-bold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
             >
               <option value="">Select Worker</option>
               {workerNames.map(name => <option key={name} value={name}>{name}</option>)}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
           </div>
         </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px] font-black uppercase tracking-wider text-muted-foreground ml-1">Receipt Date</Label>
+        <div className="space-y-2">
+          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Receipt Date</Label>
           <Input 
             type="date" 
             value={date} 
             onChange={e => setDate(e.target.value)}
-            className="rounded-lg h-11 bg-background border-border focus-visible:ring-primary/20 font-bold px-4"
+            className="rounded-xl h-12 bg-card border-border shadow-sm focus-visible:ring-primary/20 font-bold px-4 transition-all hover:border-primary/50"
           />
         </div>
       </div>
@@ -168,7 +168,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         {/* Received Small Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
-            <div className="w-1 h-4 bg-green-600 rounded-full" />
+            <div className="w-1.5 h-4 bg-green-600 rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Small (50×50)</h3>
           </div>
           <div className="space-y-3">
@@ -206,7 +206,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         {/* Received Large Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
-            <div className="w-1 h-4 bg-green-600 rounded-full" />
+            <div className="w-1.5 h-4 bg-green-600 rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Large (90×90)</h3>
           </div>
           <div className="space-y-3">
