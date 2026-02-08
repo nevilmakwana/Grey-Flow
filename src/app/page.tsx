@@ -79,7 +79,6 @@ export default function ScarfOrderApp() {
       if (group.items.length === 0) return;
       msg += `*Fabric: ${group.fabric_id}*\n`;
       
-      // Sort items by design_id ascending
       const sortedItems = [...group.items].sort((a, b) => 
         a.design_id.localeCompare(b.design_id)
       );
@@ -93,7 +92,6 @@ export default function ScarfOrderApp() {
         
         item.sizes.forEach(s => {
           if (s.quantity > 0) {
-            // Clean labels for WhatsApp (e.g., "Small (50x50 cm)" -> "Small")
             const cleanLabel = s.size_id === 'S-SML' ? 'Small' : 'Large';
             itemLine += `  • ${cleanLabel}: ${s.quantity}\n`;
             hasQty = true;
@@ -211,7 +209,7 @@ export default function ScarfOrderApp() {
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
         <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
       </header>
 
@@ -226,7 +224,7 @@ export default function ScarfOrderApp() {
           </aside>
         )}
 
-        <section className="flex-1 overflow-y-auto bg-background">
+        <section className="flex-1 overflow-y-auto bg-background/50">
           <OrderPanel 
             order={currentOrder} 
             designs={DESIGNS} 
@@ -248,7 +246,7 @@ export default function ScarfOrderApp() {
       {isMobile && (
         <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
           <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
-            <SheetHeader className="p-4 border-b">
+            <SheetHeader className="p-4 border-b bg-background">
               <SheetTitle className="text-left font-black flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5" />
                 Select Design
