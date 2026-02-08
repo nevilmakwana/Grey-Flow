@@ -221,17 +221,6 @@ export function OrderPanel({
                 </div>
                 <div className="flex items-center gap-2">
                   <Button 
-                    variant={isActive ? "default" : "ghost"} 
-                    size="sm" 
-                    onClick={() => onAddDesignToGroup(group.id)}
-                    className={cn(
-                      "rounded-xl font-bold text-xs transition-all",
-                      isActive ? "bg-primary shadow-md" : "hover:bg-primary/10 text-primary"
-                    )}
-                  >
-                    <PlusCircle className="w-4 h-4 mr-2" /> Add Design
-                  </Button>
-                  <Button 
                     variant="ghost" 
                     size="icon" 
                     onClick={() => onRemoveGroup(group.id)}
