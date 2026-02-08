@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,10 +8,12 @@ import { OrderPanel } from '@/components/scarf-app/order-panel';
 import { CSVImport } from '@/components/scarf-app/csv-import';
 import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { ShareView } from '@/components/scarf-app/share-view';
+import { StitchingModule } from '@/components/stitching/stitching-module';
 import { Toaster } from '@/components/ui/toaster';
-import { ShoppingBag } from 'lucide-react';
+import { ShoppingBag, Scissors, Printer } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
@@ -33,6 +36,7 @@ export default function ScarfOrderApp() {
 
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const [activeModule, setActiveModule] = useState<'orders' | 'stitching'>('orders');
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -214,70 +218,111 @@ export default function ScarfOrderApp() {
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
       <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
-        <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
+        <div className="flex-1">
+          <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
+        </div>
+
+        <nav className="flex items-center gap-8">
+          <button 
+            onClick={() => setActiveModule('orders')}
+            className={cn(
+              "text-sm font-medium transition-all relative py-1",
+              activeModule === 'orders' ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Print Order
+            {activeModule === 'orders' && <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />}
+          </button>
+          <button 
+            onClick={() => setActiveModule('stitching')}
+            className={cn(
+              "text-sm font-medium transition-all relative py-1",
+              activeModule === 'stitching' ? "text-primary" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Stitching
+            {activeModule === 'stitching' && <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />}
+          </button>
+        </nav>
+
+        <div className="flex-1 flex justify-end">
+          {activeModule === 'orders' && !isMobile && (
+             <button onClick={handlePrint} className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-muted text-foreground transition-colors">
+               <Printer className="h-5 w-5" />
+             </button>
+          )}
+        </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden pt-16">
-        {!isMobile && (
-          <aside className="w-64 border-r bg-muted/20 flex flex-col no-print shrink-0">
-            <DesignList 
-              designs={DESIGNS} 
-              onSelect={handleSelectDesign} 
-              selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
-            />
-          </aside>
-        )}
+        {activeModule === 'orders' ? (
+          <>
+            {!isMobile && (
+              <aside className="w-64 border-r bg-muted/20 flex flex-col no-print shrink-0">
+                <DesignList 
+                  designs={DESIGNS} 
+                  onSelect={handleSelectDesign} 
+                  selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
+                />
+              </aside>
+            )}
 
-        <section className="flex-1 overflow-y-auto bg-background/50">
-          <OrderPanel 
-            order={currentOrder} 
-            designs={DESIGNS} 
-            highlightedDesignId={highlightedDesignId}
-            activeGroupId={activeGroupId}
-            onUpdateQty={updateQuantity} 
-            onRemoveItem={removeItemFromGroup}
-            onAddGroup={handleAddGroupAndActivate}
-            onRemoveGroup={(id) => {
-              removeFabricGroup(id);
-              if (activeGroupId === id) setActiveGroupId(null);
-            }}
-            onAddDesignToGroup={handleOpenSearchForGroup}
-            settings={settings}
-          />
-        </section>
-      </main>
-
-      {isMobile && (
-        <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-          <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
-            <SheetHeader className="p-4 border-b bg-background">
-              <SheetTitle className="text-left font-black flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5" />
-                Select Design
-              </SheetTitle>
-            </SheetHeader>
-            <div className="flex-1 overflow-hidden">
-              <DesignList 
+            <section className="flex-1 overflow-y-auto bg-background/50">
+              <OrderPanel 
+                order={currentOrder} 
                 designs={DESIGNS} 
-                onSelect={handleSelectDesign} 
-                selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
+                highlightedDesignId={highlightedDesignId}
+                activeGroupId={activeGroupId}
+                onUpdateQty={updateQuantity} 
+                onRemoveItem={removeItemFromGroup}
+                onAddGroup={handleAddGroupAndActivate}
+                onRemoveGroup={(id) => {
+                  removeFabricGroup(id);
+                  if (activeGroupId === id) setActiveGroupId(null);
+                }}
+                onAddDesignToGroup={handleOpenSearchForGroup}
+                settings={settings}
               />
-            </div>
-          </SheetContent>
-        </Sheet>
-      )}
+            </section>
 
-      <FloatingDock 
-        onReset={() => {
-          clearOrder();
-          setActiveGroupId(null);
-        }}
-        onSearch={() => setIsSearchOpen(true)}
-        onWhatsApp={shareToWhatsApp}
-        onShare={handleNativeShare}
-        onPrint={handlePrint}
-        hasItems={hasItems}
-      />
+            {isMobile && (
+              <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+                <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
+                  <SheetHeader className="p-4 border-b bg-background">
+                    <SheetTitle className="text-left font-black flex items-center gap-2">
+                      <ShoppingBag className="w-5 h-5" />
+                      Select Design
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="flex-1 overflow-hidden">
+                    <DesignList 
+                      designs={DESIGNS} 
+                      onSelect={handleSelectDesign} 
+                      selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+
+            <FloatingDock 
+              onReset={() => {
+                clearOrder();
+                setActiveGroupId(null);
+              }}
+              onSearch={() => setIsSearchOpen(true)}
+              onWhatsApp={shareToWhatsApp}
+              onShare={handleNativeShare}
+              onPrint={handlePrint}
+              hasItems={hasItems}
+            />
+          </>
+        ) : (
+          <section className="flex-1 overflow-y-auto bg-background/50">
+            <StitchingModule designs={DESIGNS} />
+          </section>
+        )}
+      </main>
 
       <CSVImport 
         open={isCsvOpen} 

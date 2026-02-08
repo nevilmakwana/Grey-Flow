@@ -45,3 +45,19 @@ export interface AppSettings {
   currency: string;
   tax_percent: number;
 }
+
+export interface StitchingEntry {
+  id: string;
+  type: 'issue' | 'receive';
+  date: string;
+  workerName: string;
+  items: {
+    design_id: string;
+    size_id: 'S-SML' | 'S-LGE';
+    quantity: number;
+  }[];
+  labelsIssued?: {
+    small: number;
+    large: number;
+  };
+}
