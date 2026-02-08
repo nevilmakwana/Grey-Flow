@@ -31,45 +31,47 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F8FAFC] dark:bg-background">
-      <div className="max-w-4xl mx-auto w-full px-6 pt-12 pb-32">
-        <header className="mb-12 text-center space-y-2">
-          <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl">Stitching Ledger</h2>
-          <p className="text-muted-foreground font-medium max-w-md mx-auto">Manage scarf production work, worker issues, and real-time label inventory.</p>
-        </header>
-
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-center mb-10">
-            <TabsList className="grid w-full max-w-md grid-cols-2 h-14 bg-white dark:bg-card border shadow-sm rounded-2xl p-1.5 transition-all">
+    <div className="flex flex-col h-full bg-background">
+      <div className="max-w-4xl mx-auto w-full px-6 pt-8 pb-32">
+        <header className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Stitching Ledger</h2>
+            <p className="text-xs text-muted-foreground font-medium">Manage production issues and receipts.</p>
+          </div>
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
+            <TabsList className="grid w-64 grid-cols-2 h-10 bg-muted/50 rounded-lg p-1">
               <TabsTrigger 
                 value="issue" 
                 className={cn(
-                  "rounded-xl font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg",
-                  activeTab === 'issue' ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                  "rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  activeTab === 'issue' ? "text-primary-foreground" : "text-muted-foreground"
                 )}
               >
-                <ArrowUpRight className="w-4 h-4 mr-2" /> Issue
+                Issue
               </TabsTrigger>
               <TabsTrigger 
                 value="receive" 
                 className={cn(
-                  "rounded-xl font-bold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-lg",
-                  activeTab === 'receive' ? "text-white" : "text-muted-foreground hover:text-foreground"
+                  "rounded-md text-xs font-bold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
+                  activeTab === 'receive' ? "text-white" : "text-muted-foreground"
                 )}
               >
-                <ArrowDownLeft className="w-4 h-4 mr-2" /> Receive
+                Receive
               </TabsTrigger>
             </TabsList>
-          </div>
+          </Tabs>
+        </header>
 
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsContent value="issue" className="mt-0 focus-visible:outline-none">
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <IssueForm designs={designs} onSave={saveEntry} />
             </div>
           </TabsContent>
 
           <TabsContent value="receive" className="mt-0 focus-visible:outline-none">
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <ReceiveForm designs={designs} allEntries={entries} onSave={saveEntry} />
             </div>
           </TabsContent>
