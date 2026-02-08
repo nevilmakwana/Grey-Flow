@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -8,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Plus, Trash2, Tag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
+import { SearchableDesignSelect } from './searchable-design-select';
 
 interface IssueFormProps {
   designs: Design[];
@@ -133,16 +132,13 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
           <div className="space-y-2">
             {issueItems.filter(i => i.size_id === 'S-SML').map((item, idx) => (
               <div key={`small-${idx}`} className="flex gap-2">
-                <select 
-                  value={item.design_id} 
-                  onChange={e => updateItem(issueItems.indexOf(item), 'design_id', e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-bold ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer flex-1"
-                >
-                  <option value="">Select SKU</option>
-                  {designs.map(d => (
-                    <option key={d.design_id} value={d.design_id}>{d.design_id}</option>
-                  ))}
-                </select>
+                <div className="flex-1">
+                  <SearchableDesignSelect 
+                    designs={designs}
+                    value={item.design_id}
+                    onSelect={(val) => updateItem(issueItems.indexOf(item), 'design_id', val)}
+                  />
+                </div>
                 <Input 
                   type="number" 
                   placeholder="Qty" 
@@ -169,16 +165,13 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
           <div className="space-y-2">
             {issueItems.filter(i => i.size_id === 'S-LGE').map((item, idx) => (
               <div key={`large-${idx}`} className="flex gap-2">
-                <select 
-                  value={item.design_id} 
-                  onChange={e => updateItem(issueItems.indexOf(item), 'design_id', e.target.value)}
-                  className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-bold ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer flex-1"
-                >
-                  <option value="">Select SKU</option>
-                  {designs.map(d => (
-                    <option key={d.design_id} value={d.design_id}>{d.design_id}</option>
-                  ))}
-                </select>
+                <div className="flex-1">
+                  <SearchableDesignSelect 
+                    designs={designs}
+                    value={item.design_id}
+                    onSelect={(val) => updateItem(issueItems.indexOf(item), 'design_id', val)}
+                  />
+                </div>
                 <Input 
                   type="number" 
                   placeholder="Qty" 
