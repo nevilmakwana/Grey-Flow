@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -9,7 +10,7 @@ import { FloatingDock } from '@/components/scarf-app/floating-dock';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { StitchingModule } from '@/components/stitching/stitching-module';
 import { Toaster } from '@/components/ui/toaster';
-import { ShoppingBag, Scissors, Printer } from 'lucide-react';
+import { ShoppingBag, Scissors, Printer, Menu, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -18,6 +19,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 
 export default function ScarfOrderApp() {
@@ -39,6 +41,7 @@ export default function ScarfOrderApp() {
   const [isCsvOpen, setIsCsvOpen] = useState(false);
   const [isShareMode, setIsShareMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [highlightedDesignId, setHighlightedDesignId] = useState<string | null>(null);
 
@@ -217,11 +220,12 @@ export default function ScarfOrderApp() {
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
       <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
-        <div className="flex-1">
+        <div className="flex-1 flex items-center">
           <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
         </div>
 
-        <nav className="flex items-center gap-8">
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-8">
           <button 
             onClick={() => setActiveModule('orders')}
             className={cn(
@@ -244,7 +248,58 @@ export default function ScarfOrderApp() {
           </button>
         </nav>
 
-        <div className="flex-1" />
+        {/* Mobile Menu Trigger & Right Spacer */}
+        <div className="flex-1 flex justify-end items-center">
+          <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <button className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors">
+                  <Menu className="w-6 h-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-full sm:w-[350px] p-0 border-none bg-background/95 backdrop-blur-xl">
+                <SheetHeader className="p-6 border-b text-left">
+                  <SheetTitle className="font-black tracking-tighter text-2xl uppercase">GreyFlow Menu</SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col p-4 gap-3">
+                  <button 
+                    onClick={() => {
+                      setActiveModule('orders');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center gap-4 p-5 rounded-3xl text-xl font-bold transition-all border",
+                      activeModule === 'orders' 
+                        ? "bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20" 
+                        : "bg-muted/30 border-transparent hover:bg-muted/50"
+                    )}
+                  >
+                    <ShoppingBag className="w-6 h-6" />
+                    Print Order
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setActiveModule('stitching');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={cn(
+                      "flex items-center gap-4 p-5 rounded-3xl text-xl font-bold transition-all border",
+                      activeModule === 'stitching' 
+                        ? "bg-primary text-primary-foreground border-primary shadow-xl shadow-primary/20" 
+                        : "bg-muted/30 border-transparent hover:bg-muted/50"
+                    )}
+                  >
+                    <Scissors className="w-6 h-6" />
+                    Stitching
+                  </button>
+                </div>
+                <div className="absolute bottom-10 left-0 right-0 text-center">
+                  <p className="text-[10px] text-muted-foreground font-bold tracking-[0.3em] uppercase opacity-50">Professional Textile Workspace</p>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden pt-16">
