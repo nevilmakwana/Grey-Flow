@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -5,7 +6,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IssueForm } from './issue-form';
 import { ReceiveForm } from './receive-form';
-import { ArrowUpRight, ArrowDownLeft, Activity } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StitchingModuleProps {
@@ -33,10 +34,6 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
     <div className="flex flex-col h-full bg-[#F8FAFC] dark:bg-background">
       <div className="max-w-4xl mx-auto w-full px-6 pt-12 pb-32">
         <header className="mb-12 text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider mb-2">
-            <Activity className="w-3 h-3" />
-            Production Control
-          </div>
           <h2 className="text-4xl font-black tracking-tight text-foreground sm:text-5xl">Stitching Ledger</h2>
           <p className="text-muted-foreground font-medium max-w-md mx-auto">Manage scarf production work, worker issues, and real-time label inventory.</p>
         </header>
