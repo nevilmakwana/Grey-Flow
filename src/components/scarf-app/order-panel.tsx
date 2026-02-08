@@ -275,18 +275,6 @@ export function OrderPanel({
           </div>
         ))}
 
-        {/* ADD ANOTHER FABRIC TRIGGER */}
-        <div className="pt-8 border-t border-border/50 flex flex-col items-center">
-          <Button 
-            onClick={() => onAddGroup('Satin')} 
-            variant="outline"
-            className="rounded-[2rem] px-10 h-16 border-2 hover:bg-primary/5 hover:border-primary/30 transition-all group"
-          >
-            <Plus className="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform duration-300" />
-            <span className="text-lg font-black tracking-tight">Add Another Fabric Group</span>
-          </Button>
-        </div>
-
         {/* SUMMARY SECTION */}
         <div className="mt-20 p-8 bg-muted/30 rounded-[3rem] border-2 border-border/50 backdrop-blur-sm shadow-xl">
           <div className="flex items-center gap-3 mb-8">
