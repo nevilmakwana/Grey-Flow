@@ -34,10 +34,13 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     return Array.from(new Set([...defaults, ...existing]));
   }, [allEntries]);
 
-  const labelBalance = useMemo(() => {
+  // Calculate current label balance based on past ledger history
+  const historicalBalance = useMemo(() => {
     if (!workerName) return { small: 0, large: 0 };
+    
     const workerEntries = allEntries.filter(e => e.workerName === workerName);
     let smallIssued = 0, largeIssued = 0, smallReceived = 0, largeReceived = 0;
+    
     workerEntries.forEach(e => {
       if (e.type === 'issue') {
         smallIssued += e.labelsIssued?.small || 0;
@@ -49,6 +52,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         });
       }
     });
+    
     return {
       small: smallIssued - smallReceived,
       large: largeIssued - largeReceived
@@ -69,12 +73,17 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     setReceiveItems(newItems);
   };
 
-  const calculateTotals = () => {
+  const currentFormTotals = useMemo(() => {
     return receiveItems.reduce((acc, item) => {
       if (item.size_id === 'S-SML') acc.small += item.quantity;
       if (item.size_id === 'S-LGE') acc.large += item.quantity;
       return acc;
     }, { small: 0, large: 0 });
+  }, [receiveItems]);
+
+  const projectedBalance = {
+    small: historicalBalance.small - currentFormTotals.small,
+    large: historicalBalance.large - currentFormTotals.large
   };
 
   const generateMessage = (entry: StitchingEntry) => {
@@ -82,10 +91,9 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     msg += `✅ *Ready scarves received today*\n\n`;
     const items = entry.items.filter(i => i.quantity > 0);
     items.forEach(i => msg += `• ${i.design_id} (${i.size_id === 'S-SML' ? 'S' : 'L'}): ${i.quantity} pcs\n`);
-    const totals = calculateTotals();
-    msg += `\nTotal Recd: ${totals.small + totals.large} pcs\n`;
+    msg += `\nTotal Recd: ${currentFormTotals.small + currentFormTotals.large} pcs\n`;
     msg += `\n*Satin Label Balance:*\n`;
-    msg += `S: ${labelBalance.small - totals.small} pcs | L: ${labelBalance.large - totals.large} pcs`;
+    msg += `S: ${projectedBalance.small} pcs | L: ${projectedBalance.large} pcs`;
     return msg;
   };
 
@@ -118,8 +126,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     setWorkerName('');
     toast({ title: "Receive Entry Saved" });
   };
-
-  const totals = calculateTotals();
 
   return (
     <div className="space-y-6">
@@ -225,31 +231,52 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       </div>
 
       {workerName && (
-        <div className="p-4 bg-muted/10 rounded-xl border border-border/50">
+        <div className="p-5 bg-muted/10 rounded-xl border border-border/50 stripe-shadow">
           <div className="flex items-center gap-2 mb-4">
-            <PackageCheck className="w-3 h-3 text-green-600" />
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Label Balance Inventory</h4>
+            <PackageCheck className="w-4 h-4 text-green-600" />
+            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 bg-background rounded-lg border border-border/50">
-              <span className="block text-[8px] font-black text-muted-foreground uppercase mb-1 tracking-widest">Small Labels</span>
-              <span className={cn("text-2xl font-black", (labelBalance.small - totals.small) < 0 ? 'text-destructive' : 'text-foreground')}>
-                {labelBalance.small - totals.small}
-              </span>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Small Balance</span>
+                <span className="text-[9px] font-bold text-muted-foreground/50">{historicalBalance.small} issued</span>
+              </div>
+              <div className={cn(
+                "flex items-center justify-center h-14 rounded-xl border transition-all",
+                projectedBalance.small < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
+              )}>
+                <span className="text-2xl font-black tracking-tighter">{projectedBalance.small} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+              </div>
             </div>
-            <div className="text-center p-3 bg-background rounded-lg border border-border/50">
-              <span className="block text-[8px] font-black text-muted-foreground uppercase mb-1 tracking-widest">Large Labels</span>
-              <span className={cn("text-2xl font-black", (labelBalance.large - totals.large) < 0 ? 'text-destructive' : 'text-foreground')}>
-                {labelBalance.large - totals.large}
-              </span>
+            <div className="space-y-1">
+              <div className="flex justify-between items-center px-1">
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Large Balance</span>
+                <span className="text-[9px] font-bold text-muted-foreground/50">{historicalBalance.large} issued</span>
+              </div>
+              <div className={cn(
+                "flex items-center justify-center h-14 rounded-xl border transition-all",
+                projectedBalance.large < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
+              )}>
+                <span className="text-2xl font-black tracking-tighter">{projectedBalance.large} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+              </div>
             </div>
           </div>
+          <p className="mt-4 text-[9px] text-muted-foreground font-medium text-center">
+            * This represents the labels the worker should have after this receipt.
+          </p>
         </div>
       )}
 
-      <div className="bg-green-600 text-white p-5 rounded-xl flex items-center justify-between shadow-lg">
-        <span className="text-[8px] uppercase font-black opacity-60 tracking-widest">Total Received Today</span>
-        <span className="text-3xl font-black tracking-tighter">{totals.small + totals.large} <span className="text-xs opacity-60">PCS</span></span>
+      <div className="bg-green-600 text-white p-5 rounded-xl flex items-center justify-between shadow-lg stripe-shadow">
+        <div className="flex flex-col">
+          <span className="text-[8px] uppercase font-black opacity-60 tracking-widest">Receipt Summary</span>
+          <span className="text-sm font-bold">{workerName || 'No Worker Selected'}</span>
+        </div>
+        <div className="text-right">
+          <span className="text-[8px] uppercase font-black opacity-60 tracking-widest block mb-1">Total Received Today</span>
+          <span className="text-3xl font-black tracking-tighter">{currentFormTotals.small + currentFormTotals.large} <span className="text-xs opacity-60">PCS</span></span>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
