@@ -148,12 +148,16 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         <div className="space-y-2">
           {receiveItems.map((item, idx) => (
             <div key={idx} className="flex gap-2">
-              <Input 
-                placeholder="Design SKU" 
+              <select 
                 value={item.design_id} 
-                onChange={e => updateItem(idx, 'design_id', e.target.value.toUpperCase())}
-                className="rounded-lg h-10 bg-background border font-bold flex-1"
-              />
+                onChange={e => updateItem(idx, 'design_id', e.target.value)}
+                className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-bold ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer flex-1"
+              >
+                <option value="">Select SKU</option>
+                {designs.map(d => (
+                  <option key={d.design_id} value={d.design_id}>{d.design_id}</option>
+                ))}
+              </select>
               <select 
                 value={item.size_id} 
                 onChange={e => updateItem(idx, 'size_id', e.target.value)}
