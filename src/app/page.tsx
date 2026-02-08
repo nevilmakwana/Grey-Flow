@@ -123,13 +123,14 @@ export default function ScarfOrderApp() {
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(generateWhatsAppMessage());
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
     const isMobileDevice = typeof navigator !== 'undefined' && 
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobileDevice) {
-      window.location.href = `https://api.whatsapp.com/send?text=${text}`;
+      window.location.href = whatsappUrl;
     } else {
-      window.open(`https://web.whatsapp.com/send?text=${text}`, '_blank');
+      window.open(whatsappUrl, '_blank');
     }
   };
 

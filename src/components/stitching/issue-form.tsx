@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -96,7 +97,14 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     onSave(entry);
     if (withShare) {
       const text = encodeURIComponent(generateMessage(entry));
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
+      const isMobile = typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        window.location.href = whatsappUrl;
+      } else {
+        window.open(whatsappUrl, '_blank');
+      }
     }
     setIssueItems([
       { design_id: '', size_id: 'S-SML', quantity: 0 },
