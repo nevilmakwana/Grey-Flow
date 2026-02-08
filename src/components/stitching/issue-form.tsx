@@ -5,7 +5,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Tag } from 'lucide-react';
+import { Plus, Trash2, Tag, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SearchableDesignSelect } from './searchable-design-select';
 
@@ -20,8 +20,12 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [labels, setLabels] = useState({ small: 0, large: 0 });
   const [issueItems, setIssueItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
-    { design_id: '', size_id: 'S-SML', quantity: 0 }
+    { design_id: '', size_id: 'S-SML', quantity: 0 },
+    { design_id: '', size_id: 'S-LGE', quantity: 0 }
   ]);
+
+  const smallDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-SML'));
+  const largeDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-LGE'));
 
   const addItem = (size: 'S-SML' | 'S-LGE') => {
     setIssueItems([...issueItems, { design_id: '', size_id: size, quantity: 0 }]);
@@ -88,7 +92,10 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       const text = encodeURIComponent(generateMessage(entry));
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
-    setIssueItems([{ design_id: '', size_id: 'S-SML', quantity: 0 }]);
+    setIssueItems([
+      { design_id: '', size_id: 'S-SML', quantity: 0 },
+      { design_id: '', size_id: 'S-LGE', quantity: 0 }
+    ]);
     setLabels({ small: 0, large: 0 });
     setWorkerName('');
     toast({ title: "Issue Entry Saved" });
@@ -124,66 +131,76 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       </div>
 
       <div className="space-y-6">
+        {/* Small Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Small (50×50 cm)</h3>
           </div>
           <div className="space-y-2">
-            {issueItems.filter(i => i.size_id === 'S-SML').map((item, idx) => (
-              <div key={`small-${idx}`} className="flex gap-2">
-                <div className="flex-1">
-                  <SearchableDesignSelect 
-                    designs={designs}
-                    value={item.design_id}
-                    onSelect={(val) => updateItem(issueItems.indexOf(item), 'design_id', val)}
+            {issueItems.map((item, idx) => {
+              if (item.size_id !== 'S-SML') return null;
+              return (
+                <div key={`small-${idx}`} className="flex gap-2">
+                  <div className="flex-1">
+                    <SearchableDesignSelect 
+                      designs={smallDesigns}
+                      value={item.design_id}
+                      onSelect={(val) => updateItem(idx, 'design_id', val)}
+                      placeholder="Select Small Design..."
+                    />
+                  </div>
+                  <Input 
+                    type="number" 
+                    placeholder="Qty" 
+                    value={item.quantity || ''} 
+                    onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
-                <Input 
-                  type="number" 
-                  placeholder="Qty" 
-                  value={item.quantity || ''} 
-                  onChange={e => updateItem(issueItems.indexOf(item), 'quantity', parseInt(e.target.value) || 0)}
-                  className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
-                />
-                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
             <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Small Design
             </Button>
           </div>
         </div>
 
+        {/* Large Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Large (90×90 cm)</h3>
           </div>
           <div className="space-y-2">
-            {issueItems.filter(i => i.size_id === 'S-LGE').map((item, idx) => (
-              <div key={`large-${idx}`} className="flex gap-2">
-                <div className="flex-1">
-                  <SearchableDesignSelect 
-                    designs={designs}
-                    value={item.design_id}
-                    onSelect={(val) => updateItem(issueItems.indexOf(item), 'design_id', val)}
+            {issueItems.map((item, idx) => {
+              if (item.size_id !== 'S-LGE') return null;
+              return (
+                <div key={`large-${idx}`} className="flex gap-2">
+                  <div className="flex-1">
+                    <SearchableDesignSelect 
+                      designs={largeDesigns}
+                      value={item.design_id}
+                      onSelect={(val) => updateItem(idx, 'design_id', val)}
+                      placeholder="Select Large Design..."
+                    />
+                  </div>
+                  <Input 
+                    type="number" 
+                    placeholder="Qty" 
+                    value={item.quantity || ''} 
+                    onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
-                <Input 
-                  type="number" 
-                  placeholder="Qty" 
-                  value={item.quantity || ''} 
-                  onChange={e => updateItem(issueItems.indexOf(item), 'quantity', parseInt(e.target.value) || 0)}
-                  className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
-                />
-                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+              );
+            })}
             <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Large Design
             </Button>

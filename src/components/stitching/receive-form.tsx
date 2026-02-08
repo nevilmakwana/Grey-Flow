@@ -21,12 +21,15 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   const [workerName, setWorkerName] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [receiveItems, setReceiveItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
+    { design_id: '', size_id: 'S-SML', quantity: 0 },
     { design_id: '', size_id: 'S-LGE', quantity: 0 }
   ]);
 
+  const smallDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-SML'));
+  const largeDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-LGE'));
+
   const workerNames = useMemo(() => {
     const existing = allEntries.map(e => e.workerName);
-    // Include the primary requested names by default
     const defaults = ["Nayna", "Ramila", "Vilas"];
     return Array.from(new Set([...defaults, ...existing]));
   }, [allEntries]);
@@ -108,7 +111,10 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       const text = encodeURIComponent(generateMessage(entry));
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
-    setReceiveItems([{ design_id: '', size_id: 'S-LGE', quantity: 0 }]);
+    setReceiveItems([
+      { design_id: '', size_id: 'S-SML', quantity: 0 },
+      { design_id: '', size_id: 'S-LGE', quantity: 0 }
+    ]);
     setWorkerName('');
     toast({ title: "Receive Entry Saved" });
   };
@@ -140,44 +146,81 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-2 ml-1">
-          <div className="w-1 h-4 bg-green-600 rounded-full" />
-          <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Finished Goods Receipt</h3>
+      <div className="space-y-6">
+        {/* Received Small Section */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 mb-2 ml-1">
+            <div className="w-1 h-4 bg-green-600 rounded-full" />
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Small (50×50 cm)</h3>
+          </div>
+          <div className="space-y-2">
+            {receiveItems.map((item, idx) => {
+              if (item.size_id !== 'S-SML') return null;
+              return (
+                <div key={`small-rc-${idx}`} className="flex gap-2">
+                  <div className="flex-1">
+                    <SearchableDesignSelect 
+                      designs={smallDesigns}
+                      value={item.design_id}
+                      onSelect={(val) => updateItem(idx, 'design_id', val)}
+                      placeholder="Select Finished Small SKU..."
+                    />
+                  </div>
+                  <Input 
+                    type="number" 
+                    placeholder="Qty" 
+                    value={item.quantity || ''} 
+                    onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
+                  />
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              );
+            })}
+            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+              <Plus className="w-3 h-3 mr-2" /> Add Finished Small Design
+            </Button>
+          </div>
         </div>
-        <div className="space-y-2">
-          {receiveItems.map((item, idx) => (
-            <div key={idx} className="flex gap-2">
-              <div className="flex-1">
-                <SearchableDesignSelect 
-                  designs={designs}
-                  value={item.design_id}
-                  onSelect={(val) => updateItem(idx, 'design_id', val)}
-                />
-              </div>
-              <select 
-                value={item.size_id} 
-                onChange={e => updateItem(idx, 'size_id', e.target.value)}
-                className="h-10 rounded-lg border bg-background px-3 text-xs w-20 font-bold appearance-none cursor-pointer text-center"
-              >
-                <option value="S-SML">S</option>
-                <option value="S-LGE">L</option>
-              </select>
-              <Input 
-                type="number" 
-                placeholder="Qty" 
-                value={item.quantity || ''} 
-                onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
-              />
-              <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
-          <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
-            <Plus className="w-3 h-3 mr-2" /> Add Finished Design
-          </Button>
+
+        {/* Received Large Section */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 mb-2 ml-1">
+            <div className="w-1 h-4 bg-green-600 rounded-full" />
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Large (90×90 cm)</h3>
+          </div>
+          <div className="space-y-2">
+            {receiveItems.map((item, idx) => {
+              if (item.size_id !== 'S-LGE') return null;
+              return (
+                <div key={`large-rc-${idx}`} className="flex gap-2">
+                  <div className="flex-1">
+                    <SearchableDesignSelect 
+                      designs={largeDesigns}
+                      value={item.design_id}
+                      onSelect={(val) => updateItem(idx, 'design_id', val)}
+                      placeholder="Select Finished Large SKU..."
+                    />
+                  </div>
+                  <Input 
+                    type="number" 
+                    placeholder="Qty" 
+                    value={item.quantity || ''} 
+                    onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
+                  />
+                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              );
+            })}
+            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+              <Plus className="w-3 h-3 mr-2" /> Add Finished Large Design
+            </Button>
+          </div>
         </div>
       </div>
 
