@@ -107,7 +107,7 @@ export function FloatingDock({
         {/* SYSTEM CONTROLS GROUP */}
         <div className="flex items-center">
           {onSearch && (
-            <>
+            <div className="md:hidden flex items-center">
               <button 
                 onClick={onSearch}
                 className="h-9 w-9 flex items-center justify-center rounded-full hover:bg-secondary/80 transition-all active:scale-95 focus:outline-none group"
@@ -116,7 +116,7 @@ export function FloatingDock({
                 <Search className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
               </button>
               <div className="w-px h-4 bg-border/50 mx-1.5 shrink-0" />
-            </>
+            </div>
           )}
 
           {/* Animated Theme Toggle Button */}
