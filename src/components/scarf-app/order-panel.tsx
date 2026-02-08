@@ -286,6 +286,8 @@ export function OrderPanel({
                                 </label>
                                 <Input 
                                   type="number" 
+                                  inputMode="numeric"
+                                  pattern="[0-9]*"
                                   min="0" 
                                   value={qty || ""} 
                                   onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
@@ -300,20 +302,6 @@ export function OrderPanel({
                     </div>
                   );
                 })}
-                
-                {/* Direct Add Design Option */}
-                <button 
-                  onClick={() => onAddDesignToGroup(group.id)}
-                  className={cn(
-                    "flex items-center justify-center gap-2 border border-dashed border-border rounded-lg transition-all group",
-                    group.items.length > 0 
-                      ? "h-[96px] sm:h-[112px] bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary" 
-                      : "col-span-1 md:col-span-2 w-full h-24 text-muted-foreground hover:bg-muted/30 hover:border-primary/30"
-                  )}
-                >
-                  <Plus className="w-4 h-4" />
-                  <span className="font-bold text-sm uppercase tracking-wider">Add Design</span>
-                </button>
               </div>
             </div>
           );
