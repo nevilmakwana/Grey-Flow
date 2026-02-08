@@ -140,7 +140,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             type="date" 
             value={date} 
             onChange={e => setDate(e.target.value)}
-            className="rounded-xl h-12 bg-card border-border shadow-sm focus-visible:ring-primary/20 font-bold px-4 transition-all hover:border-primary/50"
+            className="rounded-xl h-12 w-full bg-card border-border shadow-sm focus-visible:ring-primary/20 font-bold px-4 text-left text-sm transition-all hover:border-primary/50"
           />
         </div>
       </div>
