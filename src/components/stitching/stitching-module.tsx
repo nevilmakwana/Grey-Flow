@@ -35,9 +35,6 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
     <div className="flex flex-col h-full bg-background/50">
       <div className="max-w-4xl mx-auto w-full px-6 pt-4 pb-32">
         <header className="mb-10 text-center">
-          <div className="inline-flex items-center justify-center p-3 bg-primary/10 text-primary rounded-2xl mb-4">
-            <Scissors className="w-8 h-8" />
-          </div>
           <h2 className="text-3xl font-black tracking-tighter text-foreground mb-2">Stitching Control</h2>
           <p className="text-sm text-muted-foreground font-medium">Manage scarf production and label balances.</p>
         </header>
