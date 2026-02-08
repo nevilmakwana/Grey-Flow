@@ -23,6 +23,12 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 function LiveClock() {
@@ -154,9 +160,27 @@ export function OrderPanel({
               <span className="block text-[10px] uppercase font-bold text-muted-foreground">Total Units</span>
               <span className="font-black">{grandTotal}</span>
             </div>
-            <Button size="sm" onClick={() => onAddGroup('Satin')} className="rounded-xl h-8 text-[10px] uppercase font-bold tracking-widest bg-foreground text-background hover:bg-foreground/90">
-              <Plus className="w-3 h-3 mr-1" /> Add Fabric
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" className="rounded-xl h-8 text-[10px] uppercase font-bold tracking-widest bg-foreground text-background hover:bg-foreground/90">
+                  <Plus className="w-3 h-3 mr-1" /> Add Fabric
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="rounded-2xl border-border bg-background/80 backdrop-blur-md shadow-xl p-1 min-w-[120px]">
+                <DropdownMenuItem 
+                  onClick={() => onAddGroup('Satin')} 
+                  className="rounded-xl px-4 py-2 hover:bg-primary/10 transition-colors font-bold text-[10px] uppercase tracking-widest cursor-pointer"
+                >
+                  Satin
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => onAddGroup('Cotton')} 
+                  className="rounded-xl px-4 py-2 hover:bg-primary/10 transition-colors font-bold text-[10px] uppercase tracking-widest cursor-pointer"
+                >
+                  Cotton
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
