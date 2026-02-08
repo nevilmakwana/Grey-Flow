@@ -157,7 +157,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -195,7 +195,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
