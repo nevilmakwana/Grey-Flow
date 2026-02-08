@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -87,7 +86,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   };
 
   const generateMessage = (entry: StitchingEntry) => {
-    // Format date to DD-MM-YYYY for Indian standard
     const [y, m, d] = entry.date.split('-');
     const formattedDate = `${d}-${m}-${y}`;
 
@@ -163,13 +161,14 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Received Small Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-green-600 rounded-full" />
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Small (50×50 cm)</h3>
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Small (50×50)</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {receiveItems.map((item, idx) => {
               if (item.size_id !== 'S-SML') return null;
               return (
@@ -179,7 +178,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Design..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -189,24 +188,25 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               );
             })}
             <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
-              <Plus className="w-3 h-3 mr-2" /> Add Finished Small Design
+              <Plus className="w-3 h-3 mr-2" /> Add Finished Small
             </Button>
           </div>
         </div>
 
+        {/* Received Large Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1 h-4 bg-green-600 rounded-full" />
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Large (90×90 cm)</h3>
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Large (90×90)</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {receiveItems.map((item, idx) => {
               if (item.size_id !== 'S-LGE') return null;
               return (
@@ -216,7 +216,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Design..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -226,14 +226,14 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               );
             })}
             <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
-              <Plus className="w-3 h-3 mr-2" /> Add Finished Large Design
+              <Plus className="w-3 h-3 mr-2" /> Add Finished Large
             </Button>
           </div>
         </div>
@@ -245,7 +245,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
             <PackageCheck className="w-4 h-4 text-green-600" />
             <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-1">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Small Balance</span>
@@ -274,18 +274,18 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       )}
 
-      <div className="bg-green-600 text-white p-5 rounded-xl flex items-center justify-between shadow-lg stripe-shadow">
+      <div className="bg-green-600 text-white p-5 rounded-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between shadow-lg gap-4">
         <div className="flex flex-col">
           <span className="text-[8px] uppercase font-black opacity-60 tracking-widest">Receipt Summary</span>
-          <span className="text-sm font-bold">{workerName || 'No Worker Selected'}</span>
+          <span className="text-sm font-bold truncate">{workerName || 'No Worker Selected'}</span>
         </div>
-        <div className="text-right">
+        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-white/10">
           <span className="text-[8px] uppercase font-black opacity-60 tracking-widest block mb-1">Total Received Today</span>
           <span className="text-3xl font-black tracking-tighter">{currentFormTotals.small + currentFormTotals.large} <span className="text-xs opacity-60">PCS</span></span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
           Save Ledger
         </Button>

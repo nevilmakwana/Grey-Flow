@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -51,7 +50,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
   };
 
   const generateMessage = (entry: StitchingEntry) => {
-    // Format date to DD-MM-YYYY for Indian standard
     const [y, m, d] = entry.date.split('-');
     const formattedDate = `${d}-${m}-${y}`;
 
@@ -122,16 +120,18 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Worker Name</Label>
-          <select 
-            value={workerName} 
-            onChange={e => setWorkerName(e.target.value)}
-            className="flex h-11 w-full rounded-lg border border-border bg-muted/20 px-4 py-2 text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer"
-          >
-            <option value="">Select Worker</option>
-            <option value="Nayna">Nayna</option>
-            <option value="Ramila">Ramila</option>
-            <option value="Vilas">Vilas</option>
-          </select>
+          <div className="relative">
+            <select 
+              value={workerName} 
+              onChange={e => setWorkerName(e.target.value)}
+              className="flex h-11 w-full rounded-lg border border-border bg-muted/20 px-4 py-2 text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer"
+            >
+              <option value="">Select Worker</option>
+              <option value="Nayna">Nayna</option>
+              <option value="Ramila">Ramila</option>
+              <option value="Vilas">Vilas</option>
+            </select>
+          </div>
         </div>
         <div className="space-y-1.5">
           <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Issue Date</Label>
@@ -144,13 +144,14 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Small Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Small (50×50 cm)</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {issueItems.map((item, idx) => {
               if (item.size_id !== 'S-SML') return null;
               return (
@@ -160,7 +161,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Small Design..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -170,7 +171,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -182,12 +183,13 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
           </div>
         </div>
 
+        {/* Large Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-1 h-4 bg-primary rounded-full" />
             <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Large (90×90 cm)</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {issueItems.map((item, idx) => {
               if (item.size_id !== 'S-LGE') return null;
               return (
@@ -197,7 +199,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Large Design..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -207,7 +209,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
                     className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                   />
-                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive border-border">
+                  <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
@@ -247,8 +249,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between p-5 bg-foreground text-background rounded-xl shadow-lg">
-        <div className="flex gap-8">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-5 bg-foreground text-background rounded-xl shadow-lg gap-4">
+        <div className="flex gap-8 justify-around sm:justify-start">
           <div className="flex flex-col">
             <span className="text-[8px] uppercase font-black opacity-50 tracking-widest">Small</span>
             <span className="text-xl font-black">{totals.small}</span>
@@ -258,13 +260,13 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             <span className="text-xl font-black">{totals.large}</span>
           </div>
         </div>
-        <div className="text-right">
+        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-background/10">
           <span className="text-[8px] uppercase font-black opacity-50 tracking-widest block mb-1">Total Issued</span>
           <span className="text-3xl font-black tracking-tighter">{totals.small + totals.large} <span className="text-xs opacity-50">PCS</span></span>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
           Save Ledger
         </Button>

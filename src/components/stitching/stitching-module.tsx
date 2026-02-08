@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -31,20 +30,20 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
   };
 
   return (
-    <div className="flex flex-col h-full bg-background">
-      <div className="max-w-4xl mx-auto w-full px-6 pt-8 pb-32">
-        <header className="mb-8 flex items-center justify-between">
-          <div>
+    <div className="flex flex-col h-full bg-background overflow-x-hidden">
+      <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-8 pb-32">
+        <header className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-1">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">Stitching Ledger</h2>
             <p className="text-xs text-muted-foreground font-medium">Manage production issues and receipts.</p>
           </div>
           
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-auto">
-            <TabsList className="grid w-64 grid-cols-2 h-10 bg-muted/50 rounded-lg p-1">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
+            <TabsList className="grid w-full md:w-64 grid-cols-2 h-11 bg-muted/50 rounded-xl p-1">
               <TabsTrigger 
                 value="issue" 
                 className={cn(
-                  "rounded-md text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  "rounded-lg text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
                   activeTab === 'issue' ? "text-primary-foreground" : "text-muted-foreground"
                 )}
               >
@@ -53,7 +52,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
               <TabsTrigger 
                 value="receive" 
                 className={cn(
-                  "rounded-md text-xs font-bold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
+                  "rounded-lg text-xs font-bold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
                   activeTab === 'receive' ? "text-white" : "text-muted-foreground"
                 )}
               >
