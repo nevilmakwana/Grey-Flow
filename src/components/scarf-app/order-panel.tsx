@@ -125,7 +125,7 @@ export function OrderPanel({
         </div>
         <h3 className="text-xl font-bold mb-2">Build your order</h3>
         <p className="text-muted-foreground mb-8 text-center max-w-sm text-sm">Select a fabric type below to start grouping your textile designs.</p>
-        <div className="flex gap-4 w-full max-w-sm">
+        <div className="flex gap-4 w-full max-w-[270px]">
           <Button 
             onClick={() => onAddGroup('Satin')} 
             variant="outline"
