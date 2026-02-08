@@ -12,7 +12,8 @@ import {
   Plus,
   Layers,
   ChevronRight,
-  PlusCircle
+  PlusCircle,
+  Target
 } from 'lucide-react';
 import Image from 'next/image';
 import { 
@@ -30,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 function LiveClock() {
   const [time, setTime] = useState<Date | null>(null);
@@ -67,6 +69,7 @@ interface OrderPanelProps {
   order: Order;
   designs: Design[];
   highlightedDesignId: string | null;
+  activeGroupId: string | null;
   onUpdateQty: (groupId: string, designId: string, sizeId: string, qty: number) => void;
   onRemoveItem: (groupId: string, designId: string) => void;
   onAddGroup: (fabricId: string) => void;
@@ -79,6 +82,7 @@ export function OrderPanel({
   order, 
   designs, 
   highlightedDesignId,
+  activeGroupId,
   onUpdateQty, 
   onRemoveItem, 
   onAddGroup, 
@@ -105,7 +109,6 @@ export function OrderPanel({
     if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
   };
 
-  // Scroll to highlighted design
   useEffect(() => {
     if (highlightedDesignId) {
       const element = document.getElementById(`design-card-${highlightedDesignId}`);
@@ -145,7 +148,6 @@ export function OrderPanel({
 
   return (
     <div className="max-w-4xl mx-auto pb-64">
-      {/* SCREEN HEADER */}
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md py-4 px-6 md:px-8 no-print border-b">
         <div className="flex justify-between items-center">
           <div>
@@ -186,120 +188,148 @@ export function OrderPanel({
       </div>
 
       <div className="p-4 md:p-8 space-y-12">
-        {order.fabricGroups.map((group) => (
-          <div key={group.id} className="space-y-6">
-            <div className="flex items-center justify-between px-2">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-primary/10 rounded-2xl text-primary border border-primary/20">
-                  <Layers className="w-5 h-5" />
+        {order.fabricGroups.map((group) => {
+          const isActive = activeGroupId === group.id;
+          
+          return (
+            <div 
+              key={group.id} 
+              className={cn(
+                "space-y-6 p-1 rounded-[2.5rem] transition-all duration-500",
+                isActive && "ring-2 ring-primary ring-offset-8 bg-primary/5 shadow-inner"
+              )}
+            >
+              <div className="flex items-center justify-between px-2">
+                <div className="flex items-center gap-3">
+                  <div className={cn(
+                    "p-2.5 rounded-2xl border transition-colors",
+                    isActive ? "bg-primary text-primary-foreground border-primary shadow-lg" : "bg-primary/10 text-primary border-primary/20"
+                  )}>
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl font-black tracking-tight">Fabric: {group.fabric_id}</h3>
+                      {isActive && (
+                        <Badge variant="default" className="bg-primary text-[8px] uppercase font-black px-1.5 h-4 flex items-center gap-1">
+                          <Target className="w-2 h-2" /> Active
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{group.items.length} Designs Selected</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-black tracking-tight">Fabric: {group.fabric_id}</h3>
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{group.items.length} Designs Selected</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => onAddDesignToGroup(group.id)}
-                  className="rounded-xl hover:bg-primary/10 text-primary font-bold text-xs"
-                >
-                  <PlusCircle className="w-4 h-4 mr-2" /> Add Design
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => onRemoveGroup(group.id)}
-                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {group.items.map((item) => {
-                const design = getDesignById(item.design_id);
-                if (!design) return null;
-                const isHighlighted = highlightedDesignId === item.design_id;
-
-                return (
-                  <Card 
-                    key={item.design_id} 
-                    id={`design-card-${item.design_id}`}
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant={isActive ? "default" : "ghost"} 
+                    size="sm" 
+                    onClick={() => onAddDesignToGroup(group.id)}
                     className={cn(
-                      "overflow-hidden border-border bg-card shadow-sm rounded-[2rem] transition-all duration-300 hover:shadow-md scroll-mt-32",
-                      isHighlighted && "animate-highlight"
+                      "rounded-xl font-bold text-xs transition-all",
+                      isActive ? "bg-primary shadow-md" : "hover:bg-primary/10 text-primary"
                     )}
                   >
-                    <CardContent className="p-3 sm:p-0">
-                      <div className="flex flex-row items-center sm:items-stretch gap-4 sm:gap-0">
-                        <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">
-                          <Image src={design.image_url} alt={design.design_id} fill className="object-cover" sizes="(max-width: 640px) 80px, 192px" />
-                        </div>
-                        <div className="flex-1 min-w-0 flex flex-col justify-center sm:p-6">
-                          <div className="flex justify-between items-center mb-2 sm:mb-4">
-                            <h3 className="text-base sm:text-xl font-black font-mono tracking-tighter truncate">{design.design_id}</h3>
-                            <Button variant="ghost" size="icon" onClick={() => onRemoveItem(group.id, item.design_id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8">
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          
-                          {/* Desktop Sizes */}
-                          <div className="hidden sm:block rounded-2xl overflow-hidden border border-border bg-background/50">
-                            <Table>
-                              <TableHeader className="bg-muted/50"><TableRow><TableHead className="font-bold uppercase tracking-widest text-[10px] h-8">Size Specs</TableHead><TableHead className="text-center font-bold uppercase tracking-widest text-[10px] h-8">Quantity</TableHead></TableRow></TableHeader>
-                              <TableBody>
-                                {design.sizes.map((size) => {
-                                  const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                                  const qty = orderSize?.quantity || 0;
-                                  return (
-                                    <TableRow key={size.size_id} className="border-border">
-                                      <TableCell className="font-bold py-3 text-sm">{size.label}</TableCell>
-                                      <TableCell className="text-center py-3">
-                                        <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-base sm:text-sm" />
-                                      </TableCell>
-                                    </TableRow>
-                                  );
-                                })}
-                              </TableBody>
-                            </Table>
-                          </div>
+                    <PlusCircle className="w-4 h-4 mr-2" /> Add Design
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => onRemoveGroup(group.id)}
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
 
-                          {/* Mobile Sizes */}
-                          <div className="flex sm:hidden gap-2">
-                            {design.sizes.map((size) => {
-                              const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                              const qty = orderSize?.quantity || 0;
-                              return (
-                                <div key={size.size_id} className="flex-1 flex flex-col">
-                                  <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">{size.label.includes('Small') ? 'Small' : 'Large'}</span>
-                                  <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-base" />
-                                </div>
-                              );
-                            })}
+              <div className="space-y-4">
+                {group.items.map((item) => {
+                  const design = getDesignById(item.design_id);
+                  if (!design) return null;
+                  const isHighlighted = highlightedDesignId === item.design_id;
+
+                  return (
+                    <Card 
+                      key={item.design_id} 
+                      id={`design-card-${item.design_id}`}
+                      className={cn(
+                        "overflow-hidden border-border bg-card shadow-sm rounded-[2rem] transition-all duration-300 hover:shadow-md scroll-mt-32",
+                        isHighlighted && "animate-highlight"
+                      )}
+                    >
+                      <CardContent className="p-3 sm:p-0">
+                        <div className="flex flex-row items-center sm:items-stretch gap-4 sm:gap-0">
+                          <div className="w-20 h-20 sm:w-48 sm:h-48 relative shrink-0 rounded-2xl sm:rounded-none overflow-hidden bg-muted border sm:border-none">
+                            <Image src={design.image_url} alt={design.design_id} fill className="object-cover" sizes="(max-width: 640px) 80px, 192px" />
+                          </div>
+                          <div className="flex-1 min-w-0 flex flex-col justify-center sm:p-6">
+                            <div className="flex justify-between items-center mb-2 sm:mb-4">
+                              <h3 className="text-base sm:text-xl font-black font-mono tracking-tighter truncate">{design.design_id}</h3>
+                              <Button variant="ghost" size="icon" onClick={() => onRemoveItem(group.id, item.design_id)} className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full h-8 w-8">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="hidden sm:block rounded-2xl overflow-hidden border border-border bg-background/50">
+                              <Table>
+                                <TableHeader className="bg-muted/50"><TableRow><TableHead className="font-bold uppercase tracking-widest text-[10px] h-8">Size Specs</TableHead><TableHead className="text-center font-bold uppercase tracking-widest text-[10px] h-8">Quantity</TableHead></TableRow></TableHeader>
+                                <TableBody>
+                                  {design.sizes.map((size) => {
+                                    const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                                    const qty = orderSize?.quantity || 0;
+                                    return (
+                                      <TableRow key={size.size_id} className="border-border">
+                                        <TableCell className="font-bold py-3 text-sm">{size.label}</TableCell>
+                                        <TableCell className="text-center py-3">
+                                          <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-20 mx-auto text-center h-9 rounded-lg border-2 font-bold bg-background text-base sm:text-sm" />
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  })}
+                                </TableBody>
+                              </Table>
+                            </div>
+
+                            <div className="flex sm:hidden gap-2">
+                              {design.sizes.map((size) => {
+                                const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                                const qty = orderSize?.quantity || 0;
+                                return (
+                                  <div key={size.size_id} className="flex-1 flex flex-col">
+                                    <span className="text-[10px] font-bold text-muted-foreground uppercase truncate mb-1">{size.label.includes('Small') ? 'Small' : 'Large'}</span>
+                                    <Input type="number" min="0" inputMode="numeric" value={qty || ""} onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} onKeyDown={handleKeyDown} className="w-full text-center h-10 rounded-lg border-2 font-bold bg-background text-base" />
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-              {group.items.length === 0 && (
-                <button 
-                  onClick={() => onAddDesignToGroup(group.id)}
-                  className="w-full h-32 border-2 border-dashed border-border rounded-[2rem] flex flex-col items-center justify-center gap-2 text-muted-foreground hover:bg-muted/30 hover:border-primary/30 hover:text-primary transition-all"
-                >
-                  <PlusCircle className="w-6 h-6 opacity-40" />
-                  <span className="font-bold text-sm">Tap to add designs for {group.fabric_id}</span>
-                </button>
-              )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+                {group.items.length === 0 && (
+                  <button 
+                    onClick={() => onAddDesignToGroup(group.id)}
+                    className={cn(
+                      "w-full h-32 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center gap-2 transition-all duration-300 group",
+                      isActive 
+                        ? "bg-primary/10 border-primary text-primary shadow-lg shadow-primary/5" 
+                        : "border-border text-muted-foreground hover:bg-muted/30 hover:border-primary/30 hover:text-primary"
+                    )}
+                  >
+                    <PlusCircle className={cn("w-6 h-6 transition-transform group-active:scale-90", isActive ? "opacity-100" : "opacity-40")} />
+                    <div className="text-center">
+                      <span className="font-bold text-sm block">Tap to add designs for {group.fabric_id}</span>
+                      <span className="text-[10px] opacity-60 uppercase tracking-widest font-medium">Select from sidebar or search</span>
+                    </div>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
-        {/* SUMMARY SECTION */}
         <div className="mt-20 p-8 bg-muted/30 rounded-[3rem] border-2 border-border/50 backdrop-blur-sm shadow-xl">
           <div className="flex items-center gap-3 mb-8">
             <div className="p-3 bg-foreground text-background rounded-2xl shadow-lg">

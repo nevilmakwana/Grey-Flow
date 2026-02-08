@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOrder } from './lib/store';
 import { DesignList } from '@/components/scarf-app/design-list';
 import { OrderPanel } from '@/components/scarf-app/order-panel';
@@ -39,6 +39,13 @@ export default function ScarfOrderApp() {
   const [activeGroupId, setActiveGroupId] = useState<string | null>(null);
   const [highlightedDesignId, setHighlightedDesignId] = useState<string | null>(null);
 
+  // Default active group logic
+  useEffect(() => {
+    if (!activeGroupId && currentOrder.fabricGroups.length > 0) {
+      setActiveGroupId(currentOrder.fabricGroups[0].id);
+    }
+  }, [currentOrder.fabricGroups, activeGroupId]);
+
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
       window.print();
@@ -61,7 +68,7 @@ export default function ScarfOrderApp() {
         .replace(/(\d{4})\s/, '$1 | ');
     };
 
-    let msg = `*Order Request - ${settings.company_name}*\n`;
+    let msg = `*Order Request - Grey Exim*\n`;
     msg += `Order ID: ${currentOrder.id}\n`;
     msg += `Date: ${formatFullDate(new Date().toISOString())}\n\n`;
 
@@ -117,7 +124,7 @@ export default function ScarfOrderApp() {
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: `Order Request - ${settings.company_name}`,
+          title: `Order Request - Grey Exim`,
           text: text,
         });
         toast({ title: "Order Shared", description: "Summary sent successfully." });
@@ -134,17 +141,17 @@ export default function ScarfOrderApp() {
   };
 
   const handleSelectDesign = (id: string) => {
-    if (activeGroupId) {
-      addItemToGroup(activeGroupId, id);
+    const targetGroupId = activeGroupId || (currentOrder.fabricGroups.length > 0 ? currentOrder.fabricGroups[0].id : null);
+    
+    if (targetGroupId) {
+      addItemToGroup(targetGroupId, id);
       setHighlightedDesignId(null);
       
-      // Trigger scroll after state update
       setTimeout(() => {
         setHighlightedDesignId(id);
         if (isMobile) setIsSearchOpen(false);
       }, 50);
 
-      // Clear highlight after animation completes
       setTimeout(() => {
         setHighlightedDesignId(null);
       }, 1500);
@@ -159,7 +166,25 @@ export default function ScarfOrderApp() {
 
   const handleOpenSearchForGroup = (groupId: string) => {
     setActiveGroupId(groupId);
-    setIsSearchOpen(true);
+    if (isMobile) {
+      setIsSearchOpen(true);
+    } else {
+      toast({
+        title: "Targeting Fabric Group",
+        description: "Select designs from the left sidebar to add them here."
+      });
+    }
+  };
+
+  const handleAddGroupAndActivate = (fabricId: string) => {
+    const newId = addFabricGroup(fabricId);
+    setActiveGroupId(newId);
+    if (!isMobile) {
+      toast({
+        title: `${fabricId} Group Created`,
+        description: "Now select designs from the sidebar."
+      });
+    }
   };
 
   if (isShareMode) {
@@ -200,10 +225,14 @@ export default function ScarfOrderApp() {
             order={currentOrder} 
             designs={DESIGNS} 
             highlightedDesignId={highlightedDesignId}
+            activeGroupId={activeGroupId}
             onUpdateQty={updateQuantity} 
             onRemoveItem={removeItemFromGroup}
-            onAddGroup={addFabricGroup}
-            onRemoveGroup={removeFabricGroup}
+            onAddGroup={handleAddGroupAndActivate}
+            onRemoveGroup={(id) => {
+              removeFabricGroup(id);
+              if (activeGroupId === id) setActiveGroupId(null);
+            }}
             onAddDesignToGroup={handleOpenSearchForGroup}
             settings={settings}
           />
@@ -231,7 +260,10 @@ export default function ScarfOrderApp() {
       )}
 
       <FloatingDock 
-        onReset={clearOrder}
+        onReset={() => {
+          clearOrder();
+          setActiveGroupId(null);
+        }}
         onSearch={() => setIsSearchOpen(true)}
         onWhatsApp={shareToWhatsApp}
         onShare={handleNativeShare}
@@ -245,6 +277,7 @@ export default function ScarfOrderApp() {
         designs={DESIGNS} 
         onImport={(matchedData) => {
           const groupId = addFabricGroup('Satin');
+          setActiveGroupId(groupId);
           matchedData.forEach(m => {
             addItemToGroup(groupId, m.design_id);
             updateQuantity(groupId, m.design_id, m.size_id, m.quantity);
