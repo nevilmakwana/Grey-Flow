@@ -292,7 +292,7 @@ export function OrderPanel({
                                   value={qty || ""} 
                                   onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
                                   onKeyDown={handleKeyDown} 
-                                  className="h-8 font-bold bg-muted/10 focus:bg-white text-xs px-2" 
+                                  className="h-8 font-bold bg-muted/10 focus:bg-white text-base sm:text-xs px-2" 
                                 />
                               </div>
                             );
