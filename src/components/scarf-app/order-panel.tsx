@@ -2,36 +2,25 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Order, Design, AppSettings, FabricGroup } from '@/app/lib/types';
-import { Card, CardContent } from '@/components/ui/card';
+import { Order, Design, AppSettings } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { 
   Trash2, 
   Hash,
-  ShoppingBag,
   Plus,
   Layers,
-  ChevronRight,
-  Target
+  ChevronRight
 } from 'lucide-react';
 import Image from 'next/image';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
 
 function LiveClock() {
   const [time, setTime] = useState<Date | null>(null);
@@ -130,14 +119,14 @@ export function OrderPanel({
           <Button 
             onClick={() => onAddGroup('Satin')} 
             variant="outline"
-            className="flex-1 h-8 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
             <span className="text-lg font-bold">Satin</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
             variant="outline"
-            className="flex-1 h-8 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
             <span className="text-lg font-bold">Cotton</span>
           </Button>
@@ -302,6 +291,15 @@ export function OrderPanel({
                     </div>
                   );
                 })}
+
+                {/* Trailing Add Design Option */}
+                <button 
+                  onClick={() => onAddDesignToGroup(group.id)}
+                  className="flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg transition-all group h-24 sm:h-28 bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary no-print"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span className="text-sm font-bold">Add Design</span>
+                </button>
               </div>
             </div>
           );
