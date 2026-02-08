@@ -222,7 +222,7 @@ export function OrderPanel({
                 </Button>
               </div>
 
-              <div className="p-4 space-y-4">
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {group.items.map((item) => {
                   const design = getDesignById(item.design_id);
                   if (!design) return null;
@@ -237,38 +237,39 @@ export function OrderPanel({
                         isHighlighted && "animate-highlight ring-1 ring-primary/30"
                       )}
                     >
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 relative shrink-0 bg-muted aspect-square border-r border-border/30">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 relative shrink-0 bg-muted aspect-square border-r border-border/30">
                         <Image 
                           src={design.image_url} 
                           alt={design.design_id} 
                           fill 
                           className="object-cover" 
-                          sizes="(max-width: 640px) 96px, 128px" 
+                          sizes="(max-width: 640px) 96px, 112px" 
+                          data-ai-hint="silk scarf"
                         />
                       </div>
                       
-                      <div className="flex-1 flex flex-col justify-center px-4 py-2 sm:px-6">
-                        <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1 flex flex-col justify-center px-3 py-2 sm:px-4">
+                        <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="text-sm sm:text-base font-bold text-foreground">{design.design_id}</h3>
+                            <h3 className="text-sm font-bold text-foreground truncate max-w-[120px]">{design.design_id}</h3>
                           </div>
                           <Button 
                             variant="ghost" 
                             size="icon" 
                             onClick={() => onRemoveItem(group.id, item.design_id)} 
-                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/5 h-7 w-7"
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/5 h-6 w-6"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
                         
-                        <div className="flex gap-4">
+                        <div className="flex gap-2">
                           {design.sizes.map((size) => {
                             const orderSize = item.sizes.find(s => s.size_id === size.size_id);
                             const qty = orderSize?.quantity || 0;
                             return (
-                              <div key={size.size_id} className="flex-1 max-w-[120px]">
-                                <label className="block text-[10px] font-bold text-muted-foreground uppercase mb-1 truncate">
+                              <div key={size.size_id} className="flex-1 min-w-0">
+                                <label className="block text-[8px] font-bold text-muted-foreground uppercase mb-0.5 truncate">
                                   {size.label.split(' ')[0]}
                                 </label>
                                 <Input 
@@ -277,7 +278,7 @@ export function OrderPanel({
                                   value={qty || ""} 
                                   onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
                                   onKeyDown={handleKeyDown} 
-                                  className="h-9 font-bold bg-muted/10 focus:bg-white text-sm" 
+                                  className="h-8 font-bold bg-muted/10 focus:bg-white text-xs px-2" 
                                 />
                               </div>
                             );
@@ -291,7 +292,7 @@ export function OrderPanel({
                   <button 
                     onClick={() => onAddDesignToGroup(group.id)}
                     className={cn(
-                      "w-full h-24 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 transition-all group",
+                      "col-span-1 md:col-span-2 w-full h-24 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 transition-all group",
                       isActive 
                         ? "bg-primary/5 border-primary/50 text-primary" 
                         : "text-muted-foreground hover:bg-muted/30 hover:border-primary/30"
