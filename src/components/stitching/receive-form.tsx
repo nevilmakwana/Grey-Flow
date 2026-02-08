@@ -6,7 +6,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Send, CheckCircle, User, CalendarDays, PackageCheck, Wallet } from 'lucide-react';
+import { Plus, Trash2, PackageCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -25,7 +25,10 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   ]);
 
   const workerNames = useMemo(() => {
-    return Array.from(new Set(allEntries.map(e => e.workerName)));
+    const existing = allEntries.map(e => e.workerName);
+    // Include the primary requested names by default
+    const defaults = ["Nayna", "Ramila", "Vilas"];
+    return Array.from(new Set([...defaults, ...existing]));
   }, [allEntries]);
 
   const labelBalance = useMemo(() => {
@@ -138,8 +141,9 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       </div>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between ml-1">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-green-600">Finished Goods</h3>
+        <div className="flex items-center gap-2 mb-2 ml-1">
+          <div className="w-1 h-4 bg-green-600 rounded-full" />
+          <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Finished Goods Receipt</h3>
         </div>
         <div className="space-y-2">
           {receiveItems.map((item, idx) => (
@@ -148,12 +152,12 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 placeholder="Design SKU" 
                 value={item.design_id} 
                 onChange={e => updateItem(idx, 'design_id', e.target.value.toUpperCase())}
-                className="rounded-lg h-11 bg-background border font-bold flex-1"
+                className="rounded-lg h-10 bg-background border font-bold flex-1"
               />
               <select 
                 value={item.size_id} 
                 onChange={e => updateItem(idx, 'size_id', e.target.value)}
-                className="h-11 rounded-lg border bg-background px-3 text-xs w-24 font-bold appearance-none cursor-pointer text-center"
+                className="h-10 rounded-lg border bg-background px-3 text-xs w-20 font-bold appearance-none cursor-pointer text-center"
               >
                 <option value="S-SML">S</option>
                 <option value="S-LGE">L</option>
@@ -163,46 +167,52 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 placeholder="Qty" 
                 value={item.quantity || ''} 
                 onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                className="rounded-lg h-11 w-20 bg-background border text-center font-bold"
+                className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
               />
-              <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-11 w-11 rounded-lg text-muted-foreground hover:text-destructive">
+              <Button variant="ghost" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
                 <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           ))}
-          <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-11 text-xs font-bold text-muted-foreground hover:text-green-600">
+          <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
             <Plus className="w-3 h-3 mr-2" /> Add Finished Design
           </Button>
         </div>
       </div>
 
       {workerName && (
-        <div className="p-4 bg-muted/20 rounded-xl grid grid-cols-2 gap-4">
-          <div className="text-center">
-            <span className="block text-[8px] font-bold text-muted-foreground uppercase mb-1">Small Labels</span>
-            <span className={cn("text-xl font-black", (labelBalance.small - totals.small) < 0 ? 'text-destructive' : 'text-foreground')}>
-              {labelBalance.small - totals.small}
-            </span>
+        <div className="p-4 bg-muted/10 rounded-xl border border-border/50">
+          <div className="flex items-center gap-2 mb-4">
+            <PackageCheck className="w-3 h-3 text-green-600" />
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Label Balance Inventory</h4>
           </div>
-          <div className="text-center">
-            <span className="block text-[8px] font-bold text-muted-foreground uppercase mb-1">Large Labels</span>
-            <span className={cn("text-xl font-black", (labelBalance.large - totals.large) < 0 ? 'text-destructive' : 'text-foreground')}>
-              {labelBalance.large - totals.large}
-            </span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-background rounded-lg border border-border/50">
+              <span className="block text-[8px] font-black text-muted-foreground uppercase mb-1 tracking-widest">Small Labels</span>
+              <span className={cn("text-2xl font-black", (labelBalance.small - totals.small) < 0 ? 'text-destructive' : 'text-foreground')}>
+                {labelBalance.small - totals.small}
+              </span>
+            </div>
+            <div className="text-center p-3 bg-background rounded-lg border border-border/50">
+              <span className="block text-[8px] font-black text-muted-foreground uppercase mb-1 tracking-widest">Large Labels</span>
+              <span className={cn("text-2xl font-black", (labelBalance.large - totals.large) < 0 ? 'text-destructive' : 'text-foreground')}>
+                {labelBalance.large - totals.large}
+              </span>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="bg-green-600 text-white p-4 rounded-xl flex items-center justify-between">
-        <span className="text-[10px] uppercase font-bold opacity-70">Total Received</span>
-        <span className="text-2xl font-black">{totals.small + totals.large} <span className="text-xs opacity-70">PCS</span></span>
+      <div className="bg-green-600 text-white p-5 rounded-xl flex items-center justify-between shadow-lg">
+        <span className="text-[8px] uppercase font-black opacity-60 tracking-widest">Total Received Today</span>
+        <span className="text-3xl font-black tracking-tighter">{totals.small + totals.large} <span className="text-xs opacity-60">PCS</span></span>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-12 rounded-xl font-bold border-border">
-          Save Entry
+        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
+          Save Ledger
         </Button>
-        <Button onClick={() => handleSubmit(true)} className="h-12 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold">
+        <Button onClick={() => handleSubmit(true)} className="h-14 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
           Save & Message
         </Button>
       </div>

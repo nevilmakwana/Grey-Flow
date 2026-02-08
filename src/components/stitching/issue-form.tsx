@@ -6,7 +6,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Send, Save, User, CalendarDays, ClipboardList, Tag } from 'lucide-react';
+import { Plus, Trash2, Tag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -68,7 +68,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
   const handleSubmit = (withShare = false) => {
     if (!workerName) {
-      toast({ variant: "destructive", title: "Missing Worker Name", description: "Please enter the worker's name." });
+      toast({ variant: "destructive", title: "Select Worker", description: "Please choose a worker from the list." });
       return;
     }
     const validItems = issueItems.filter(i => i.design_id && i.quantity > 0);
@@ -102,12 +102,16 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Worker Name</Label>
-          <Input 
-            placeholder="Worker Name" 
+          <select 
             value={workerName} 
             onChange={e => setWorkerName(e.target.value)}
-            className="rounded-lg h-11 bg-muted/20 border-border focus-visible:ring-primary/20 font-medium px-4"
-          />
+            className="flex h-11 w-full rounded-lg border border-border bg-muted/20 px-4 py-2 text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer"
+          >
+            <option value="">Select Worker</option>
+            <option value="Nayna">Nayna</option>
+            <option value="Ramila">Ramila</option>
+            <option value="Vilas">Vilas</option>
+          </select>
         </div>
         <div className="space-y-1.5">
           <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Issue Date</Label>
@@ -122,7 +126,10 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
       <div className="space-y-6">
         <div className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Small (50×50 cm)</h3>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-1 h-4 bg-primary rounded-full" />
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Small (50×50 cm)</h3>
+          </div>
           <div className="space-y-2">
             {issueItems.filter(i => i.size_id === 'S-SML').map((item, idx) => (
               <div key={`small-${idx}`} className="flex gap-2">
@@ -130,28 +137,31 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                   placeholder="Design SKU" 
                   value={item.design_id} 
                   onChange={e => updateItem(issueItems.indexOf(item), 'design_id', e.target.value.toUpperCase())}
-                  className="rounded-lg h-11 bg-background border font-bold flex-1"
+                  className="rounded-lg h-10 bg-background border font-bold flex-1"
                 />
                 <Input 
                   type="number" 
                   placeholder="Qty" 
                   value={item.quantity || ''} 
                   onChange={e => updateItem(issueItems.indexOf(item), 'quantity', parseInt(e.target.value) || 0)}
-                  className="rounded-lg h-11 w-24 bg-background border text-center font-bold"
+                  className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                 />
-                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-11 w-11 rounded-lg text-muted-foreground hover:text-destructive">
+                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             ))}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-11 text-xs font-bold text-muted-foreground hover:text-primary">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Small Design
             </Button>
           </div>
         </div>
 
         <div className="space-y-3">
-          <h3 className="text-[10px] font-bold uppercase tracking-widest text-primary ml-1">Large (90×90 cm)</h3>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-1 h-4 bg-primary rounded-full" />
+            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Large (90×90 cm)</h3>
+          </div>
           <div className="space-y-2">
             {issueItems.filter(i => i.size_id === 'S-LGE').map((item, idx) => (
               <div key={`large-${idx}`} className="flex gap-2">
@@ -159,32 +169,35 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                   placeholder="Design SKU" 
                   value={item.design_id} 
                   onChange={e => updateItem(issueItems.indexOf(item), 'design_id', e.target.value.toUpperCase())}
-                  className="rounded-lg h-11 bg-background border font-bold flex-1"
+                  className="rounded-lg h-10 bg-background border font-bold flex-1"
                 />
                 <Input 
                   type="number" 
                   placeholder="Qty" 
                   value={item.quantity || ''} 
                   onChange={e => updateItem(issueItems.indexOf(item), 'quantity', parseInt(e.target.value) || 0)}
-                  className="rounded-lg h-11 w-24 bg-background border text-center font-bold"
+                  className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
                 />
-                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-11 w-11 rounded-lg text-muted-foreground hover:text-destructive">
+                <Button variant="ghost" size="icon" onClick={() => removeItem(issueItems.indexOf(item))} className="h-10 w-10 rounded-lg text-muted-foreground hover:text-destructive">
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
             ))}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-11 text-xs font-bold text-muted-foreground hover:text-primary">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-primary uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Large Design
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="p-4 bg-muted/20 rounded-xl space-y-4">
-        <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Satin Labels</h4>
+      <div className="p-4 bg-muted/10 rounded-xl border border-border/50">
+        <div className="flex items-center gap-2 mb-4">
+          <Tag className="w-3 h-3 text-primary" />
+          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Satin Labels Issued Today</h4>
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Small</Label>
+            <Label className="text-[9px] font-black text-muted-foreground uppercase ml-1">Small Labels</Label>
             <Input 
               type="number" 
               value={labels.small || ''} 
@@ -193,7 +206,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-[9px] font-bold text-muted-foreground uppercase ml-1">Large</Label>
+            <Label className="text-[9px] font-black text-muted-foreground uppercase ml-1">Large Labels</Label>
             <Input 
               type="number" 
               value={labels.large || ''} 
@@ -204,28 +217,28 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between p-4 bg-primary text-primary-foreground rounded-xl shadow-sm">
-        <div className="flex gap-6">
+      <div className="flex items-center justify-between p-5 bg-foreground text-background rounded-xl shadow-lg">
+        <div className="flex gap-8">
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase font-bold opacity-70">Small</span>
-            <span className="text-lg font-bold">{totals.small}</span>
+            <span className="text-[8px] uppercase font-black opacity-50 tracking-widest">Small</span>
+            <span className="text-xl font-black">{totals.small}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase font-bold opacity-70">Large</span>
-            <span className="text-lg font-bold">{totals.large}</span>
+            <span className="text-[8px] uppercase font-black opacity-50 tracking-widest">Large</span>
+            <span className="text-xl font-black">{totals.large}</span>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-[8px] uppercase font-bold opacity-70 block">Total Issued</span>
-          <span className="text-2xl font-black">{totals.small + totals.large}</span>
+          <span className="text-[8px] uppercase font-black opacity-50 tracking-widest block mb-1">Total Issued</span>
+          <span className="text-3xl font-black tracking-tighter">{totals.small + totals.large} <span className="text-xs opacity-50">PCS</span></span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
-        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-12 rounded-xl font-bold border-border">
-          Save Entry
+        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
+          Save Ledger
         </Button>
-        <Button onClick={() => handleSubmit(true)} className="h-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold">
+        <Button onClick={() => handleSubmit(true)} className="h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
           Save & Message
         </Button>
       </div>
