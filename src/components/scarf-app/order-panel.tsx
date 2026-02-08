@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -212,14 +213,25 @@ export function OrderPanel({
                     <p className="text-xs text-muted-foreground font-medium">{group.items.length} designs included</p>
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={() => onRemoveGroup(group.id)}
-                  className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/5"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => onAddDesignToGroup(group.id)}
+                    className="h-8 w-8 text-primary hover:bg-primary/10"
+                    title="Add Design"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={() => onRemoveGroup(group.id)}
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/5"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
 
               <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -288,20 +300,20 @@ export function OrderPanel({
                     </div>
                   );
                 })}
-                {group.items.length === 0 && (
-                  <button 
-                    onClick={() => onAddDesignToGroup(group.id)}
-                    className={cn(
-                      "col-span-1 md:col-span-2 w-full h-24 border border-dashed border-border rounded-lg flex flex-col items-center justify-center gap-1 transition-all group",
-                      isActive 
-                        ? "bg-primary/5 border-primary/50 text-primary" 
-                        : "text-muted-foreground hover:bg-muted/30 hover:border-primary/30"
-                    )}
-                  >
-                    <span className="font-bold text-sm">Add designs for {group.fabric_id}</span>
-                    <span className="text-[10px] font-medium opacity-60 uppercase tracking-widest">Select from the sidebar</span>
-                  </button>
-                )}
+                
+                {/* Direct Add Design Option */}
+                <button 
+                  onClick={() => onAddDesignToGroup(group.id)}
+                  className={cn(
+                    "flex items-center justify-center gap-2 border border-dashed border-border rounded-lg transition-all group",
+                    group.items.length > 0 
+                      ? "h-[96px] sm:h-[112px] bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary" 
+                      : "col-span-1 md:col-span-2 w-full h-24 text-muted-foreground hover:bg-muted/30 hover:border-primary/30"
+                  )}
+                >
+                  <Plus className="w-4 h-4" />
+                  <span className="font-bold text-sm uppercase tracking-wider">Add Design</span>
+                </button>
               </div>
             </div>
           );
