@@ -251,7 +251,6 @@ export function OrderPanel({
                         <div className="flex justify-between items-start mb-3">
                           <div>
                             <h3 className="text-sm sm:text-base font-bold text-foreground">{design.design_id}</h3>
-                            <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">Design SKU</p>
                           </div>
                           <Button 
                             variant="ghost" 
