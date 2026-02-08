@@ -12,7 +12,6 @@ import {
   Plus,
   Layers,
   ChevronRight,
-  PlusCircle,
   Target
 } from 'lucide-react';
 import Image from 'next/image';
@@ -342,9 +341,8 @@ export function OrderPanel({
                         : "border-border text-muted-foreground hover:bg-muted/30 hover:border-primary/30 hover:text-primary"
                     )}
                   >
-                    <PlusCircle className={cn("w-6 h-6 transition-transform group-active:scale-90", isActive ? "opacity-100" : "opacity-40")} />
                     <div className="text-center">
-                      <span className="font-bold text-sm block">Tap to add designs for {group.fabric_id}</span>
+                      <span className="font-bold text-sm block">Add designs for {group.fabric_id}</span>
                       <span className="text-[10px] opacity-60 uppercase tracking-widest font-medium">Select from sidebar or search</span>
                     </div>
                   </button>
