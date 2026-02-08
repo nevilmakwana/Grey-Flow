@@ -248,7 +248,7 @@ export default function ScarfOrderApp() {
           </button>
         </nav>
 
-        {/* Mobile Menu Trigger & Right Spacer */}
+        {/* Mobile Menu Trigger & Right Drawer */}
         <div className="flex-1 flex justify-end items-center">
           <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -259,7 +259,7 @@ export default function ScarfOrderApp() {
               </SheetTrigger>
               <SheetContent side="right" className="w-full sm:w-[350px] p-0 border-none bg-background/95 backdrop-blur-xl">
                 <SheetHeader className="p-6 border-b text-left">
-                  <SheetTitle className="font-black tracking-tighter text-2xl uppercase">GreyFlow Menu</SheetTitle>
+                  {/* Removed SheetTitle as requested */}
                 </SheetHeader>
                 <div className="flex flex-col p-4 gap-3">
                   <button 
