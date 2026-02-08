@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -245,13 +244,7 @@ export default function ScarfOrderApp() {
           </button>
         </nav>
 
-        <div className="flex-1 flex justify-end">
-          {activeModule === 'orders' && !isMobile && (
-             <button onClick={handlePrint} className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-muted text-foreground transition-colors">
-               <Printer className="h-5 w-5" />
-             </button>
-          )}
-        </div>
+        <div className="flex-1" />
       </header>
 
       <main className="flex-1 flex overflow-hidden pt-16">
@@ -299,7 +292,7 @@ export default function ScarfOrderApp() {
                       designs={DESIGNS} 
                       onSelect={handleSelectDesign} 
                       selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
-                    />
+                />
                   </div>
                 </SheetContent>
               </Sheet>
