@@ -157,13 +157,12 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                 {date ? format(parseISO(date), "dd MMM yyyy") : <span>Pick a date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border-border bg-popover" align="start">
+            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border border-border bg-popover mt-2" align="start">
               <Calendar
                 mode="single"
                 selected={date ? parseISO(date) : undefined}
                 onSelect={(d) => d && setDate(format(d, "yyyy-MM-dd"))}
                 initialFocus
-                className="rounded-2xl"
               />
             </PopoverContent>
           </Popover>
