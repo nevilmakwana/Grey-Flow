@@ -20,7 +20,7 @@ export function SearchableDesignSelect({
   designs, 
   value, 
   onSelect, 
-  placeholder = "Select SKU...",
+  placeholder = "Select...",
   className
 }: SearchableDesignSelectProps) {
   const [open, setOpen] = useState(false);

@@ -166,7 +166,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Received Small Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-green-600 rounded-full" />
@@ -182,7 +181,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Design..."
+                      placeholder="Select..."
                     />
                   </div>
                   <Input 
@@ -204,7 +203,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
           </div>
         </div>
 
-        {/* Received Large Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-green-600 rounded-full" />
@@ -220,7 +218,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Finished Design..."
+                      placeholder="Select..."
                     />
                   </div>
                   <Input 

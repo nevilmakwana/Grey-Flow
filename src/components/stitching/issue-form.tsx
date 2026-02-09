@@ -147,7 +147,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Small Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-primary rounded-full" />
@@ -163,7 +162,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Small Design..."
+                      placeholder="Select..."
                     />
                   </div>
                   <Input 
@@ -185,7 +184,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
           </div>
         </div>
 
-        {/* Large Scarf Section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-primary rounded-full" />
@@ -201,7 +199,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select Large Design..."
+                      placeholder="Select..."
                     />
                   </div>
                   <Input 
