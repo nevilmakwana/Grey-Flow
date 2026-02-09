@@ -281,20 +281,22 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-5 bg-foreground text-background rounded-xl shadow-lg gap-4">
-        <div className="flex gap-8 justify-around sm:justify-start">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-6 bg-card border border-border/60 rounded-2xl shadow-sm gap-4">
+        <div className="flex gap-10 justify-around sm:justify-start">
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase font-black opacity-50 tracking-widest">Small</span>
-            <span className="text-xl font-black">{totals.small}</span>
+            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Small</span>
+            <span className="text-2xl font-bold text-foreground">{totals.small}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-[8px] uppercase font-black opacity-50 tracking-widest">Large</span>
-            <span className="text-xl font-black">{totals.large}</span>
+            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Large</span>
+            <span className="text-2xl font-bold text-foreground">{totals.large}</span>
           </div>
         </div>
-        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-background/10">
-          <span className="text-[8px] uppercase font-black opacity-50 tracking-widest block mb-1">Total Issued</span>
-          <span className="text-3xl font-black tracking-tighter">{totals.small + totals.large} <span className="text-xs opacity-50">PCS</span></span>
+        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-border/30">
+          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest block mb-1">Total Issued</span>
+          <span className="text-3xl font-black text-primary tracking-tighter">
+            {totals.small + totals.large} <span className="text-sm font-medium opacity-60">PCS</span>
+          </span>
         </div>
       </div>
 
