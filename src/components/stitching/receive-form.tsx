@@ -303,15 +303,21 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-6 bg-card border border-border/60 rounded-2xl shadow-sm gap-4">
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Receipt Summary</span>
-          <span className="text-base font-bold text-foreground truncate">{workerName || 'No Worker Selected'}</span>
+      <div className="flex items-center justify-between px-4 py-3 bg-muted/20 border border-border/50 rounded-xl">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 border-r border-border/50 pr-4">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Small</span>
+            <span className="text-sm font-black text-foreground">{currentFormTotals.small}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Large</span>
+            <span className="text-sm font-black text-foreground">{currentFormTotals.large}</span>
+          </div>
         </div>
-        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-border/30">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest block mb-1">Total Received Today</span>
-          <span className="text-3xl font-black text-green-600 tracking-tighter">
-            {currentFormTotals.small + currentFormTotals.large} <span className="text-sm font-medium opacity-60">PCS</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Total</span>
+          <span className="text-lg font-black text-green-600 tracking-tight">
+            {currentFormTotals.small + currentFormTotals.large} <span className="text-[10px] opacity-60">PCS</span>
           </span>
         </div>
       </div>

@@ -281,21 +281,21 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-6 bg-card border border-border/60 rounded-2xl shadow-sm gap-4">
-        <div className="flex gap-10 justify-around sm:justify-start">
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Small</span>
-            <span className="text-2xl font-bold text-foreground">{totals.small}</span>
+      <div className="flex items-center justify-between px-4 py-3 bg-muted/20 border border-border/50 rounded-xl">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 border-r border-border/50 pr-4">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Small</span>
+            <span className="text-sm font-black text-foreground">{totals.small}</span>
           </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Large</span>
-            <span className="text-2xl font-bold text-foreground">{totals.large}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Large</span>
+            <span className="text-sm font-black text-foreground">{totals.large}</span>
           </div>
         </div>
-        <div className="text-center sm:text-right border-t sm:border-t-0 pt-4 sm:pt-0 border-border/30">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest block mb-1">Total Issued</span>
-          <span className="text-3xl font-black text-primary tracking-tighter">
-            {totals.small + totals.large} <span className="text-sm font-medium opacity-60">PCS</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Total</span>
+          <span className="text-lg font-black text-primary tracking-tight">
+            {totals.small + totals.large} <span className="text-[10px] opacity-60">PCS</span>
           </span>
         </div>
       </div>
