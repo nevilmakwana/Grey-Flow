@@ -1,26 +1,29 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useOrder } from './lib/store';
-import { DesignList } from '@/components/scarf-app/design-list';
-import { OrderPanel } from '@/components/scarf-app/order-panel';
-import { CSVImport } from '@/components/scarf-app/csv-import';
-import { FloatingDock } from '@/components/scarf-app/floating-dock';
-import { ShareView } from '@/components/scarf-app/share-view';
-import { StitchingModule } from '@/components/stitching/stitching-module';
-import { Toaster } from '@/components/ui/toaster';
-import { ShoppingBag, Scissors, Menu, X, ChevronRight } from 'lucide-react';
+import { useOrder } from '@/app/lib/store';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+import { 
+  Menu, 
+  ShoppingBag, 
+  Scissors, 
+  ChevronRight,
+  Search
+} from 'lucide-react';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetTrigger
 } from '@/components/ui/sheet';
+import { DesignList } from '@/components/scarf-app/design-list';
+import { OrderPanel } from '@/components/scarf-app/order-panel';
+import { FloatingDock } from '@/components/scarf-app/floating-dock';
+import { StitchingModule } from '@/components/stitching/stitching-module';
+import { CSVImport } from '@/components/scarf-app/csv-import';
+import { ShareView } from '@/components/scarf-app/share-view';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function ScarfOrderApp() {
   const { 
@@ -297,9 +300,6 @@ export default function ScarfOrderApp() {
                     <ChevronRight className={cn("w-4 h-4 transition-transform", activeModule === 'stitching' && "translate-x-1")} />
                   </button>
                 </div>
-                <div className="p-8 border-t bg-muted/5 mt-auto">
-                  <p className="text-[10px] text-muted-foreground font-bold tracking-[0.2em] uppercase opacity-40 text-center">GreyFlow Workspace</p>
-                </div>
               </SheetContent>
             </Sheet>
           </div>
@@ -340,18 +340,18 @@ export default function ScarfOrderApp() {
             {isMobile && (
               <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
                 <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
-                  <SheetHeader className="p-4 border-b bg-background">
-                    <SheetTitle className="text-left font-black flex items-center gap-2">
+                  <div className="p-4 border-b bg-background">
+                    <h2 className="text-left font-black flex items-center gap-2">
                       <ShoppingBag className="w-5 h-5" />
                       Select Design
-                    </SheetTitle>
-                  </SheetHeader>
+                    </h2>
+                  </div>
                   <div className="flex-1 overflow-hidden">
                     <DesignList 
                       designs={DESIGNS} 
                       onSelect={handleSelectDesign} 
                       selectedIds={currentOrder.fabricGroups.flatMap(g => g.items.map(i => i.design_id))} 
-                />
+                    />
                   </div>
                 </SheetContent>
               </Sheet>
