@@ -19,6 +19,12 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-4 bg-background", className)}
+      modifiers={{
+        sunday: (date) => date.getDay() === 0,
+      }}
+      modifiersClassNames={{
+        sunday: "text-zinc-500/80", // Dark grey for Sundays
+      }}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -41,8 +47,8 @@ function Calendar({
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-full hover:bg-muted transition-all"
         ),
-        selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground font-bold shadow-sm",
-        today: "text-primary font-bold bg-primary/5",
+        selected: "bg-[#FF3B30] text-white hover:bg-[#FF3B30] hover:text-white focus:bg-[#FF3B30] focus:text-white font-bold shadow-sm",
+        today: "text-black font-bold bg-[#FF3B30] ring-2 ring-[#FF3B30] ring-offset-1", // Apple's Red highlight with black text
         outside: "text-muted-foreground opacity-20 aria-selected:bg-accent/50 aria-selected:text-muted-foreground",
         disabled: "text-muted-foreground opacity-50",
         hidden: "invisible",
