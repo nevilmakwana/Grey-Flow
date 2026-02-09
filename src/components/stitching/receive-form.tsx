@@ -22,7 +22,6 @@ interface ReceiveFormProps {
 export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   const { toast } = useToast();
   const [workerName, setWorkerName] = useState('');
-  // Use local date instead of UTC ISO string to ensure "today" is correct for the user
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [receiveItems, setReceiveItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
     { design_id: '', size_id: 'S-SML', quantity: 0 },
@@ -210,6 +209,8 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                   </div>
                   <Input 
                     type="number" 
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
@@ -247,6 +248,8 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                   </div>
                   <Input 
                     type="number" 
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}

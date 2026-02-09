@@ -21,7 +21,6 @@ interface IssueFormProps {
 export function IssueForm({ designs, onSave }: IssueFormProps) {
   const { toast } = useToast();
   const [workerName, setWorkerName] = useState('');
-  // Use local date instead of UTC ISO string to ensure "today" is correct for the user
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [labels, setLabels] = useState({ small: 0, large: 0 });
   const [issueItems, setIssueItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
@@ -192,6 +191,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                   </div>
                   <Input 
                     type="number" 
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
@@ -229,6 +230,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                   </div>
                   <Input 
                     type="number" 
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
@@ -257,6 +260,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             <Label className="text-[9px] font-black text-muted-foreground uppercase ml-1">Small Labels</Label>
             <Input 
               type="number" 
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={labels.small || ''} 
               onChange={e => setLabels({ ...labels, small: parseInt(e.target.value) || 0 })}
               className="rounded-lg h-10 bg-background border text-center font-bold"
@@ -266,6 +271,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             <Label className="text-[9px] font-black text-muted-foreground uppercase ml-1">Large Labels</Label>
             <Input 
               type="number" 
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={labels.large || ''} 
               onChange={e => setLabels({ ...labels, large: parseInt(e.target.value) || 0 })}
               className="rounded-lg h-10 bg-background border text-center font-bold"
