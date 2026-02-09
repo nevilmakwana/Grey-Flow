@@ -54,6 +54,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     const formattedDate = `${d}-${m}-${y}`;
 
     let msg = `📅 Date: ${formattedDate}\n`;
+    msg += `👷 *Worker:* ${entry.workerName}\n`;
     msg += `🧣 *Issued for stitching today*\n\n`;
     const smalls = entry.items.filter(i => i.size_id === 'S-SML' && i.quantity > 0);
     const larges = entry.items.filter(i => i.size_id === 'S-LGE' && i.quantity > 0);

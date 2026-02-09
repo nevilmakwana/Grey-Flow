@@ -90,6 +90,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     const formattedDate = `${d}-${m}-${y}`;
 
     let msg = `📅 Date: ${formattedDate}\n`;
+    msg += `👷 *Worker:* ${entry.workerName}\n`;
     msg += `✅ *Ready scarves received today*\n\n`;
     const items = entry.items.filter(i => i.quantity > 0);
     items.forEach(i => msg += `• ${i.design_id} (${i.size_id === 'S-SML' ? 'S' : 'L'}): ${i.quantity} pcs\n`);
