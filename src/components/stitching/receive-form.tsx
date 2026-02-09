@@ -162,12 +162,12 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Worker Selection</Label>
+          <Label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground ml-1">Worker Selection</Label>
           <div className="relative group">
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-bold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
+              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
             >
               <option value="">Select Worker</option>
               {workerNames.map(name => <option key={name} value={name}>{name}</option>)}
@@ -177,13 +177,13 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Receive Date</Label>
+          <Label className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground ml-1">Receive Date</Label>
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-bold shadow-sm transition-all hover:border-primary/50",
+                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-semibold shadow-sm transition-all hover:border-primary/50",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -207,7 +207,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-green-600 rounded-full" />
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Small (50×50)</h3>
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-foreground">Received Small (50×50)</h3>
           </div>
           <div className="space-y-3">
             {receiveItems.map((item, idx) => {
@@ -229,7 +229,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
@@ -237,7 +237,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Finished Small
             </Button>
           </div>
@@ -246,7 +246,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
             <div className="w-1.5 h-4 bg-green-600 rounded-full" />
-            <h3 className="text-[11px] font-black uppercase tracking-widest text-foreground">Received Large (90×90)</h3>
+            <h3 className="text-[11px] font-semibold uppercase tracking-widest text-foreground">Received Large (90×90)</h3>
           </div>
           <div className="space-y-3">
             {receiveItems.map((item, idx) => {
@@ -268,7 +268,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-bold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground hover:text-destructive border-border">
                     <Trash2 className="w-4 h-4" />
@@ -276,7 +276,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-bold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
               <Plus className="w-3 h-3 mr-2" /> Add Finished Large
             </Button>
           </div>
@@ -287,31 +287,31 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         <div className="p-5 bg-muted/10 rounded-xl border border-border/50 stripe-shadow">
           <div className="flex items-center gap-2 mb-4">
             <PackageCheck className="w-4 h-4 text-green-600" />
-            <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="space-y-1">
               <div className="flex justify-between items-center px-1">
-                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Small Balance</span>
-                <span className="text-[9px] font-bold text-muted-foreground/50">{historicalBalance.small} issued</span>
+                <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Small Balance</span>
+                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.small} issued</span>
               </div>
               <div className={cn(
                 "flex items-center justify-center h-14 rounded-xl border transition-all",
                 projectedBalance.small < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
               )}>
-                <span className="text-2xl font-black tracking-tighter">{projectedBalance.small} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+                <span className="text-2xl font-semibold tracking-tighter">{projectedBalance.small} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
               </div>
             </div>
             <div className="space-y-1">
               <div className="flex justify-between items-center px-1">
-                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Large Balance</span>
-                <span className="text-[9px] font-bold text-muted-foreground/50">{historicalBalance.large} issued</span>
+                <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Large Balance</span>
+                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.large} issued</span>
               </div>
               <div className={cn(
                 "flex items-center justify-center h-14 rounded-xl border transition-all",
                 projectedBalance.large < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
               )}>
-                <span className="text-2xl font-black tracking-tighter">{projectedBalance.large} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+                <span className="text-2xl font-semibold tracking-tighter">{projectedBalance.large} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
               </div>
             </div>
           </div>
@@ -321,17 +321,17 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border border-border/50 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 border-r border-border/50 pr-4">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Small</span>
-            <span className="text-sm font-black text-foreground">{currentFormTotals.small}</span>
+            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Small</span>
+            <span className="text-sm font-semibold text-foreground">{currentFormTotals.small}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Large</span>
-            <span className="text-sm font-black text-foreground">{currentFormTotals.large}</span>
+            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Large</span>
+            <span className="text-sm font-semibold text-foreground">{currentFormTotals.large}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Total</span>
-          <span className="text-lg font-black text-green-600 tracking-tight">
+          <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Total</span>
+          <span className="text-lg font-semibold text-green-600 tracking-tight">
             {currentFormTotals.small + currentFormTotals.large} <span className="text-[10px] opacity-60">PCS</span>
           </span>
         </div>
@@ -340,14 +340,14 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       <div className="grid grid-cols-2 gap-3 w-full">
         <Button 
           onClick={() => handleSubmit('whatsapp')} 
-          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-bold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-semibold shadow-none active:scale-95 transition-all"
         >
           <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
         </Button>
         <Button 
           onClick={() => handleSubmit('native')} 
           variant="outline"
-          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-bold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-semibold shadow-none active:scale-95 transition-all"
         >
           <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>

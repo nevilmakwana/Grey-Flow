@@ -39,7 +39,7 @@ export function SearchableDesignSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between h-10 font-bold rounded-lg border bg-background text-left px-3", className)}
+          className={cn("w-full justify-between h-10 font-semibold rounded-lg border bg-background text-left px-3", className)}
         >
           <span className="truncate">{value ? value : placeholder}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -64,7 +64,7 @@ export function SearchableDesignSelect({
                 <button
                   key={design.design_id}
                   className={cn(
-                    "flex w-full items-center rounded-md px-2 py-2 text-sm font-bold outline-none transition-colors hover:bg-primary/10 hover:text-primary text-left",
+                    "flex w-full items-center rounded-md px-2 py-2 text-sm font-semibold outline-none transition-colors hover:bg-primary/10 hover:text-primary text-left",
                     value === design.design_id && "bg-primary/5 text-primary"
                   )}
                   onClick={() => {

@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -113,7 +112,7 @@ export function OrderPanel({
         <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-6">
           <Layers className="w-8 h-8 text-muted-foreground/40" />
         </div>
-        <h3 className="text-xl font-bold mb-2">Build your order</h3>
+        <h3 className="text-xl font-semibold mb-2">Build your order</h3>
         <p className="text-muted-foreground mb-8 text-center max-w-sm text-sm">Select a fabric type below to start grouping your textile designs.</p>
         <div className="flex gap-4 w-full max-w-[270px]">
           <Button 
@@ -121,14 +120,14 @@ export function OrderPanel({
             variant="outline"
             className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
-            <span className="text-lg font-bold">Satin</span>
+            <span className="text-lg font-semibold">Satin</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
             variant="outline"
             className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
           >
-            <span className="text-lg font-bold">Cotton</span>
+            <span className="text-lg font-semibold">Cotton</span>
           </Button>
         </div>
       </div>
@@ -145,19 +144,19 @@ export function OrderPanel({
               <ChevronRight className="w-3 h-3 text-muted-foreground" />
               <span className="text-xs font-medium text-muted-foreground">{order.id}</span>
             </div>
-            <h2 className="text-2xl font-bold text-foreground tracking-tight">Order Request</h2>
+            <h2 className="text-2xl font-semibold text-foreground tracking-tight">Order Request</h2>
             <div className="mt-1">
               <LiveClock />
             </div>
           </div>
           <div className="hidden sm:flex items-center gap-4">
             <div className="text-right border-r pr-4">
-              <span className="block text-[10px] uppercase font-bold text-muted-foreground tracking-widest">Net Quantity</span>
-              <span className="text-xl font-bold text-primary">{grandTotal}</span>
+              <span className="block text-[10px] uppercase font-semibold text-muted-foreground tracking-widest">Net Quantity</span>
+              <span className="text-xl font-semibold text-primary">{grandTotal}</span>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="rounded-md font-bold text-sm bg-primary text-primary-foreground stripe-shadow">
+                <Button className="rounded-md font-semibold text-sm bg-primary text-primary-foreground stripe-shadow">
                   <Plus className="w-4 h-4 mr-2" /> Add Fabric
                 </Button>
               </DropdownMenuTrigger>
@@ -192,9 +191,9 @@ export function OrderPanel({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-lg">{group.fabric_id}</h3>
+                      <h3 className="font-semibold text-lg">{group.fabric_id}</h3>
                       {isActive && (
-                        <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] font-bold h-5 uppercase tracking-wide">
+                        <Badge variant="secondary" className="bg-primary/10 text-primary text-[10px] font-semibold h-5 uppercase tracking-wide">
                           Active Group
                         </Badge>
                       )}
@@ -243,7 +242,7 @@ export function OrderPanel({
                       <div className="flex-1 flex flex-col justify-center px-3 py-2 sm:px-4">
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <h3 className="text-sm font-bold text-foreground truncate max-w-[120px]">{design.design_id}</h3>
+                            <h3 className="text-sm font-semibold text-foreground truncate max-w-[120px]">{design.design_id}</h3>
                           </div>
                           <Button 
                             variant="ghost" 
@@ -261,7 +260,7 @@ export function OrderPanel({
                             const qty = orderSize?.quantity || 0;
                             return (
                               <div key={size.size_id} className="flex-1 min-w-0">
-                                <label className="block text-[8px] font-bold text-muted-foreground uppercase mb-0.5 truncate">
+                                <label className="block text-[8px] font-semibold text-muted-foreground uppercase mb-0.5 truncate">
                                   {size.label.split(' ')[0]}
                                 </label>
                                 <Input 
@@ -272,7 +271,7 @@ export function OrderPanel({
                                   value={qty || ""} 
                                   onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
                                   onKeyDown={handleKeyDown} 
-                                  className="h-8 font-bold bg-muted/10 focus:bg-white text-base sm:text-xs px-2" 
+                                  className="h-8 font-semibold bg-muted/10 focus:bg-white text-base sm:text-xs px-2" 
                                 />
                               </div>
                             );
@@ -283,13 +282,12 @@ export function OrderPanel({
                   );
                 })}
 
-                {/* Trailing Add Design Option - Only visible on small screens */}
                 <button 
                   onClick={() => onAddDesignToGroup(group.id)}
                   className="md:hidden flex items-center justify-center gap-2 border-2 border-dashed border-border rounded-lg transition-all group h-24 sm:h-28 bg-muted/5 hover:bg-muted/10 hover:border-primary/50 text-muted-foreground hover:text-primary no-print"
                 >
                   <Plus className="w-5 h-5" />
-                  <span className="text-sm font-bold">Add Design</span>
+                  <span className="text-sm font-semibold">Add Design</span>
                 </button>
               </div>
             </div>
@@ -301,20 +299,20 @@ export function OrderPanel({
             <div className="p-1.5 bg-primary/10 text-primary rounded-md">
               <Hash className="w-4 h-4" />
             </div>
-            <h3 className="text-base font-bold">Consolidated Summary</h3>
+            <h3 className="text-base font-semibold">Consolidated Summary</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="p-3 bg-muted/20 border border-border/50 rounded-lg">
-              <span className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest block mb-1">Small Total</span>
-              <span className="text-xl font-bold">{totals.small}</span>
+              <span className="text-[9px] font-semibold uppercase text-muted-foreground tracking-widest block mb-1">Small Total</span>
+              <span className="text-xl font-semibold">{totals.small}</span>
             </div>
             <div className="p-3 bg-muted/20 border border-border/50 rounded-lg">
-              <span className="text-[9px] font-bold uppercase text-muted-foreground tracking-widest block mb-1">Large Total</span>
-              <span className="text-xl font-bold">{totals.large}</span>
+              <span className="text-[9px] font-semibold uppercase text-muted-foreground tracking-widest block mb-1">Large Total</span>
+              <span className="text-xl font-semibold">{totals.large}</span>
             </div>
             <div className="p-3 bg-primary text-primary-foreground rounded-lg stripe-shadow">
-              <span className="text-[9px] font-bold uppercase opacity-80 tracking-widest block mb-1">Net Grand Total</span>
-              <span className="text-xl font-bold">{grandTotal}</span>
+              <span className="text-[9px] font-semibold uppercase opacity-80 tracking-widest block mb-1">Net Grand Total</span>
+              <span className="text-xl font-semibold">{grandTotal}</span>
             </div>
           </div>
         </div>

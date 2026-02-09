@@ -34,7 +34,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
       <div className="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-8 pb-32">
         <header className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Stitching Ledger</h2>
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">Stitching Ledger</h2>
             <p className="text-xs text-muted-foreground font-medium">Manage production issues and receipts.</p>
           </div>
           
@@ -43,7 +43,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
               <TabsTrigger 
                 value="issue" 
                 className={cn(
-                  "rounded-lg text-xs font-bold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
+                  "rounded-lg text-xs font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
                   activeTab === 'issue' ? "text-primary-foreground" : "text-muted-foreground"
                 )}
               >
@@ -52,7 +52,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
               <TabsTrigger 
                 value="receive" 
                 className={cn(
-                  "rounded-lg text-xs font-bold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
+                  "rounded-lg text-xs font-semibold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
                   activeTab === 'receive' ? "text-white" : "text-muted-foreground"
                 )}
               >
