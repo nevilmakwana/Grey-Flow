@@ -88,11 +88,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     }, { small: 0, large: 0 });
   }, [receiveItems]);
 
-  const projectedBalance = {
-    small: historicalBalance.small - currentFormTotals.small,
-    large: historicalBalance.large - currentFormTotals.large
-  };
-
   const generateMessage = (entry: StitchingEntry) => {
     const formattedDate = format(parseISO(entry.date), "dd-MM-yyyy");
 
@@ -305,7 +300,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
             <div className="space-y-1.5">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[9px] font-medium text-muted-foreground uppercase">Small (Actual)</span>
-                <span className="text-[9px] font-medium text-muted-foreground/50">{projectedBalance.small} proj</span>
               </div>
               <Input 
                 type="number" 
@@ -320,7 +314,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
             <div className="space-y-1.5">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[9px] font-medium text-muted-foreground uppercase">Large (Actual)</span>
-                <span className="text-[9px] font-medium text-muted-foreground/50">{projectedBalance.large} proj</span>
               </div>
               <Input 
                 type="number" 
