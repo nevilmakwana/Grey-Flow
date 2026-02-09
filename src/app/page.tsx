@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -75,7 +76,8 @@ export default function ScarfOrderApp() {
 
   const handlePrint = () => {
     if (typeof window !== 'undefined') {
-      window.print();
+      setIsShareMode(true);
+      setTimeout(() => window.print(), 300);
     }
   };
 
@@ -155,25 +157,8 @@ export default function ScarfOrderApp() {
     }
   };
 
-  const handleNativeShare = async () => {
-    const text = generateWhatsAppMessage();
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title: `Order Request - Grey Exim`,
-          text: text,
-        });
-        toast({ title: "Order Shared", description: "Summary sent successfully." });
-      } catch (err) {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(text);
-        toast({ title: "Copied to Clipboard", description: "Opening presentation view..." });
-        setIsShareMode(true);
-      } catch (err) {
-        setIsShareMode(true);
-      }
-    }
+  const handleOpenShareView = () => {
+    setIsShareMode(true);
   };
 
   const handleSelectDesign = (id: string) => {
@@ -382,7 +367,7 @@ export default function ScarfOrderApp() {
               }}
               onSearch={() => setIsSearchOpen(true)}
               onWhatsApp={shareToWhatsApp}
-              onShare={handleNativeShare}
+              onShare={handleOpenShareView}
               onPrint={handlePrint}
               hasItems={hasItems}
             />

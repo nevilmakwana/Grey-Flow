@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Order, Design, AppSettings } from '@/app/lib/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Printer } from 'lucide-react';
+import { ArrowLeft, Printer, Share2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface ShareViewProps {
