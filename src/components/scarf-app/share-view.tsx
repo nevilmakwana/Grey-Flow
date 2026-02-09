@@ -1,23 +1,33 @@
+
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Order, Design, AppSettings } from '@/app/lib/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Share2, Hash, Calendar, Clock, Layers } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { ArrowLeft, Printer, User, Building, Hash, Calendar, Layers } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+
+interface ShareViewProps {
+  order: Order;
+  designs: Design[];
+  settings: AppSettings;
+  onBack: () => void;
+}
 
 export function ShareView({ order, designs, settings, onBack }: ShareViewProps) {
+  const [recipient, setRecipient] = useState("Oseas Print");
+  const [preparedBy, setPreparedBy] = useState("Hemil M");
+
   const getDesignById = (id: string) => designs.find(d => d.design_id === id);
 
   const formatFullDate = (isoString: string) => {
     const date = new Date(isoString);
-    return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date);
-  };
-
-  const formatTime = (isoString: string) => {
-    const date = new Date(isoString);
-    return new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: true }).format(date).toUpperCase();
+    return new Intl.DateTimeFormat('en-GB', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric' 
+    }).format(date);
   };
 
   const totals = order.fabricGroups.reduce((acc, group) => {
@@ -30,97 +40,160 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
     return acc;
   }, { small: 0, large: 0 });
 
-  const grandTotal = totals.small + totals.large;
-
   return (
-    <div className="max-w-3xl mx-auto p-6 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex justify-between items-center mb-12 no-print">
-        <Button variant="ghost" onClick={onBack} className="rounded-full hover:bg-muted"><ArrowLeft className="w-4 h-4 mr-2" /> Workspace</Button>
-        <Button onClick={() => window.print()} className="rounded-full bg-foreground text-background shadow-lg"><Share2 className="w-4 h-4 mr-2" /> Save PDF</Button>
+    <div className="min-h-screen bg-white text-black p-0 sm:p-8 md:p-12 selection:bg-primary/20">
+      {/* Controls - Hidden on Print */}
+      <div className="max-w-[1000px] mx-auto mb-8 flex justify-between items-center no-print px-4">
+        <Button 
+          variant="ghost" 
+          onClick={onBack} 
+          className="rounded-xl font-medium text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
+        </Button>
+        <div className="flex gap-3">
+          <Button 
+            onClick={() => window.print()} 
+            className="rounded-xl bg-black text-white hover:bg-black/80 font-medium px-6 shadow-lg"
+          >
+            <Printer className="w-4 h-4 mr-2" /> Print A4 PDF
+          </Button>
+        </div>
       </div>
 
-      <div className="space-y-16">
-        <div className="text-center space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.3em] font-semibold text-muted-foreground">Print Order Request</span>
-          <h1 className="text-5xl font-semibold tracking-tighter">Order Summary</h1>
-          <div className="flex flex-col items-center gap-1">
-            <span className="text-xl font-semibold text-primary">{order.id}</span>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {formatFullDate(order.created_at)}</span>
-              <span className="w-1 h-1 bg-muted-foreground/30 rounded-full" />
-              <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {formatTime(order.created_at)}</span>
+      {/* A4 Content Container */}
+      <div className="max-w-[1000px] mx-auto bg-white print:m-0 print:p-0">
+        
+        {/* Header Section */}
+        <header className="flex justify-between items-start border-b border-gray-100 pb-8 mb-8 px-4 sm:px-0">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 relative grayscale opacity-80">
+              {/* Placeholder for Grey Exim Logo */}
+              <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-gray-400 rounded-sm rotate-45" />
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-gray-400 tracking-wide">Grey Exim</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Fabric Print Order</h1>
             </div>
           </div>
-        </div>
 
+          <div className="text-right space-y-1.5">
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">To:</span>
+              <Input 
+                value={recipient} 
+                onChange={(e) => setRecipient(e.target.value)} 
+                className="h-6 w-32 border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
+              />
+              <span className="hidden print:inline font-semibold text-sm">{recipient}</span>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Date:</span>
+              <span className="font-semibold text-sm">{formatFullDate(order.created_at)}</span>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Order No:</span>
+              <span className="font-semibold text-sm">{order.id}</span>
+            </div>
+            <div className="flex items-center justify-end gap-2">
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Prepared by:</span>
+              <Input 
+                value={preparedBy} 
+                onChange={(e) => setPreparedBy(e.target.value)} 
+                className="h-6 w-32 border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
+              />
+              <span className="hidden print:inline font-semibold text-sm">{preparedBy}</span>
+            </div>
+          </div>
+        </header>
+
+        {/* Orders by Fabric Group */}
         {order.fabricGroups.map((group) => {
           if (group.items.length === 0) return null;
           return (
-            <div key={group.id} className="space-y-8">
-              <div className="flex items-center gap-3 border-b-2 pb-4 border-foreground/5">
-                <Layers className="w-6 h-6 text-primary" />
-                <h2 className="text-3xl font-semibold tracking-tight">Fabric: {group.fabric_id}</h2>
+            <section key={group.id} className="mb-12 page-break-inside-avoid">
+              <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
+                <span className="text-[11px] font-medium text-gray-400 uppercase tracking-[0.2em]">Fabric Type:</span>
+                <span className="bg-black text-white text-[10px] font-semibold px-4 py-1.5 rounded-full tracking-wider">
+                  {group.fabric_id}
+                </span>
               </div>
-              <div className="space-y-6">
+
+              {/* Grid Layout - 4 columns on desktop/print */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 sm:px-0">
                 {group.items.map((item) => {
                   const design = getDesignById(item.design_id);
                   if (!design) return null;
+                  
                   return (
-                    <Card key={item.design_id} className="overflow-hidden border-border bg-card shadow-sm rounded-[2rem]">
-                      <CardContent className="p-0">
-                        <div className="flex flex-col sm:flex-row">
-                          <div className="w-full sm:w-40 aspect-square relative shrink-0 overflow-hidden bg-muted">
-                            <Image src={design.image_url} alt={design.design_id} fill className="object-cover" sizes="(max-width: 640px) 100vw, 160px" />
-                          </div>
-                          <div className="flex-1 p-8 flex flex-col justify-center">
-                            <h3 className="text-2xl font-semibold tracking-tighter mb-4">{design.design_id}</h3>
-                            <div className="space-y-3">
-                              {design.sizes.map((size) => {
-                                const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                                const qty = orderSize?.quantity || 0;
-                                if (qty === 0) return null;
-                                return (
-                                  <div key={size.size_id} className="flex justify-between items-center text-sm">
-                                    <span className="text-muted-foreground font-medium">{size.label}</span>
-                                    <span className="font-semibold text-foreground">{(qty).toLocaleString()} pcs</span>
-                                  </div>
-                                );
-                              })}
+                    <div key={item.design_id} className="border border-gray-100 rounded-2xl p-3 flex flex-col gap-3 relative bg-gray-50/30 print:bg-white print:border-gray-200">
+                      {/* SKU Badge */}
+                      <div className="absolute top-4 left-4 z-10">
+                        <span className="bg-[#007AFF] text-white text-[8px] font-semibold px-2 py-1 rounded-sm shadow-sm">
+                          {design.design_id.replace('OG/SCF/', '')}
+                        </span>
+                      </div>
+
+                      {/* Image Container */}
+                      <div className="aspect-square relative rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm">
+                        <Image 
+                          src={design.image_url} 
+                          alt={design.design_id} 
+                          fill 
+                          className="object-cover" 
+                          sizes="(max-width: 640px) 50vw, 250px"
+                        />
+                      </div>
+
+                      {/* Quantity Rows */}
+                      <div className="space-y-2 px-1">
+                        {design.sizes.map((size) => {
+                          const orderSize = item.sizes.find(s => s.size_id === size.size_id);
+                          const qty = orderSize?.quantity || 0;
+                          return (
+                            <div key={size.size_id} className="flex justify-between items-center text-[10px]">
+                              <span className="text-gray-400 font-medium">
+                                {size.size_id === 'S-SML' ? '50x50 cm (Small)' : '90x90 cm (Large)'}
+                              </span>
+                              <span className="font-semibold text-gray-900">
+                                {qty > 0 ? `${qty} pcs` : '0 pcs'}
+                              </span>
                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                          );
+                        })}
+                      </div>
+                    </div>
                   );
                 })}
               </div>
-            </div>
+            </section>
           );
         })}
 
-        <div className="pt-16 border-t border-border">
-          <div className="flex items-center gap-3 mb-10 justify-center">
-            <div className="p-3 bg-foreground text-background rounded-2xl"><Hash className="w-5 h-5" /></div>
-            <h3 className="text-2xl font-semibold uppercase tracking-tight">Consolidated Summary</h3>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex flex-col items-center p-8 bg-muted/20 rounded-[2.5rem] border border-border">
-              <span className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest mb-1">Small Scarf Total</span>
-              <span className="text-4xl font-semibold">{totals.small}</span>
+        {/* Footer Summary */}
+        <footer className="mt-16 pt-8 border-t border-gray-100 px-4 sm:px-0 page-break-inside-avoid">
+          <div className="max-w-xs space-y-2">
+            <h3 className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] mb-4">Total Quantity</h3>
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-gray-400 font-medium">50x50 cm (Small):</span>
+              <span className="font-semibold text-gray-900">{totals.small} pcs</span>
             </div>
-            <div className="flex flex-col items-center p-8 bg-muted/20 rounded-[2.5rem] border border-border">
-              <span className="text-[10px] font-semibold uppercase text-muted-foreground tracking-widest mb-1">Large Scarf Total</span>
-              <span className="text-4xl font-semibold">{totals.large}</span>
+            <div className="flex justify-between items-center text-xs">
+              <span className="text-gray-400 font-medium">90x90 cm (Large):</span>
+              <span className="font-semibold text-gray-900">{totals.large} pcs</span>
             </div>
-            <div className="flex flex-col items-center p-8 bg-foreground text-background rounded-[2.5rem] shadow-2xl">
-              <span className="text-[10px] font-semibold uppercase opacity-60 tracking-widest mb-1">Net Grand Total</span>
-              <span className="text-4xl font-semibold">{grandTotal}</span>
+            <div className="pt-2 border-t border-gray-50 flex justify-between items-center">
+              <span className="text-xs font-semibold text-gray-900 uppercase">Net Grand Total:</span>
+              <span className="text-lg font-semibold text-gray-900">{totals.small + totals.large} pcs</span>
             </div>
           </div>
-        </div>
+        </footer>
 
-        <div className="pt-16 text-center border-t border-border/10">
-          <p className="text-[10px] text-muted-foreground font-light tracking-[0.4em] uppercase">GreyFlow Document System</p>
+        {/* System ID - Print Only */}
+        <div className="mt-12 text-center hidden print:block">
+          <p className="text-[8px] text-gray-300 font-medium uppercase tracking-[0.5em]">GreyFlow Document System</p>
         </div>
       </div>
     </div>
