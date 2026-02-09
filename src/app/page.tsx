@@ -23,6 +23,7 @@ import { StitchingModule } from '@/components/stitching/stitching-module';
 import { CSVImport } from '@/components/scarf-app/csv-import';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
+import Link from 'next/link';
 
 const AppleMenuIcon = ({ className }: { className?: string }) => (
   <svg 
@@ -242,7 +243,9 @@ export default function ScarfOrderApp() {
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
       <header className="fixed top-0 left-0 right-0 z-50 h-10 glass flex items-center justify-between px-6 no-print">
         <div className="flex-1 flex items-center">
-          <h1 className="font-sans font-semibold text-base tracking-tight">GreyFlow</h1>
+          <Link href="/" className="hover:opacity-70 transition-opacity">
+            <h1 className="font-sans font-semibold text-base tracking-tight text-foreground">GreyFlow</h1>
+          </Link>
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
@@ -356,7 +359,7 @@ export default function ScarfOrderApp() {
               <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
                 <SheetContent side="left" className="w-full p-0 flex flex-col border-none">
                   <div className="p-4 border-b bg-background">
-                    <h2 className="text-left font-semibold flex items-center gap-2">
+                    <h2 className="text-left font-semibold flex items-center gap-2 text-foreground">
                       <ShoppingBag className="w-5 h-5" />
                       Select Design
                     </h2>
