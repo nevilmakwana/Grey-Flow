@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Tag, ChevronDown, Calendar as CalendarIcon, MessageCircle, Share2 } from 'lucide-react';
+import { Plus, Trash2, Tag, ChevronDown, Calendar as CalendarIcon, MessageCircle, Share2, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SearchableDesignSelect } from './searchable-design-select';
 import { format, parseISO } from 'date-fns';
@@ -15,10 +15,11 @@ import { cn } from '@/lib/utils';
 
 interface IssueFormProps {
   designs: Design[];
+  allEntries: StitchingEntry[];
   onSave: (entry: StitchingEntry) => void;
 }
 
-export function IssueForm({ designs, onSave }: IssueFormProps) {
+export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
   const { toast } = useToast();
   const [workerName, setWorkerName] = useState('');
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -30,6 +31,36 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
   const smallDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-SML'));
   const largeDesigns = designs.filter(d => d.sizes.some(s => s.size_id === 'S-LGE'));
+
+  const workerNames = useMemo(() => {
+    const existing = allEntries.map(e => e.workerName);
+    const defaults = ["Nayna", "Ramila", "Vilas"];
+    return Array.from(new Set([...defaults, ...existing]));
+  }, [allEntries]);
+
+  const currentWorkerBalance = useMemo(() => {
+    if (!workerName) return { small: 0, large: 0 };
+    
+    const workerEntries = allEntries.filter(e => e.workerName === workerName);
+    let smallIssued = 0, largeIssued = 0, smallReceived = 0, largeReceived = 0;
+    
+    workerEntries.forEach(e => {
+      if (e.type === 'issue') {
+        smallIssued += e.labelsIssued?.small || 0;
+        largeIssued += e.labelsIssued?.large || 0;
+      } else {
+        e.items.forEach(i => {
+          if (i.size_id === 'S-SML') smallReceived += i.quantity;
+          if (i.size_id === 'S-LGE') largeReceived += i.quantity;
+        });
+      }
+    });
+    
+    return {
+      small: smallIssued - smallReceived,
+      large: largeIssued - largeReceived
+    };
+  }, [workerName, allEntries]);
 
   const addItem = (size: 'S-SML' | 'S-LGE') => {
     setIssueItems([...issueItems, { design_id: '', size_id: size, quantity: 0 }]);
@@ -45,7 +76,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     setIssueItems(newItems);
   };
 
-  const calculateTotals = () => {
+  const calculateFormTotals = () => {
     return issueItems.reduce((acc, item) => {
       if (item.size_id === 'S-SML') acc.small += item.quantity;
       if (item.size_id === 'S-LGE') acc.large += item.quantity;
@@ -72,10 +103,11 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       larges.forEach(i => msg += `• ${i.design_id}: ${i.quantity} pcs\n`);
     }
     
-    const totals = calculateTotals();
-    msg += `\nTotal S: ${totals.small} pcs | L: ${totals.large} pcs\n`;
+    const formTotals = calculateFormTotals();
+    msg += `\nTotal S: ${formTotals.small} pcs | L: ${formTotals.large} pcs\n`;
     msg += `\n*Satin Label (Issued Today):*\n`;
-    msg += `S: ${entry.labelsIssued?.small || 0} | L: ${entry.labelsIssued?.large || 0} pcs`;
+    msg += `S: ${entry.labelsIssued?.small || 0} | L: ${entry.labelsIssued?.large || 0} pcs\n`;
+    msg += `*Closing Balance:* S: ${currentWorkerBalance.small + (entry.labelsIssued?.small || 0)} | L: ${currentWorkerBalance.large + (entry.labelsIssued?.large || 0)}`;
     return msg;
   };
 
@@ -85,8 +117,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       return;
     }
     const validItems = issueItems.filter(i => i.design_id && i.quantity > 0);
-    if (validItems.length === 0) {
-      toast({ variant: "destructive", title: "No items to issue", description: "Please add at least one design with a quantity." });
+    if (validItems.length === 0 && labels.small === 0 && labels.large === 0) {
+      toast({ variant: "destructive", title: "Empty Form", description: "Please add items or issue labels." });
       return;
     }
     const entry: StitchingEntry = {
@@ -136,7 +168,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     toast({ title: "Issue Entry Saved" });
   };
 
-  const totals = calculateTotals();
+  const formTotals = calculateFormTotals();
 
   return (
     <div className="space-y-6">
@@ -147,12 +179,10 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
+              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
             >
               <option value="">Select Worker</option>
-              <option value="Nayna">Nayna</option>
-              <option value="Ramila">Ramila</option>
-              <option value="Vilas">Vilas</option>
+              {workerNames.map(name => <option key={name} value={name}>{name}</option>)}
             </select>
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
           </div>
@@ -165,7 +195,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
               <Button
                 variant="outline"
                 className={cn(
-                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-semibold shadow-sm transition-all hover:border-primary/50",
+                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-medium shadow-sm transition-all hover:border-primary/50",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -185,6 +215,25 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
+      {workerName && (
+        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <Info className="w-4 h-4 text-primary" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-primary">Currently with Worker</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-medium text-muted-foreground">SMALL:</span>
+              <span className="text-sm font-semibold text-foreground">{currentWorkerBalance.small}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-medium text-muted-foreground">LARGE:</span>
+              <span className="text-sm font-semibold text-foreground">{currentWorkerBalance.large}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2 ml-1">
@@ -201,7 +250,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -219,7 +268,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-primary uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-primary uppercase tracking-wider transition-all">
               <Plus className="w-3 h-3 mr-2" /> Add Small Design
             </Button>
           </div>
@@ -240,7 +289,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -258,7 +307,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-primary uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-primary uppercase tracking-wider transition-all">
               <Plus className="w-3 h-3 mr-2" /> Add Large Design
             </Button>
           </div>
@@ -296,21 +345,21 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border border-border/50 rounded-xl">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 border-r border-border/50 pr-4">
-            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Small</span>
-            <span className="text-sm font-semibold text-foreground">{totals.small}</span>
+      <div className="px-5 py-3 bg-muted/20 border border-border/50 rounded-xl flex items-center justify-between gap-4">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Small</span>
+            <span className="text-sm font-semibold text-foreground">{formTotals.small}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Large</span>
-            <span className="text-sm font-semibold text-foreground">{totals.large}</span>
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Large</span>
+            <span className="text-sm font-semibold text-foreground">{formTotals.large}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Total</span>
+          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Total</span>
           <span className="text-lg font-semibold text-primary tracking-tight">
-            {totals.small + totals.large} <span className="text-[10px] opacity-60">PCS</span>
+            {formTotals.small + formTotals.large} <span className="text-[10px] opacity-60">PCS</span>
           </span>
         </div>
       </div>
@@ -318,14 +367,14 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       <div className="grid grid-cols-2 gap-3 w-full">
         <Button 
           onClick={() => handleSubmit('whatsapp')} 
-          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-semibold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-medium shadow-none active:scale-95 transition-all"
         >
           <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
         </Button>
         <Button 
           onClick={() => handleSubmit('native')} 
           variant="outline"
-          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-semibold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-medium shadow-none active:scale-95 transition-all"
         >
           <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>

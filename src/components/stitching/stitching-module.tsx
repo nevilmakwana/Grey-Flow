@@ -5,7 +5,6 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IssueForm } from './issue-form';
 import { ReceiveForm } from './receive-form';
-import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface StitchingModuleProps {
@@ -35,7 +34,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
         <header className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">Stitching Ledger</h2>
-            <p className="text-xs text-muted-foreground font-medium">Manage production issues and receipts.</p>
+            <p className="text-[11px] text-muted-foreground font-medium">Manage production issues and receipts.</p>
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
@@ -65,7 +64,7 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsContent value="issue" className="mt-0 focus-visible:outline-none">
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-              <IssueForm designs={designs} onSave={saveEntry} />
+              <IssueForm designs={designs} allEntries={entries} onSave={saveEntry} />
             </div>
           </TabsContent>
 

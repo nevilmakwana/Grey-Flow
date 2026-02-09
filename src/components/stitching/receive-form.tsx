@@ -97,8 +97,8 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     msg += `✅ *Ready scarves received today*\n\n`;
     const items = entry.items.filter(i => i.quantity > 0);
     items.forEach(i => msg += `• ${i.design_id} (${i.size_id === 'S-SML' ? 'S' : 'L'}): ${i.quantity} pcs\n`);
-    msg += `\nTotal Recd: ${currentFormTotals.small + currentFormTotals.large} pcs\n`;
-    msg += `\n*Satin Label Balance:*\n`;
+    msg += `\nTotal Received: ${currentFormTotals.small + currentFormTotals.large} pcs\n`;
+    msg += `\n*Satin Label Balance Inventory:*\n`;
     msg += `S: ${projectedBalance.small} pcs | L: ${projectedBalance.large} pcs`;
     return msg;
   };
@@ -167,7 +167,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
+              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
             >
               <option value="">Select Worker</option>
               {workerNames.map(name => <option key={name} value={name}>{name}</option>)}
@@ -183,7 +183,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
               <Button
                 variant="outline"
                 className={cn(
-                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-semibold shadow-sm transition-all hover:border-primary/50",
+                  "flex h-12 w-full justify-start rounded-xl border border-border bg-card px-4 py-2 text-left text-sm font-medium shadow-sm transition-all hover:border-primary/50",
                   !date && "text-muted-foreground"
                 )}
               >
@@ -219,7 +219,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={smallDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -237,7 +237,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-SML')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider transition-all">
               <Plus className="w-3 h-3 mr-2" /> Add Finished Small
             </Button>
           </div>
@@ -258,7 +258,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                       designs={largeDesigns}
                       value={item.design_id}
                       onSelect={(val) => updateItem(idx, 'design_id', val)}
-                      placeholder="Select..."
+                      placeholder="Select Design..."
                     />
                   </div>
                   <Input 
@@ -276,7 +276,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 </div>
               );
             })}
-            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider">
+            <Button variant="outline" size="sm" onClick={() => addItem('S-LGE')} className="rounded-lg w-full border-dashed h-10 text-[10px] font-semibold text-muted-foreground hover:text-green-600 uppercase tracking-wider transition-all">
               <Plus className="w-3 h-3 mr-2" /> Add Finished Large
             </Button>
           </div>
@@ -284,53 +284,53 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       </div>
 
       {workerName && (
-        <div className="p-5 bg-muted/10 rounded-xl border border-border/50 stripe-shadow">
+        <div className="p-4 bg-muted/10 rounded-xl border border-border/50">
           <div className="flex items-center gap-2 mb-4">
             <PackageCheck className="w-4 h-4 text-green-600" />
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
+            <h4 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Satin Label Balance Inventory</h4>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Small Balance</span>
-                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.small} issued</span>
+                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.small} prev</span>
               </div>
               <div className={cn(
-                "flex items-center justify-center h-14 rounded-xl border transition-all",
+                "flex items-center justify-center h-12 rounded-lg border transition-all",
                 projectedBalance.small < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
               )}>
-                <span className="text-2xl font-semibold tracking-tighter">{projectedBalance.small} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+                <span className="text-xl font-semibold tracking-tighter">{projectedBalance.small} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
               </div>
             </div>
             <div className="space-y-1">
               <div className="flex justify-between items-center px-1">
                 <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest">Large Balance</span>
-                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.large} issued</span>
+                <span className="text-[9px] font-medium text-muted-foreground/50">{historicalBalance.large} prev</span>
               </div>
               <div className={cn(
-                "flex items-center justify-center h-14 rounded-xl border transition-all",
+                "flex items-center justify-center h-12 rounded-lg border transition-all",
                 projectedBalance.large < 0 ? "bg-destructive/5 border-destructive/20 text-destructive" : "bg-background border-border/50 text-foreground"
               )}>
-                <span className="text-2xl font-semibold tracking-tighter">{projectedBalance.large} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
+                <span className="text-xl font-semibold tracking-tighter">{projectedBalance.large} <span className="text-[10px] opacity-50 ml-1">PCS</span></span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border border-border/50 rounded-xl">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 border-r border-border/50 pr-4">
-            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Small</span>
+      <div className="px-5 py-3 bg-muted/20 border border-border/50 rounded-xl flex items-center justify-between gap-4">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Small</span>
             <span className="text-sm font-semibold text-foreground">{currentFormTotals.small}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Large</span>
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Large</span>
             <span className="text-sm font-semibold text-foreground">{currentFormTotals.large}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[9px] font-medium text-muted-foreground uppercase tracking-wider">Total</span>
+          <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Total</span>
           <span className="text-lg font-semibold text-green-600 tracking-tight">
             {currentFormTotals.small + currentFormTotals.large} <span className="text-[10px] opacity-60">PCS</span>
           </span>
@@ -340,14 +340,14 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       <div className="grid grid-cols-2 gap-3 w-full">
         <Button 
           onClick={() => handleSubmit('whatsapp')} 
-          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-semibold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-medium shadow-none active:scale-95 transition-all"
         >
           <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
         </Button>
         <Button 
           onClick={() => handleSubmit('native')} 
           variant="outline"
-          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-semibold shadow-none active:scale-95 transition-all"
+          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-medium shadow-none active:scale-95 transition-all"
         >
           <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>
