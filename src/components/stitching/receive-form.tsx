@@ -22,7 +22,8 @@ interface ReceiveFormProps {
 export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   const { toast } = useToast();
   const [workerName, setWorkerName] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  // Use local date instead of UTC ISO string to ensure "today" is correct for the user
+  const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [receiveItems, setReceiveItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
     { design_id: '', size_id: 'S-SML', quantity: 0 },
     { design_id: '', size_id: 'S-LGE', quantity: 0 }
@@ -180,7 +181,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
               <Calendar
                 mode="single"
                 selected={date ? parseISO(date) : undefined}
-                onSelect={(d) => d && setDate(d.toISOString().split('T')[0])}
+                onSelect={(d) => d && setDate(format(d, 'yyyy-MM-dd'))}
                 initialFocus
               />
             </PopoverContent>
