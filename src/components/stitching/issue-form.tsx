@@ -157,7 +157,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
                 {date ? format(parseISO(date), "dd MMM yyyy") : <span>Pick a date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border border-border bg-popover mt-2" align="start">
+            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border border-border bg-popover mt-2 animate-in fade-in zoom-in-95 duration-200" align="start">
               <Calendar
                 mode="single"
                 selected={date ? parseISO(date) : undefined}

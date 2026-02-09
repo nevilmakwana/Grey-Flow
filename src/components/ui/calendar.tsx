@@ -22,7 +22,7 @@ function Calendar({
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center mb-2",
+        caption: "flex justify-center pt-1 relative items-center mb-4",
         caption_label: "text-sm font-black tracking-tight",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
@@ -31,15 +31,15 @@ function Calendar({
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex w-full mb-1",
+        table: "w-full border-collapse select-none",
+        head_row: "flex w-full justify-between",
         head_cell:
-          "text-muted-foreground rounded-md w-8 font-bold text-[9px] uppercase tracking-widest text-center",
-        row: "flex w-full mt-1",
-        cell: "h-8 w-8 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+          "text-muted-foreground rounded-md w-9 font-bold text-[9px] uppercase tracking-widest text-center",
+        row: "flex w-full mt-2 justify-between",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-8 w-8 p-0 font-medium aria-selected:opacity-100 rounded-lg hover:bg-muted transition-all"
+          "h-9 w-9 p-0 font-medium aria-selected:opacity-100 rounded-lg hover:bg-muted transition-all"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -54,11 +54,11 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("h-4 w-4", className)} {...props} />
+        IconLeft: ({ ...props }) => (
+          <ChevronLeft className="h-4 w-4" />
         ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("h-4 w-4", className)} {...props} />
+        IconRight: ({ ...props }) => (
+          <ChevronRight className="h-4 w-4" />
         ),
       }}
       {...props}
