@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -5,6 +6,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IssueForm } from './issue-form';
 import { ReceiveForm } from './receive-form';
+import { WorkerLedger } from './worker-ledger';
 import { cn } from '@/lib/utils';
 
 interface StitchingModuleProps {
@@ -34,16 +36,16 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
         <header className="mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">Stitching Ledger</h2>
-            <p className="text-[11px] text-muted-foreground font-medium">Manage production issues and receipts.</p>
+            <p className="text-[11px] text-muted-foreground font-medium">Manage production issues, receipts, and label inventory.</p>
           </div>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full md:w-auto">
-            <TabsList className="grid w-full md:w-64 grid-cols-2 h-11 bg-muted/50 rounded-xl p-1">
+            <TabsList className="grid w-full md:w-80 grid-cols-3 h-11 bg-muted/50 rounded-xl p-1">
               <TabsTrigger 
                 value="issue" 
                 className={cn(
-                  "rounded-lg text-xs font-semibold transition-all data-[state=active]:bg-primary data-[state=active]:text-primary-foreground",
-                  activeTab === 'issue' ? "text-primary-foreground" : "text-muted-foreground"
+                  "rounded-lg text-xs font-semibold transition-all",
+                  activeTab === 'issue' ? "bg-primary text-primary-foreground" : "text-muted-foreground"
                 )}
               >
                 Issue
@@ -51,11 +53,20 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
               <TabsTrigger 
                 value="receive" 
                 className={cn(
-                  "rounded-lg text-xs font-semibold transition-all data-[state=active]:bg-green-600 data-[state=active]:text-white",
-                  activeTab === 'receive' ? "text-white" : "text-muted-foreground"
+                  "rounded-lg text-xs font-semibold transition-all",
+                  activeTab === 'receive' ? "bg-green-600 text-white" : "text-muted-foreground"
                 )}
               >
                 Receive
+              </TabsTrigger>
+              <TabsTrigger 
+                value="history" 
+                className={cn(
+                  "rounded-lg text-xs font-semibold transition-all",
+                  activeTab === 'history' ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
+                )}
+              >
+                History
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -71,6 +82,12 @@ export function StitchingModule({ designs }: StitchingModuleProps) {
           <TabsContent value="receive" className="mt-0 focus-visible:outline-none">
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <ReceiveForm designs={designs} allEntries={entries} onSave={saveEntry} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="history" className="mt-0 focus-visible:outline-none">
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <WorkerLedger entries={entries} />
             </div>
           </TabsContent>
         </Tabs>

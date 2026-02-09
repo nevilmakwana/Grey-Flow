@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -39,18 +40,18 @@ export function SearchableDesignSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn("w-full justify-between h-10 font-semibold rounded-lg border bg-background text-left px-3", className)}
+          className={cn("w-full justify-between h-10 font-medium rounded-lg border bg-background text-left px-3", className)}
         >
           <span className="truncate">{value ? value : placeholder}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-[240px] rounded-xl shadow-2xl border-border bg-popover" align="start">
+      <PopoverContent className="p-0 w-[240px] rounded-xl shadow-xl border-border bg-popover" align="start">
         <div className="flex items-center border-b px-3 bg-muted/20">
           <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
           <input
-            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-            placeholder="Filter SKUs..."
+            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+            placeholder="Filter SKU..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -58,13 +59,13 @@ export function SearchableDesignSelect({
         <ScrollArea className="h-[250px]">
           <div className="p-1">
             {filteredDesigns.length === 0 ? (
-              <div className="py-6 text-center text-xs text-muted-foreground font-medium uppercase tracking-tight">No design found</div>
+              <div className="py-6 text-center text-xs text-muted-foreground font-medium uppercase tracking-tight">No SKU found</div>
             ) : (
               filteredDesigns.map((design) => (
                 <button
                   key={design.design_id}
                   className={cn(
-                    "flex w-full items-center rounded-md px-2 py-2 text-sm font-semibold outline-none transition-colors hover:bg-primary/10 hover:text-primary text-left",
+                    "flex w-full items-center rounded-md px-2 py-2 text-sm font-medium outline-none transition-colors hover:bg-primary/10 hover:text-primary text-left",
                     value === design.design_id && "bg-primary/5 text-primary"
                   )}
                   onClick={() => {

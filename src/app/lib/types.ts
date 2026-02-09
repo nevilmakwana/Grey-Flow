@@ -48,7 +48,7 @@ export interface AppSettings {
 
 export interface StitchingEntry {
   id: string;
-  type: 'issue' | 'receive';
+  type: 'issue' | 'receive' | 'balance-check';
   date: string;
   workerName: string;
   items: {
@@ -57,6 +57,10 @@ export interface StitchingEntry {
     quantity: number;
   }[];
   labelsIssued?: {
+    small: number;
+    large: number;
+  };
+  labelsRemaining?: {
     small: number;
     large: number;
   };
