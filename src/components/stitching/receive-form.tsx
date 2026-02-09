@@ -5,10 +5,13 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, PackageCheck, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, PackageCheck, ChevronDown, Calendar as CalendarIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { SearchableDesignSelect } from './searchable-design-select';
+import { format, parseISO } from 'date-fns';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface ReceiveFormProps {
   designs: Design[];
@@ -86,8 +89,8 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
   };
 
   const generateMessage = (entry: StitchingEntry) => {
-    const [y, m, d] = entry.date.split('-');
-    const formattedDate = `${d}-${m}-${y}`;
+    const dateObj = parseISO(entry.date);
+    const formattedDate = format(dateObj, "dd-MM-yyyy");
 
     let msg = `📅 Date: ${formattedDate}\n`;
     msg += `👷 *Worker:* ${entry.workerName}\n`;
@@ -118,17 +121,20 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       items: validItems
     };
     onSave(entry);
+    
     if (withShare) {
       const text = encodeURIComponent(generateMessage(entry));
       const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
-      const isMobile = typeof navigator !== 'undefined' && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobileDevice = typeof navigator !== 'undefined' && 
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
-      if (isMobile) {
+      if (isMobileDevice) {
         window.location.href = whatsappUrl;
       } else {
         window.open(whatsappUrl, '_blank');
       }
     }
+    
     setReceiveItems([
       { design_id: '', size_id: 'S-SML', quantity: 0 },
       { design_id: '', size_id: 'S-LGE', quantity: 0 }
@@ -156,12 +162,29 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
         <div className="space-y-2">
           <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Receipt Date</Label>
-          <Input 
-            type="date" 
-            value={date} 
-            onChange={e => setDate(e.target.value)}
-            className="rounded-xl h-12 w-full bg-card border-border shadow-sm focus-visible:ring-primary/20 font-bold px-4 text-left text-sm transition-all hover:border-primary/50"
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full h-12 justify-start text-left font-bold rounded-xl border border-border bg-card px-4 shadow-sm hover:border-primary/50 transition-all",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
+                {date ? format(parseISO(date), "dd MMM yyyy") : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border-border bg-popover" align="start">
+              <Calendar
+                mode="single"
+                selected={date ? parseISO(date) : undefined}
+                onSelect={(d) => d && setDate(format(d, "yyyy-MM-dd"))}
+                initialFocus
+                className="rounded-2xl"
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
