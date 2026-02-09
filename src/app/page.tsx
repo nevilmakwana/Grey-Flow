@@ -6,7 +6,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { 
-  Menu, 
   ShoppingBag, 
   Scissors, 
   ChevronRight,
@@ -24,6 +23,25 @@ import { StitchingModule } from '@/components/stitching/stitching-module';
 import { CSVImport } from '@/components/scarf-app/csv-import';
 import { ShareView } from '@/components/scarf-app/share-view';
 import { Toaster } from '@/components/ui/toaster';
+
+const AppleMenuIcon = ({ className }: { className?: string }) => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+  >
+    <path 
+      d="M4 8H20M4 16H20" 
+      stroke="currentColor" 
+      strokeWidth="1.5" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default function ScarfOrderApp() {
   const { 
@@ -257,8 +275,8 @@ export default function ScarfOrderApp() {
           <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
-                <button className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors">
-                  <Menu className="w-6 h-6" />
+                <button className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors outline-none">
+                  <AppleMenuIcon className="w-6 h-6" />
                 </button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-0 border-none bg-background/95 backdrop-blur-xl flex flex-col">
