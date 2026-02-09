@@ -118,14 +118,14 @@ export function OrderPanel({
           <Button 
             onClick={() => onAddGroup('Satin')} 
             variant="outline"
-            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow"
           >
             <span className="text-lg font-semibold">Satin</span>
           </Button>
           <Button 
             onClick={() => onAddGroup('Cotton')} 
             variant="outline"
-            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow-hover"
+            className="flex-1 h-10 rounded-lg bg-card border-border hover:border-primary hover:text-primary transition-all stripe-shadow"
           >
             <span className="text-lg font-semibold">Cotton</span>
           </Button>
@@ -224,7 +224,7 @@ export function OrderPanel({
                       key={item.design_id} 
                       id={`design-card-${item.design_id}`}
                       className={cn(
-                        "flex flex-row items-stretch border border-border rounded-lg overflow-hidden bg-white hover:border-primary/50 transition-all duration-200 scroll-mt-32",
+                        "flex flex-row items-stretch border border-border rounded-lg overflow-hidden bg-card hover:border-primary/50 transition-all duration-200 scroll-mt-32",
                         isHighlighted && "animate-highlight ring-1 ring-primary/30"
                       )}
                     >
@@ -235,7 +235,6 @@ export function OrderPanel({
                           fill 
                           className="object-cover" 
                           sizes="(max-width: 640px) 96px, 112px" 
-                          data-ai-hint="silk scarf"
                         />
                       </div>
                       
@@ -271,7 +270,7 @@ export function OrderPanel({
                                   value={qty || ""} 
                                   onChange={(e) => onUpdateQty(group.id, item.design_id, size.size_id, parseInt(e.target.value) || 0)} 
                                   onKeyDown={handleKeyDown} 
-                                  className="h-8 font-semibold bg-muted/10 focus:bg-white text-base sm:text-xs px-2" 
+                                  className="h-8 font-semibold bg-muted/10 focus:bg-background text-base sm:text-xs px-2" 
                                 />
                               </div>
                             );
