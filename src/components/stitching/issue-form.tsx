@@ -298,11 +298,8 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
-          Save Ledger
-        </Button>
-        <Button onClick={() => handleSubmit(true)} className="h-14 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
+      <div className="w-full">
+        <Button onClick={() => handleSubmit(true)} className="h-14 w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
           Save & Message
         </Button>
       </div>

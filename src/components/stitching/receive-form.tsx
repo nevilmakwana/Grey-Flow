@@ -314,11 +314,8 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Button onClick={() => handleSubmit(false)} variant="outline" className="h-14 rounded-xl font-black uppercase tracking-widest border-2 hover:bg-muted transition-all">
-          Save Ledger
-        </Button>
-        <Button onClick={() => handleSubmit(true)} className="h-14 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
+      <div className="w-full">
+        <Button onClick={() => handleSubmit(true)} className="h-14 w-full rounded-xl bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
           Save & Message
         </Button>
       </div>
