@@ -5,7 +5,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Tag, ChevronDown, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Trash2, Tag, ChevronDown, Calendar as CalendarIcon, MessageCircle, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SearchableDesignSelect } from './searchable-design-select';
 import { format, parseISO } from 'date-fns';
@@ -79,7 +79,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     return msg;
   };
 
-  const handleSubmit = (withShare = false) => {
+  const handleSubmit = async (platform: 'whatsapp' | 'native') => {
     if (!workerName) {
       toast({ variant: "destructive", title: "Select Worker", description: "Please choose a worker from the list." });
       return;
@@ -99,9 +99,10 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
     };
     onSave(entry);
     
-    if (withShare) {
-      const text = encodeURIComponent(generateMessage(entry));
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
+    const text = generateMessage(entry);
+
+    if (platform === 'whatsapp') {
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       const isMobileDevice = typeof navigator !== 'undefined' && 
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
@@ -109,6 +110,20 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         window.location.href = whatsappUrl;
       } else {
         window.open(whatsappUrl, '_blank');
+      }
+    } else {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        try {
+          await navigator.share({
+            title: `Issue - ${entry.workerName}`,
+            text: text,
+          });
+        } catch (err) {}
+      } else {
+        try {
+          await navigator.clipboard.writeText(text);
+          toast({ title: "Copied to Clipboard" });
+        } catch (err) {}
       }
     }
     
@@ -281,7 +296,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-4 py-3 bg-muted/20 border border-border/50 rounded-xl">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border border-border/50 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 border-r border-border/50 pr-4">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Small</span>
@@ -300,9 +315,19 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
         </div>
       </div>
 
-      <div className="w-full">
-        <Button onClick={() => handleSubmit(true)} className="h-14 w-full rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
-          Save & Message
+      <div className="grid grid-cols-2 gap-3 w-full">
+        <Button 
+          onClick={() => handleSubmit('whatsapp')} 
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+        >
+          <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
+        </Button>
+        <Button 
+          onClick={() => handleSubmit('native')} 
+          variant="outline"
+          className="h-14 rounded-xl border-primary text-primary hover:bg-primary/5 font-black uppercase tracking-widest shadow-md active:scale-95 transition-all"
+        >
+          <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>
       </div>
     </div>

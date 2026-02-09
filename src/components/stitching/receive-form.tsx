@@ -5,7 +5,7 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, PackageCheck, ChevronDown, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Trash2, PackageCheck, ChevronDown, Calendar as CalendarIcon, MessageCircle, Share2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { SearchableDesignSelect } from './searchable-design-select';
@@ -103,7 +103,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     return msg;
   };
 
-  const handleSubmit = (withShare = false) => {
+  const handleSubmit = async (platform: 'whatsapp' | 'native') => {
     if (!workerName) {
       toast({ variant: "destructive", title: "Select Worker", description: "Choose a worker to continue." });
       return;
@@ -122,9 +122,10 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     };
     onSave(entry);
     
-    if (withShare) {
-      const text = encodeURIComponent(generateMessage(entry));
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${text}`;
+    const text = generateMessage(entry);
+
+    if (platform === 'whatsapp') {
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       const isMobileDevice = typeof navigator !== 'undefined' && 
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       
@@ -132,6 +133,20 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         window.location.href = whatsappUrl;
       } else {
         window.open(whatsappUrl, '_blank');
+      }
+    } else {
+      if (typeof navigator !== 'undefined' && navigator.share) {
+        try {
+          await navigator.share({
+            title: `Receive - ${entry.workerName}`,
+            text: text,
+          });
+        } catch (err) {}
+      } else {
+        try {
+          await navigator.clipboard.writeText(text);
+          toast({ title: "Copied to Clipboard" });
+        } catch (err) {}
       }
     }
     
@@ -152,7 +167,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
             <select 
               value={workerName} 
               onChange={e => setWorkerName(e.target.value)}
-              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-bold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
+              className="flex h-12 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm font-bold shadow-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 appearance-none cursor-pointer transition-all hover:border-primary/50 pr-10"
             >
               <option value="">Select Worker</option>
               {workerNames.map(name => <option key={name} value={name}>{name}</option>)}
@@ -303,7 +318,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       )}
 
-      <div className="flex items-center justify-between px-4 py-3 bg-muted/20 border border-border/50 rounded-xl">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border border-border/50 rounded-xl">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 border-r border-border/50 pr-4">
             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">Small</span>
@@ -322,9 +337,19 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
         </div>
       </div>
 
-      <div className="w-full">
-        <Button onClick={() => handleSubmit(true)} className="h-14 w-full rounded-xl bg-green-600 hover:bg-green-700 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all">
-          Save & Message
+      <div className="grid grid-cols-2 gap-3 w-full">
+        <Button 
+          onClick={() => handleSubmit('whatsapp')} 
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+        >
+          <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
+        </Button>
+        <Button 
+          onClick={() => handleSubmit('native')} 
+          variant="outline"
+          className="h-14 rounded-xl border-green-600 text-green-600 hover:bg-green-600/5 font-black uppercase tracking-widest shadow-md active:scale-95 transition-all"
+        >
+          <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>
       </div>
     </div>
