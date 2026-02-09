@@ -318,14 +318,14 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
       <div className="grid grid-cols-2 gap-3 w-full">
         <Button 
           onClick={() => handleSubmit('whatsapp')} 
-          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+          className="h-14 rounded-xl bg-[#25D366] hover:bg-[#25D366]/90 text-white font-bold shadow-none active:scale-95 transition-all"
         >
           <MessageCircle className="w-5 h-5 mr-2" /> WhatsApp
         </Button>
         <Button 
           onClick={() => handleSubmit('native')} 
           variant="outline"
-          className="h-14 rounded-xl border-primary text-primary hover:bg-primary/5 font-black uppercase tracking-widest shadow-md active:scale-95 transition-all"
+          className="h-14 rounded-xl border-none bg-muted/50 text-foreground hover:bg-muted font-bold shadow-none active:scale-95 transition-all"
         >
           <Share2 className="w-5 h-5 mr-2" /> Share More
         </Button>
