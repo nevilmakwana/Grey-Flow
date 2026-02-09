@@ -5,13 +5,10 @@ import { Design, StitchingEntry } from '@/app/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Tag, ChevronDown, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, Trash2, Tag, ChevronDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SearchableDesignSelect } from './searchable-design-select';
 import { format, parseISO } from 'date-fns';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 
 interface IssueFormProps {
   designs: Design[];
@@ -21,7 +18,7 @@ interface IssueFormProps {
 export function IssueForm({ designs, onSave }: IssueFormProps) {
   const { toast } = useToast();
   const [workerName, setWorkerName] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date] = useState(new Date().toISOString().split('T')[0]);
   const [labels, setLabels] = useState({ small: 0, large: 0 });
   const [issueItems, setIssueItems] = useState<{ design_id: string; size_id: 'S-SML' | 'S-LGE'; quantity: number }[]>([
     { design_id: '', size_id: 'S-SML', quantity: 0 },
@@ -125,7 +122,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <div className="space-y-2">
           <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Worker Assignment</Label>
           <div className="relative group">
@@ -141,31 +138,6 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
             </select>
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Issue Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full h-12 justify-start text-left font-bold rounded-xl border border-border bg-card px-4 shadow-sm hover:border-primary/50 transition-all",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4 text-primary" />
-                {date ? format(parseISO(date), "dd MMM yyyy") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 rounded-2xl shadow-2xl border border-border bg-popover mt-2 animate-in fade-in zoom-in-95 duration-200" align="start">
-              <Calendar
-                mode="single"
-                selected={date ? parseISO(date) : undefined}
-                onSelect={(d) => d && setDate(format(d, "yyyy-MM-dd"))}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
         </div>
       </div>
 
