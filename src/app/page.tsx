@@ -241,9 +241,9 @@ export default function ScarfOrderApp() {
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden selection:bg-primary selection:text-primary-foreground">
-      <header className="fixed top-0 left-0 right-0 z-50 h-16 glass flex items-center justify-between px-6 no-print">
+      <header className="fixed top-0 left-0 right-0 z-50 h-10 glass flex items-center justify-between px-6 no-print">
         <div className="flex-1 flex items-center">
-          <h1 className="font-headline font-bold text-lg tracking-tight">GreyFlow</h1>
+          <h1 className="font-headline font-bold text-base tracking-tight">GreyFlow</h1>
         </div>
 
         {/* Desktop Navigation */}
@@ -251,7 +251,7 @@ export default function ScarfOrderApp() {
           <button 
             onClick={() => setActiveModule('orders')}
             className={cn(
-              "text-sm font-medium transition-all relative py-1",
+              "text-xs font-medium transition-all relative py-1",
               activeModule === 'orders' ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -261,7 +261,7 @@ export default function ScarfOrderApp() {
           <button 
             onClick={() => setActiveModule('stitching')}
             className={cn(
-              "text-sm font-medium transition-all relative py-1",
+              "text-xs font-medium transition-all relative py-1",
               activeModule === 'stitching' ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -276,11 +276,11 @@ export default function ScarfOrderApp() {
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
                 <button className="p-2 -mr-2 text-muted-foreground hover:text-foreground transition-colors outline-none">
-                  <AppleMenuIcon className="w-6 h-6" />
+                  <AppleMenuIcon className="w-5 h-5" />
                 </button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] p-0 border-none bg-background/95 backdrop-blur-xl flex flex-col">
-                <div className="flex-1 flex flex-col p-6 pt-20 gap-2">
+                <div className="flex-1 flex flex-col p-6 pt-16 gap-2">
                   <button 
                     onClick={() => {
                       setActiveModule('orders');
@@ -324,7 +324,7 @@ export default function ScarfOrderApp() {
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden pt-16">
+      <main className="flex-1 flex overflow-hidden pt-10">
         {activeModule === 'orders' ? (
           <>
             {!isMobile && (
