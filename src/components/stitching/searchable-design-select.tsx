@@ -50,7 +50,7 @@ export function SearchableDesignSelect({
         <div className="flex items-center border-b px-3 bg-muted/20">
           <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
           <input
-            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
+            className="flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground placeholder:text-[10px]"
             placeholder="Filter SKU..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}

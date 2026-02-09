@@ -118,7 +118,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
       return;
     }
 
-    // Save as a receive entry first
     const receiveEntry: StitchingEntry = {
       id: `st-rc-${Date.now()}`,
       type: 'receive',
@@ -128,7 +127,6 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
     };
     onSave(receiveEntry);
 
-    // If user provided a remaining label count, save it as a balance-check entry
     if (labelsRemaining.small > 0 || labelsRemaining.large > 0) {
       const balanceEntry: StitchingEntry = {
         id: `st-bc-${Date.now()}`,
@@ -243,7 +241,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold placeholder:text-[10px]"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground border-border">
                     <Trash2 className="w-4 h-4" />
@@ -282,7 +280,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold placeholder:text-[10px]"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground border-border">
                     <Trash2 className="w-4 h-4" />
@@ -315,7 +313,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 pattern="[0-9]*"
                 value={labelsRemaining.small || ''} 
                 onChange={e => setLabelsRemaining({ ...labelsRemaining, small: parseInt(e.target.value) || 0 })}
-                className="rounded-lg h-10 bg-background border text-center font-semibold"
+                className="rounded-lg h-10 bg-background border text-center font-semibold placeholder:text-[10px]"
                 placeholder="Remaining..."
               />
             </div>
@@ -330,7 +328,7 @@ export function ReceiveForm({ designs, allEntries, onSave }: ReceiveFormProps) {
                 pattern="[0-9]*"
                 value={labelsRemaining.large || ''} 
                 onChange={e => setLabelsRemaining({ ...labelsRemaining, large: parseInt(e.target.value) || 0 })}
-                className="rounded-lg h-10 bg-background border text-center font-semibold"
+                className="rounded-lg h-10 bg-background border text-center font-semibold placeholder:text-[10px]"
                 placeholder="Remaining..."
               />
             </div>

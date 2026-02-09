@@ -46,7 +46,6 @@ export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
     let smallBalance = 0;
     let largeBalance = 0;
     
-    // Sort entries by date to respect balance checks if any
     const sortedEntries = [...workerEntries].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     sortedEntries.forEach(e => {
@@ -259,7 +258,7 @@ export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold placeholder:text-[10px]"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground border-border">
                     <Trash2 className="w-4 h-4" />
@@ -298,7 +297,7 @@ export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
                     placeholder="Qty" 
                     value={item.quantity || ''} 
                     onChange={e => updateItem(idx, 'quantity', parseInt(e.target.value) || 0)}
-                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold"
+                    className="rounded-lg h-10 w-20 bg-background border text-center font-semibold placeholder:text-[10px]"
                   />
                   <Button variant="outline" size="icon" onClick={() => removeItem(idx)} className="h-10 w-10 shrink-0 rounded-lg text-muted-foreground border-border">
                     <Trash2 className="w-4 h-4" />
@@ -327,7 +326,7 @@ export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
               pattern="[0-9]*"
               value={labels.small || ''} 
               onChange={e => setLabels({ ...labels, small: parseInt(e.target.value) || 0 })}
-              className="rounded-lg h-10 bg-background border text-center font-semibold"
+              className="rounded-lg h-10 bg-background border text-center font-semibold placeholder:text-[10px]"
             />
           </div>
           <div className="space-y-1.5">
@@ -338,7 +337,7 @@ export function IssueForm({ designs, allEntries, onSave }: IssueFormProps) {
               pattern="[0-9]*"
               value={labels.large || ''} 
               onChange={e => setLabels({ ...labels, large: parseInt(e.target.value) || 0 })}
-              className="rounded-lg h-10 bg-background border text-center font-semibold"
+              className="rounded-lg h-10 bg-background border text-center font-semibold placeholder:text-[10px]"
             />
           </div>
         </div>
