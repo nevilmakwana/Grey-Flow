@@ -125,7 +125,7 @@ export function IssueForm({ designs, onSave }: IssueFormProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-3">
         <div className="space-y-2">
           <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Worker Assignment</Label>
           <div className="relative group">
