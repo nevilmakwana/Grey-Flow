@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Order, Design, AppSettings } from '@/app/lib/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Printer, User, Building, Hash, Calendar, Layers } from 'lucide-react';
+import { ArrowLeft, Printer } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface ShareViewProps {
@@ -67,44 +67,47 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
         {/* Header Section */}
         <header className="flex justify-between items-start border-b border-gray-100 pb-8 mb-8 px-4 sm:px-0">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 relative grayscale opacity-80">
-              {/* Placeholder for Grey Exim Logo */}
-              <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center">
-                <div className="w-6 h-6 bg-gray-400 rounded-sm rotate-45" />
+            <div className="w-12 h-12 relative opacity-80 shrink-0">
+              <div className="w-full h-full bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-gray-300 rounded-sm rotate-45" />
               </div>
             </div>
             <div>
-              <p className="text-xs font-medium text-gray-400 tracking-wide">Grey Exim</p>
-              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Fabric Print Order</h1>
+              <p className="text-[10px] font-medium text-gray-400 tracking-wide mb-0.5">Grey Exim</p>
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900 leading-tight">Fabric Print Order</h1>
             </div>
           </div>
 
-          <div className="text-right space-y-1.5">
+          <div className="text-right space-y-1">
             <div className="flex items-center justify-end gap-2">
               <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">To:</span>
-              <Input 
-                value={recipient} 
-                onChange={(e) => setRecipient(e.target.value)} 
-                className="h-6 w-32 border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
-              />
-              <span className="hidden print:inline font-semibold text-sm">{recipient}</span>
+              <div className="relative group min-w-[120px]">
+                <Input 
+                  value={recipient} 
+                  onChange={(e) => setRecipient(e.target.value)} 
+                  className="h-6 w-full border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
+                />
+                <span className="hidden print:inline font-medium text-sm text-gray-900">{recipient}</span>
+              </div>
             </div>
             <div className="flex items-center justify-end gap-2">
               <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Date:</span>
-              <span className="font-semibold text-sm">{formatFullDate(order.created_at)}</span>
+              <span className="font-medium text-sm text-gray-900">{formatFullDate(order.created_at)}</span>
             </div>
             <div className="flex items-center justify-end gap-2">
               <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Order No:</span>
-              <span className="font-semibold text-sm">{order.id}</span>
+              <span className="font-medium text-sm text-gray-900">{order.id}</span>
             </div>
             <div className="flex items-center justify-end gap-2">
               <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Prepared by:</span>
-              <Input 
-                value={preparedBy} 
-                onChange={(e) => setPreparedBy(e.target.value)} 
-                className="h-6 w-32 border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
-              />
-              <span className="hidden print:inline font-semibold text-sm">{preparedBy}</span>
+              <div className="relative group min-w-[120px]">
+                <Input 
+                  value={preparedBy} 
+                  onChange={(e) => setPreparedBy(e.target.value)} 
+                  className="h-6 w-full border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
+                />
+                <span className="hidden print:inline font-medium text-sm text-gray-900">{preparedBy}</span>
+              </div>
             </div>
           </div>
         </header>
@@ -113,25 +116,25 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
         {order.fabricGroups.map((group) => {
           if (group.items.length === 0) return null;
           return (
-            <section key={group.id} className="mb-12 page-break-inside-avoid">
+            <section key={group.id} className="mb-12 print-avoid-break">
               <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
                 <span className="text-[11px] font-medium text-gray-400 uppercase tracking-[0.2em]">Fabric Type:</span>
-                <span className="bg-black text-white text-[10px] font-semibold px-4 py-1.5 rounded-full tracking-wider">
+                <span className="bg-black text-white text-[10px] font-semibold px-4 py-1 rounded-full tracking-wider print:bg-black print:text-white">
                   {group.fabric_id}
                 </span>
               </div>
 
-              {/* Grid Layout - 4 columns on desktop/print */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 sm:px-0">
+              {/* Grid Layout - 4 columns as per design */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 sm:px-0">
                 {group.items.map((item) => {
                   const design = getDesignById(item.design_id);
                   if (!design) return null;
                   
                   return (
-                    <div key={item.design_id} className="border border-gray-100 rounded-2xl p-3 flex flex-col gap-3 relative bg-gray-50/30 print:bg-white print:border-gray-200">
-                      {/* SKU Badge */}
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="bg-[#007AFF] text-white text-[8px] font-semibold px-2 py-1 rounded-sm shadow-sm">
+                    <div key={item.design_id} className="border border-gray-100 rounded-2xl p-4 flex flex-col gap-4 relative bg-gray-50/20 print:bg-white print:border-gray-200">
+                      {/* SKU Badge - High visibility as per design */}
+                      <div className="absolute top-6 left-6 z-10">
+                        <span className="bg-[#007AFF] text-white text-[8px] font-semibold px-2 py-1 rounded-sm shadow-sm print:bg-[#007AFF] print:text-white">
                           {design.design_id.replace('OG/SCF/', '')}
                         </span>
                       </div>
@@ -147,8 +150,8 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
                         />
                       </div>
 
-                      {/* Quantity Rows */}
-                      <div className="space-y-2 px-1">
+                      {/* Quantity Rows - Aligned left and right */}
+                      <div className="space-y-1.5 px-0.5">
                         {design.sizes.map((size) => {
                           const orderSize = item.sizes.find(s => s.size_id === size.size_id);
                           const qty = orderSize?.quantity || 0;
@@ -172,20 +175,20 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
           );
         })}
 
-        {/* Footer Summary */}
-        <footer className="mt-16 pt-8 border-t border-gray-100 px-4 sm:px-0 page-break-inside-avoid">
+        {/* Footer Summary - Bottom Left Alignment */}
+        <footer className="mt-16 pt-8 border-t border-gray-100 px-4 sm:px-0 print-avoid-break">
           <div className="max-w-xs space-y-2">
             <h3 className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] mb-4">Total Quantity</h3>
-            <div className="flex justify-between items-center text-xs">
+            <div className="flex justify-between items-center text-[11px]">
               <span className="text-gray-400 font-medium">50x50 cm (Small):</span>
               <span className="font-semibold text-gray-900">{totals.small} pcs</span>
             </div>
-            <div className="flex justify-between items-center text-xs">
+            <div className="flex justify-between items-center text-[11px]">
               <span className="text-gray-400 font-medium">90x90 cm (Large):</span>
               <span className="font-semibold text-gray-900">{totals.large} pcs</span>
             </div>
-            <div className="pt-2 border-t border-gray-50 flex justify-between items-center">
-              <span className="text-xs font-semibold text-gray-900 uppercase">Net Grand Total:</span>
+            <div className="pt-3 border-t border-gray-50 flex justify-between items-center mt-2">
+              <span className="text-[11px] font-semibold text-gray-900 uppercase">Net Grand Total:</span>
               <span className="text-lg font-semibold text-gray-900">{totals.small + totals.large} pcs</span>
             </div>
           </div>
@@ -193,7 +196,7 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
 
         {/* System ID - Print Only */}
         <div className="mt-12 text-center hidden print:block">
-          <p className="text-[8px] text-gray-300 font-medium uppercase tracking-[0.5em]">GreyFlow Document System</p>
+          <p className="text-[8px] text-gray-200 font-medium uppercase tracking-[0.5em]">GreyFlow Document System</p>
         </div>
       </div>
     </div>
