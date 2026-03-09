@@ -41,6 +41,7 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [savedId, setSavedId] = useState("");
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   useEffect(() => {
     const meta = getSessionCache(ORDER_SHARE_META_KEY);
@@ -153,9 +154,63 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
     }
   };
 
-  const handleGeneratePdf = () => {
-    if (!isSaved) return;
-    window.print();
+  const handleGeneratePdf = async () => {
+    if (!isSaved || isGeneratingPdf) return;
+    if (!recipient.trim()) {
+      toast({ variant: "destructive", title: "Recipient required", description: "To field fill karo." });
+      return;
+    }
+    if (orderGroups.length === 0) {
+      toast({ variant: "destructive", title: "No items", description: "Order me quantity wali designs add karo." });
+      return;
+    }
+
+    setIsGeneratingPdf(true);
+    try {
+      const body = {
+        recipient: recipient.trim(),
+        preparedBy: preparedBy.trim(),
+        challanNumber: challanNo.trim(),
+        orderNumber: String(order.id || "").trim(),
+        date: String(order.created_at || ""),
+        companyName: settings.company_name || "Grey Exim",
+        groups: byFabricForRender.map((g) => ({
+          fabricType: g.fabricType,
+          designs: g.items.map((d) => ({
+            designCode: d.designCode,
+            qty50: Number(d.qty50 || 0),
+            qty90: Number(d.qty90 || 0),
+            imageUrl: String(d.imageUrl || ""),
+          })),
+        })),
+      };
+
+      const res = await fetch("/api/pdf/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        let message = "Could not generate PDF.";
+        try {
+          const json = await res.json();
+          message = String(json?.error?.message || json?.message || message);
+        } catch {}
+        toast({ variant: "destructive", title: "PDF failed", description: message });
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `Fabric-Order-${String(order.id || "order")}.pdf`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch {
+      toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   };
 
   return (
@@ -180,10 +235,10 @@ export function ShareView({ order, designs, settings, onBack }: ShareViewProps) 
             </Button>
             <Button
               onClick={handleGeneratePdf}
-              disabled={!isSaved}
+              disabled={!isSaved || isGeneratingPdf}
               className="h-11 rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-6 disabled:opacity-45"
             >
-              <FileText className="w-4 h-4 mr-2" />
+              {isGeneratingPdf ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <FileText className="w-4 h-4 mr-2" />}
               Generate PDF
             </Button>
           </div>
