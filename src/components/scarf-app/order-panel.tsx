@@ -626,7 +626,7 @@ export function OrderPanel({
     };
   };
   const printHistoryEntries = useMemo(() => {
-    return historyEntries.filter((entry) => String(entry?.type || "").trim() !== "usage");
+    return historyEntries;
   }, [historyEntries]);
 
   const historyCombinedEntries = useMemo(() => {
@@ -964,17 +964,29 @@ export function OrderPanel({
   const showNewOrder = !newOrderStarted;
   const challanOptions = React.useMemo(
     () =>
-      (purchases || []).map((p: any, idx: number) => ({
-        id: String(p?._id || p?.id || p?.challanOrInvoiceNo || p?.invoiceNo || `row-${idx}`),
-        value: String(
-          p?.challanOrInvoiceNo ||
-          p?.challan ||
-          p?.invoiceNo ||
-          p?.invoice ||
-          ""
-        ).trim(),
-      })).filter((c) => c.value),
-    [purchases]
+      (purchases || [])
+        .map((p: any, idx: number) => {
+          const pid = String(p?._id || p?.id || "");
+          const deliveredRaw = Number(
+            p?.netMeters ?? (Number(p?.deliveredMeters || 0) - Number(p?.returnMeters || 0))
+          );
+          const delivered = Number.isFinite(deliveredRaw) ? deliveredRaw : 0;
+          const used = pid ? usedMetersByPurchase.get(pid) || 0 : 0;
+          const remaining = delivered - used;
+          return {
+            id: String(p?._id || p?.id || p?.challanOrInvoiceNo || p?.invoiceNo || `row-${idx}`),
+            value: String(
+              p?.challanOrInvoiceNo ||
+                p?.challan ||
+                p?.invoiceNo ||
+                p?.invoice ||
+                ""
+            ).trim(),
+            remaining,
+          };
+        })
+        .filter((c) => c.value && c.remaining > 0.0001),
+    [purchases, usedMetersByPurchase]
   );
 
   const handleStartNewOrder = () => {
