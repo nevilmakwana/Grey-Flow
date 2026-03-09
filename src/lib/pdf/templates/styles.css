@@ -1,0 +1,348 @@
+{{archivoFontFaces}}
+
+@page {
+  /* Scale by 4/3 so CSS px -> PDF pt matches the reference PDFs */
+  size: 2800px 3963px;
+  margin: 0;
+}
+
+body {
+  font-family: "Archivo", system-ui, -apple-system, Segoe UI, Roboto, Arial,
+    sans-serif;
+  color: #0b0b0f;
+  font-size: 26.67px; /* 20pt */
+  line-height: 1;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background: #ffffff !important;
+  margin: 0;
+}
+
+strong,
+b {
+  font-weight: 600;
+}
+
+html,
+body {
+  background: #ffffff !important;
+}
+
+.page {
+  width: 2800px; /* 2100pt */
+  height: 3963px; /* 2972pt */
+  margin: 0;
+  padding: 157.33px 160px 0 160px; /* 118/120pt */
+  box-sizing: border-box;
+  background: #ffffff !important;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  break-after: page;
+  page-break-after: always;
+}
+
+.page:last-child {
+  break-after: auto;
+  page-break-after: auto;
+}
+
+.main {
+  flex: 1 1 auto;
+  background: #ffffff !important;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 22px; /* tuned to reference */
+  border-bottom: 2.67px solid #eef2f7; /* 2pt */
+  margin-bottom: 74.67px; /* tuned to reference */
+}
+
+.left {
+  display: flex;
+  gap: 13.33px; /* 10pt */
+  align-items: center;
+}
+
+.logo {
+  width: 120px; /* 90pt */
+  height: 120px; /* 90pt */
+  border-radius: 0;
+  object-fit: contain;
+  background: transparent;
+  flex: 0 0 auto;
+}
+
+.brand-name {
+  font-size: 34.67px; /* 26pt */
+  color: #9ca3af;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.title {
+  margin-top: 3px;
+  font-size: 48px; /* 36pt */
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #111827;
+}
+
+.meta {
+  text-align: right;
+  display: grid;
+  gap: 13.33px; /* 10pt */
+  min-width: 693.33px; /* 520pt */
+  justify-items: end;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 24px; /* 18pt */
+  align-items: baseline;
+  justify-items: end;
+}
+
+.meta-k {
+  font-size: 32px; /* 24pt */
+  color: #9ca3af;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.meta-v {
+  font-weight: 600;
+  font-size: 32px; /* 24pt */
+  color: #111827;
+  line-height: 1;
+}
+
+.fabric-section {
+  margin-top: 0;
+  background: #ffffff !important;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.fabric-section + .fabric-section {
+  margin-top: 130px; /* tuned to reference */
+}
+
+.fabric-block {
+  background: #ffffff !important;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.fabric-line {
+  display: flex;
+  align-items: center;
+  gap: 24px; /* tuned to reference */
+  margin-bottom: 64.67px; /* tuned to reference */
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.fabric-label {
+  font-size: 32px; /* 24pt */
+  color: #9ca3af;
+  letter-spacing: 0;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.fabric-pill {
+  background: #000;
+  color: #fff;
+  padding: 13.33px 32px; /* 10pt 24pt */
+  border-radius: 999px;
+  font-size: 32px; /* 24pt */
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.grid {
+  display: grid;
+  background: #ffffff !important;
+  grid-template-columns: repeat(4, 582.67px); /* 437pt */
+  column-gap: 49.33px; /* 37pt */
+  row-gap: 83.33px; /* tuned to reference */
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+.card {
+  background: #ffffff !important;
+  border: 2.67px solid #e5e7eb; /* 2pt */
+  border-radius: 37.33px; /* 28pt */
+  padding: 14.4px;
+  position: relative;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  /*
+    iOS PDF viewers (Safari/Chrome) can render blurred/alpha shadows as grey "tiles/boxes".
+    Avoid blur/spread shadows to prevent soft-mask artifacts; use a subtle hard shadow instead.
+  */
+  /* Subtle depth without blur (prevents iOS PDF grey "tiles") */
+  box-shadow: 0 6px 0 0 #eef2f7;
+}
+
+.sku-badge {
+  position: absolute;
+  top: 29px;
+  left: 40px;
+  z-index: 2;
+  background: #007aff;
+  color: #fff;
+  font-size: 26.67px; /* 20pt */
+  font-weight: 600;
+  line-height: 1;
+  padding: 13.33px 18.67px; /* 10pt 14pt */
+  border-radius: 21.33px; /* 16pt */
+}
+
+.img {
+  width: 545.33px; /* 409pt */
+  height: 545.33px; /* 409pt */
+  border-radius: 37.33px; /* match card radius */
+  overflow: hidden;
+  border: none;
+  background: #ffffff !important;
+  box-shadow: none;
+}
+
+.img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #ffffff !important;
+}
+
+img {
+  background: #ffffff;
+}
+
+.qty {
+  margin-top: 32px; /* 24pt */
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 26.67px; /* 20pt */
+  line-height: 1;
+  margin-top: 16px; /* 12pt */
+}
+
+.label {
+  color: #9ca3af;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.value {
+  color: #111827;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.value.na {
+  color: #9ca3af;
+  font-weight: 600;
+}
+
+.footer {
+  height: 266.67px; /* 200pt (tuned to reference) */
+  box-sizing: border-box;
+  padding-top: 48px; /* tuned to reference */
+  border-top: 2.67px solid #eef2f7; /* 2pt */
+  display: block;
+  margin-top: auto;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.totals {
+  width: auto;
+  max-width: 746.67px; /* 560pt */
+  display: inline-block;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.totals-title {
+  font-size: 32px; /* 24pt */
+  color: #9ca3af;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 34.67px; /* 26pt */
+}
+
+.totals-row {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 18.67px; /* 14pt */
+  justify-content: start;
+  align-items: baseline;
+  font-size: 29.33px; /* 22pt */
+  line-height: 1;
+  margin-top: 21.33px; /* 16pt */
+  color: #111827;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.totals-row strong {
+  font-size: 29.33px; /* 22pt */
+  font-weight: 600;
+  color: #111827;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.totals-row span {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.totals-grand {
+  margin-top: 45.33px; /* 34pt */
+  padding-top: 34.67px; /* 26pt */
+  border-top: 2.67px solid #f3f4f6; /* 2pt */
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  break-before: avoid;
+  page-break-before: avoid;
+}
+
+.totals-grand span {
+  font-size: 29.33px; /* 22pt */
+  font-weight: 600;
+  text-transform: none;
+  color: #111827;
+  line-height: 1;
+}
+
+.totals-grand strong {
+  font-size: 34.67px; /* 26pt */
+  font-weight: 600;
+  color: #111827;
+  line-height: 1;
+}
+
