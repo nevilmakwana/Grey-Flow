@@ -861,9 +861,15 @@ export function OrderPanel({
       try {
         const res = await fetch("/api/purchases", { cache: "no-store" });
         const json = await readApiJson(res);
-        const list: any[] = Array.isArray(json.data?.purchases) ? json.data.purchases : [];
+        const payload: any = json.data;
+        const list: any[] = Array.isArray(payload?.data?.purchases)
+          ? payload.data.purchases
+          : Array.isArray(payload?.purchases)
+            ? payload.purchases
+            : [];
+        const normalizedWorker = String(name || "").trim().toLowerCase();
         const filtered = list
-          .filter((p) => String(p?.printingWorkerName || "").trim() === name)
+          .filter((p) => String(p?.printingWorkerName || "").trim().toLowerCase() === normalizedWorker)
           .sort((a, b) => new Date(b?.date || 0).getTime() - new Date(a?.date || 0).getTime());
         const latest = filtered[0];
         setHeaderChallan(String(latest?.challanOrInvoiceNo || ""));
@@ -871,7 +877,12 @@ export function OrderPanel({
         try {
           const usageRes = await fetch(`/api/printing-usage?workerName=${encodeURIComponent(name)}`, { cache: "no-store" });
           const usageJson = await readApiJson(usageRes);
-          const usagesRaw: any[] = Array.isArray(usageJson.data?.usages) ? usageJson.data.usages : [];
+          const usagePayload: any = usageJson.data;
+          const usagesRaw: any[] = Array.isArray(usagePayload?.data?.usages)
+            ? usagePayload.data.usages
+            : Array.isArray(usagePayload?.usages)
+              ? usagePayload.usages
+              : [];
       const usages = [...usagesRaw]
         .map((u) => ({
           ...u,
