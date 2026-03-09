@@ -2739,57 +2739,110 @@ export function OrderPanel({
   
   return (
     <div className="max-w-5xl mx-auto w-full px-4 sm:px-6 pt-8 pb-32">
-      <div className="mb-8 rounded-2xl bg-background/70 border border-border/60 shadow-xl px-4 sm:px-6 py-5">
-        <div className="flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          <div className="flex items-center gap-2 min-w-0">
-            <span>Dashboard</span>
-            <ChevronRight className="w-3 h-3" />
-            <span>Order:</span>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-foreground">{effectiveOrderNumber || "New Order"}</span>
-            <div className="ml-2 inline-flex items-center gap-2 shrink-0">
-              <span className="text-muted-foreground">Challan:</span>
-              <Select
-                value={headerChallan}
-                onValueChange={setHeaderChallan}
-                disabled={!newOrderStarted || !hasWorker || challanOptions.length === 0}
-              >
-                <SelectTrigger className="h-8 w-[132px] rounded-lg border-border/60 bg-card/70 px-2 normal-case tracking-normal text-xs">
-                  <SelectValue
-                    placeholder={
-                      newOrderStarted
-                        ? !hasWorker
-                          ? "Select worker first"
-                          : challanOptions.length
-                            ? "Select challan"
-                            : "No challans"
-                        : "Click New Order first"
-                    }
-                  />
+      {mainTab === "order" && (
+        <div className="mb-8 rounded-2xl bg-background/70 border border-border/60 shadow-xl px-4 sm:px-6 py-5">
+          <div className="flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <div className="flex items-center gap-2 min-w-0">
+              <span>Dashboard</span>
+              <ChevronRight className="w-3 h-3" />
+              <span>Order:</span>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-foreground">{effectiveOrderNumber || "New Order"}</span>
+              <div className="ml-2 inline-flex items-center gap-2 shrink-0">
+                <span className="text-muted-foreground">Challan:</span>
+                <Select
+                  value={headerChallan}
+                  onValueChange={setHeaderChallan}
+                  disabled={!newOrderStarted || !hasWorker || challanOptions.length === 0}
+                >
+                  <SelectTrigger className="h-8 w-[132px] rounded-lg border-border/60 bg-card/70 px-2 normal-case tracking-normal text-xs">
+                    <SelectValue
+                      placeholder={
+                        newOrderStarted
+                          ? !hasWorker
+                            ? "Select worker first"
+                            : challanOptions.length
+                              ? "Select challan"
+                              : "No challans"
+                          : "Click New Order first"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {challanOptions.map((c) => (
+                      <SelectItem key={c.id} value={c.value}>
+                        {c.value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-2">
+            <h2 className="text-4xl font-black text-foreground tracking-tight">Order Request</h2>
+            <p className="text-2xl font-medium text-muted-foreground mt-1">{nowText}</p>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 lg:grid-cols-[minmax(260px,1fr),auto] gap-4 items-end">
+            <div className="space-y-2 max-w-md">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Printing Worker</Label>
+              <Select value={headerPrintingWorker} onValueChange={setHeaderPrintingWorker} disabled={!newOrderStarted}>
+                <SelectTrigger className="h-11 rounded-xl bg-card border-border/60">
+                  <SelectValue placeholder={newOrderStarted ? "Select worker" : "Click New Order first"} />
                 </SelectTrigger>
                 <SelectContent>
-                  {challanOptions.map((c) => (
-                    <SelectItem key={c.id} value={c.value}>
-                      {c.value}
-                    </SelectItem>
+                  {printingWorkerOptions.map((name) => (
+                    <SelectItem key={name} value={name}>{name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
+
+            <div className="flex flex-wrap items-center justify-end gap-3 rounded-xl border border-border/50 bg-card/30 px-3 py-3">
+              <div className="px-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Remaining Fabric (m)</p>
+                <p className="text-4xl font-black text-foreground leading-tight mt-1">{Number(remainingForOrder?.remaining || 0)}</p>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  Received {Number(remainingForOrder?.delivered || 0)} - Used {Number(remainingForOrder?.used || 0)}
+                </p>
+              </div>
+              <div className="h-14 w-px bg-border/70" />
+              <div className="px-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Net Quantity</p>
+                <p className="text-4xl font-black text-primary leading-tight mt-1">{grandTotal}</p>
+              </div>
+              {showNewOrder && (
+                <Button onClick={handleStartNewOrder} size="lg" className="h-11 rounded-xl font-semibold px-4">
+                  <Plus className="w-4 h-4 mr-2" /> New Order
+                </Button>
+              )}
+              {showAddFabric && (
+                <Button
+                  onClick={handleAddFabric}
+                  size="lg"
+                  className="h-11 rounded-xl font-semibold px-4"
+                  disabled={!newOrderStarted || !hasWorker || !hasChallan}
+                >
+                  <Plus className="w-4 h-4 mr-2" /> Add Fabric
+                </Button>
+              )}
+              <Button onClick={resetOrderHeader} variant="ghost" size="icon" className="h-11 w-11 rounded-xl border border-border/50 bg-card/50">
+                <RotateCcw className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
+      )}
 
-        <div className="mt-2">
-          <h2 className="text-4xl font-black text-foreground tracking-tight">Order Request</h2>
-          <p className="text-2xl font-medium text-muted-foreground mt-1">{nowText}</p>
-        </div>
-
-        <div className="mt-5 grid grid-cols-1 lg:grid-cols-[minmax(260px,1fr),auto] gap-4 items-end">
-          <div className="space-y-2 max-w-md">
+      {(mainTab === "history" || mainTab === "jobwork") && (
+        <div className="mb-8 rounded-2xl bg-background/70 border border-border/60 shadow-xl px-4 sm:px-6 py-5">
+          <div className="max-w-md space-y-2">
             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Printing Worker</Label>
-            <Select value={headerPrintingWorker} onValueChange={setHeaderPrintingWorker} disabled={!newOrderStarted}>
+            <Select value={headerPrintingWorker} onValueChange={setHeaderPrintingWorker}>
               <SelectTrigger className="h-11 rounded-xl bg-card border-border/60">
-                <SelectValue placeholder={newOrderStarted ? "Select worker" : "Click New Order first"} />
+                <SelectValue placeholder="Select worker" />
               </SelectTrigger>
               <SelectContent>
                 {printingWorkerOptions.map((name) => (
@@ -2798,41 +2851,8 @@ export function OrderPanel({
               </SelectContent>
             </Select>
           </div>
-
-          <div className="flex flex-wrap items-center justify-end gap-3 rounded-xl border border-border/50 bg-card/30 px-3 py-3">
-            <div className="px-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Remaining Fabric (m)</p>
-              <p className="text-4xl font-black text-foreground leading-tight mt-1">{Number(remainingForOrder?.remaining || 0)}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">
-                Received {Number(remainingForOrder?.delivered || 0)} - Used {Number(remainingForOrder?.used || 0)}
-              </p>
-            </div>
-            <div className="h-14 w-px bg-border/70" />
-            <div className="px-2">
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Net Quantity</p>
-              <p className="text-4xl font-black text-primary leading-tight mt-1">{grandTotal}</p>
-            </div>
-            {showNewOrder && (
-              <Button onClick={handleStartNewOrder} size="lg" className="h-11 rounded-xl font-semibold px-4">
-                <Plus className="w-4 h-4 mr-2" /> New Order
-              </Button>
-            )}
-            {showAddFabric && (
-              <Button
-                onClick={handleAddFabric}
-                size="lg"
-                className="h-11 rounded-xl font-semibold px-4"
-                disabled={!newOrderStarted || !hasWorker || !hasChallan}
-              >
-                <Plus className="w-4 h-4 mr-2" /> Add Fabric
-              </Button>
-            )}
-            <Button onClick={resetOrderHeader} variant="ghost" size="icon" className="h-11 w-11 rounded-xl border border-border/50 bg-card/50">
-              <RotateCcw className="w-4 h-4" />
-            </Button>
-          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-4 mb-8">
         <Tabs value={mainTab} onValueChange={(v) => {
