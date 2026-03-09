@@ -1,12 +1,12 @@
-
 "use client";
 
-import React, { useState } from 'react';
-import { Order, Design, AppSettings } from '@/app/lib/types';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Printer, Share2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
+import React, { useEffect, useMemo, useState } from "react";
+import { Order, Design, AppSettings } from "@/app/lib/types";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, FileText, Loader2, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { getSessionCache, readApiJson } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface ShareViewProps {
   order: Order;
@@ -15,190 +15,289 @@ interface ShareViewProps {
   onBack: () => void;
 }
 
+const ORDER_SHARE_META_KEY = "orders:share:meta";
+
+function formatFullDate(isoString: string) {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
+
+function getQty(item: any, sizeId: "S-SML" | "S-LGE") {
+  const size = Array.isArray(item?.sizes)
+    ? item.sizes.find((s: any) => String(s?.size_id || "") === sizeId)
+    : null;
+  return Number(size?.quantity || 0);
+}
+
 export function ShareView({ order, designs, settings, onBack }: ShareViewProps) {
-  const [recipient, setRecipient] = useState("Oseas Print");
+  const { toast } = useToast();
+  const [recipient, setRecipient] = useState("");
   const [preparedBy, setPreparedBy] = useState("Hemil M");
+  const [challanNo, setChallanNo] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [savedId, setSavedId] = useState("");
 
-  const getDesignById = (id: string) => designs.find(d => d.design_id === id);
+  useEffect(() => {
+    const meta = getSessionCache(ORDER_SHARE_META_KEY);
+    const recipientFromMeta = String(meta?.recipient || "").trim();
+    const challanFromMeta = String(meta?.challanNo || meta?.orderNumber || "").trim();
+    if (recipientFromMeta) setRecipient(recipientFromMeta);
+    if (challanFromMeta) setChallanNo(challanFromMeta);
+  }, []);
 
-  const formatFullDate = (isoString: string) => {
-    const date = new Date(isoString);
-    return new Intl.DateTimeFormat('en-GB', { 
-      day: '2-digit', 
-      month: 'short', 
-      year: 'numeric' 
-    }).format(date);
-  };
+  const orderGroups = useMemo(() => {
+    return (order.fabricGroups || [])
+      .map((group) => {
+        const mappedDesigns = (group.items || [])
+          .map((item) => {
+            const qty50 = getQty(item, "S-SML");
+            const qty90 = getQty(item, "S-LGE");
+            return {
+              designCode: String(item?.design_id || "").trim(),
+              qty50,
+              qty90,
+            };
+          })
+          .filter((d) => d.designCode && (d.qty50 > 0 || d.qty90 > 0));
+        return {
+          id: String(group.id || ""),
+          fabricType: String(group.fabric_id || "").trim() || "Satin",
+          designs: mappedDesigns,
+        };
+      })
+      .filter((g) => g.designs.length > 0);
+  }, [order.fabricGroups]);
 
-  const totals = order.fabricGroups.reduce((acc, group) => {
-    group.items.forEach(item => {
-      item.sizes.forEach(s => {
-        if (s.size_id === 'S-SML') acc.small += s.quantity;
-        if (s.size_id === 'S-LGE') acc.large += s.quantity;
+  const totals = useMemo(() => {
+    let small = 0;
+    let large = 0;
+    orderGroups.forEach((g) => {
+      g.designs.forEach((d) => {
+        small += Number(d.qty50 || 0);
+        large += Number(d.qty90 || 0);
       });
     });
-    return acc;
-  }, { small: 0, large: 0 });
+    return { small, large, grand: small + large };
+  }, [orderGroups]);
+
+  const byFabricForRender = useMemo(() => {
+    return orderGroups.map((group) => ({
+      ...group,
+      items: group.designs
+        .map((row) => {
+          const design = designs.find((d) => String(d.design_id || "") === row.designCode);
+          return {
+            ...row,
+            imageUrl: String(design?.image_url || ""),
+          };
+        })
+        .filter((d) => d.qty50 > 0 || d.qty90 > 0),
+    }));
+  }, [orderGroups, designs]);
+
+  const handleFinalizeAndSave = async () => {
+    if (!recipient.trim()) {
+      toast({ variant: "destructive", title: "Recipient required", description: "To field fill karo." });
+      return;
+    }
+    if (orderGroups.length === 0) {
+      toast({ variant: "destructive", title: "No items", description: "Order me quantity wali designs add karo." });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const body = {
+        orderNumber: String(order.id || "").trim(),
+        recipient: recipient.trim(),
+        workerName: recipient.trim(),
+        preparedBy: preparedBy.trim(),
+        challanNo: challanNo.trim(),
+        groups: orderGroups.map((g) => ({
+          fabricType: g.fabricType,
+          designs: g.designs.map((d) => ({
+            designCode: d.designCode,
+            qty50: Number(d.qty50 || 0),
+            qty90: Number(d.qty90 || 0),
+          })),
+        })),
+      };
+      const res = await fetch("/api/order-pdf/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const { ok, data, error } = await readApiJson(res);
+      if (!ok) {
+        toast({
+          variant: "destructive",
+          title: "Save failed",
+          description: String(error || data?.error || "Could not save order entry."),
+        });
+        return;
+      }
+
+      const id = String(data?.order?._id || "");
+      setSavedId(id);
+      setIsSaved(true);
+      toast({ title: "Saved", description: "Entry saved to database. PDF button is now enabled." });
+    } catch {
+      toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleGeneratePdf = () => {
+    if (!isSaved) return;
+    window.print();
+  };
 
   return (
-    <div className="min-h-screen bg-white text-black p-0 sm:p-8 md:p-12 selection:bg-primary/20">
-      {/* Controls - Hidden on Print */}
-      <div className="max-w-[1000px] mx-auto mb-8 flex justify-between items-center no-print px-4">
-        <Button 
-          variant="ghost" 
-          onClick={onBack} 
-          className="rounded-xl font-medium text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
-        </Button>
-        <div className="flex gap-3">
-          <Button 
-            onClick={() => window.print()} 
-            className="rounded-xl bg-black text-white hover:bg-black/80 font-medium px-6 shadow-lg"
+    <div className="min-h-screen bg-[#04060b] text-slate-100 px-4 sm:px-8 lg:px-12 py-8 print:p-0 print:bg-white print:text-black">
+      <div className="mx-auto w-full max-w-[1200px]">
+        <div className="mb-8 flex items-center justify-between gap-4 no-print">
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="h-10 rounded-xl px-3 text-slate-300 hover:text-white hover:bg-slate-800/60"
           >
-            <Printer className="w-4 h-4 mr-2" /> Print A4 PDF
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
           </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleFinalizeAndSave}
+              disabled={isSaving}
+              className="h-11 rounded-xl bg-blue-600/70 hover:bg-blue-600 text-white px-6 disabled:opacity-70"
+            >
+              {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              Finalize &amp; Save Entry
+            </Button>
+            <Button
+              onClick={handleGeneratePdf}
+              disabled={!isSaved}
+              className="h-11 rounded-xl bg-blue-500 hover:bg-blue-400 text-white px-6 disabled:opacity-45"
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Generate PDF
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {/* A4 Content Container */}
-      <div className="max-w-[1000px] mx-auto bg-white print:m-0 print:p-0">
-        
-        {/* Header Section */}
-        <header className="flex justify-between items-start border-b border-gray-100 pb-8 mb-8 px-4 sm:px-0">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 relative opacity-80 shrink-0">
-              <div className="w-full h-full bg-gray-100 rounded-full flex items-center justify-center">
-                <div className="w-6 h-6 bg-gray-300 rounded-sm rotate-45" />
-              </div>
-            </div>
+        <div className="border-t border-b border-slate-800/70 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr,360px] gap-8">
             <div>
-              <p className="text-[10px] font-medium text-gray-400 tracking-wide mb-0.5">Grey Exim</p>
-              <h1 className="text-2xl font-semibold tracking-tight text-gray-900 leading-tight">Fabric Print Order</h1>
+              <div className="text-sm text-slate-400">{settings.company_name || "Grey Exim"}</div>
+              <h1 className="mt-1 text-5xl font-black tracking-tight leading-none text-white">Fabric Print Order</h1>
+            </div>
+            <div className="space-y-2 text-right">
+              <div className="flex items-center justify-end gap-3">
+                <span className="text-[11px] tracking-[0.2em] uppercase text-slate-400">To:</span>
+                <Input
+                  value={recipient}
+                  onChange={(e) => {
+                    setRecipient(e.target.value);
+                    setIsSaved(false);
+                  }}
+                  className="h-7 w-44 border-0 bg-transparent text-right text-2xl font-semibold text-white px-0 focus-visible:ring-0"
+                />
+              </div>
+              <div className="text-[28px] font-medium text-slate-300">{formatFullDate(order.created_at)}</div>
+              <div className="flex items-center justify-end gap-3">
+                <span className="text-[11px] tracking-[0.2em] uppercase text-slate-400">Order No:</span>
+                <span className="text-3xl font-black text-white">{order.id}</span>
+              </div>
+              <div className="flex items-center justify-end gap-3">
+                <span className="text-[11px] tracking-[0.2em] uppercase text-slate-400">Challan No:</span>
+                <Input
+                  value={challanNo}
+                  onChange={(e) => {
+                    setChallanNo(e.target.value);
+                    setIsSaved(false);
+                  }}
+                  className="h-7 w-44 border-0 bg-transparent text-right text-xl font-semibold text-white px-0 focus-visible:ring-0"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-3">
+                <span className="text-[11px] tracking-[0.2em] uppercase text-slate-400">Prepared By:</span>
+                <Input
+                  value={preparedBy}
+                  onChange={(e) => {
+                    setPreparedBy(e.target.value);
+                    setIsSaved(false);
+                  }}
+                  className="h-7 w-44 border-0 bg-transparent text-right text-2xl font-semibold text-white px-0 focus-visible:ring-0"
+                />
+              </div>
+              {savedId ? <div className="text-xs text-emerald-400">Saved ID: {savedId}</div> : null}
             </div>
           </div>
+        </div>
 
-          <div className="text-right space-y-1">
-            <div className="flex items-center justify-end gap-2">
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">To:</span>
-              <div className="relative group min-w-[120px]">
-                <Input 
-                  value={recipient} 
-                  onChange={(e) => setRecipient(e.target.value)} 
-                  className="h-6 w-full border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
-                />
-                <span className="hidden print:inline font-medium text-sm text-gray-900">{recipient}</span>
-              </div>
+        {byFabricForRender.map((group) => (
+          <section key={group.id} className="pt-10 pb-16 border-b border-slate-800/70">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="text-[14px] tracking-[0.24em] uppercase text-slate-400">Fabric Type:</span>
+              <span className="rounded-full bg-slate-700/70 px-5 py-1 text-sm font-semibold text-white">{group.fabricType}</span>
             </div>
-            <div className="flex items-center justify-end gap-2">
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Date:</span>
-              <span className="font-medium text-sm text-gray-900">{formatFullDate(order.created_at)}</span>
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Order No:</span>
-              <span className="font-medium text-sm text-gray-900">{order.id}</span>
-            </div>
-            <div className="flex items-center justify-end gap-2">
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Prepared by:</span>
-              <div className="relative group min-w-[120px]">
-                <Input 
-                  value={preparedBy} 
-                  onChange={(e) => setPreparedBy(e.target.value)} 
-                  className="h-6 w-full border-none p-0 text-right font-medium focus:ring-0 bg-transparent no-print inline-block"
-                />
-                <span className="hidden print:inline font-medium text-sm text-gray-900">{preparedBy}</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Orders by Fabric Group */}
-        {order.fabricGroups.map((group) => {
-          if (group.items.length === 0) return null;
-          return (
-            <section key={group.id} className="mb-12 print-avoid-break">
-              <div className="flex items-center gap-3 mb-6 px-4 sm:px-0">
-                <span className="text-[11px] font-medium text-gray-400 uppercase tracking-[0.2em]">Fabric Type:</span>
-                <span className="bg-black text-white text-[10px] font-semibold px-4 py-1 rounded-full tracking-wider print:bg-black print:text-white">
-                  {group.fabric_id}
-                </span>
-              </div>
-
-              {/* Grid Layout - 4 columns as per design */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 px-4 sm:px-0">
-                {group.items.map((item) => {
-                  const design = getDesignById(item.design_id);
-                  if (!design) return null;
-                  
-                  return (
-                    <div key={item.design_id} className="border border-gray-100 rounded-2xl p-4 flex flex-col gap-4 relative bg-gray-50/20 print:bg-white print:border-gray-200">
-                      {/* SKU Badge - High visibility as per design */}
-                      <div className="absolute top-6 left-6 z-10">
-                        <span className="bg-[#007AFF] text-white text-[8px] font-semibold px-2 py-1 rounded-sm shadow-sm print:bg-[#007AFF] print:text-white">
-                          {design.design_id.replace('OG/SCF/', '')}
-                        </span>
-                      </div>
-
-                      {/* Image Container */}
-                      <div className="aspect-square relative rounded-xl overflow-hidden border border-gray-100 bg-white shadow-sm">
-                        <Image 
-                          src={design.image_url} 
-                          alt={design.design_id} 
-                          fill 
-                          className="object-cover" 
-                          sizes="(max-width: 640px) 50vw, 250px"
-                        />
-                      </div>
-
-                      {/* Quantity Rows - Aligned left and right */}
-                      <div className="space-y-1.5 px-0.5">
-                        {design.sizes.map((size) => {
-                          const orderSize = item.sizes.find(s => s.size_id === size.size_id);
-                          const qty = orderSize?.quantity || 0;
-                          return (
-                            <div key={size.size_id} className="flex justify-between items-center text-[10px]">
-                              <span className="text-gray-400 font-medium">
-                                {size.size_id === 'S-SML' ? '50x50 cm (Small)' : '90x90 cm (Large)'}
-                              </span>
-                              <span className="font-semibold text-gray-900">
-                                {qty > 0 ? `${qty} pcs` : '0 pcs'}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {group.items.map((item) => (
+                <article key={`${group.id}-${item.designCode}`} className="rounded-2xl border border-slate-700/70 bg-slate-900/70 p-4">
+                  <div className="mb-3 inline-flex rounded-md bg-blue-500 px-2 py-1 text-[10px] font-semibold text-white">
+                    {item.designCode.replace("OG/SCF/", "")}
+                  </div>
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-xl border border-slate-700 bg-slate-800">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.designCode}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">No image</div>
+                    )}
+                  </div>
+                  <div className="mt-4 space-y-2 text-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-300">50x50 cm (Small)</span>
+                      <span className="font-bold text-white">{item.qty50} pcs</span>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-300">90x90 cm (Large)</span>
+                      <span className="font-bold text-white">{item.qty90} pcs</span>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ))}
 
-        {/* Footer Summary - Bottom Left Alignment */}
-        <footer className="mt-16 pt-8 border-t border-gray-100 px-4 sm:px-0 print-avoid-break">
-          <div className="max-w-xs space-y-2">
-            <h3 className="text-[10px] font-medium text-gray-400 uppercase tracking-[0.2em] mb-4">Total Quantity</h3>
-            <div className="flex justify-between items-center text-[11px]">
-              <span className="text-gray-400 font-medium">50x50 cm (Small):</span>
-              <span className="font-semibold text-gray-900">{totals.small} pcs</span>
+        <footer className="pt-10 pb-16">
+          <div className="max-w-md space-y-2">
+            <h3 className="text-[16px] tracking-[0.24em] uppercase text-slate-300">Total Quantity</h3>
+            <div className="flex items-center justify-between text-2xl">
+              <span className="text-slate-300">50x50 cm (Small):</span>
+              <span className="font-black text-white">{totals.small} pcs</span>
             </div>
-            <div className="flex justify-between items-center text-[11px]">
-              <span className="text-gray-400 font-medium">90x90 cm (Large):</span>
-              <span className="font-semibold text-gray-900">{totals.large} pcs</span>
+            <div className="flex items-center justify-between text-2xl">
+              <span className="text-slate-300">90x90 cm (Large):</span>
+              <span className="font-black text-white">{totals.large} pcs</span>
             </div>
-            <div className="pt-3 border-t border-gray-50 flex justify-between items-center mt-2">
-              <span className="text-[11px] font-semibold text-gray-900 uppercase">Net Grand Total:</span>
-              <span className="text-lg font-semibold text-gray-900">{totals.small + totals.large} pcs</span>
+            <div className="mt-4 border-t border-slate-700 pt-4 flex items-center justify-between">
+              <span className="text-[30px] font-black uppercase text-white">Net Grand Total:</span>
+              <span className="text-[42px] font-black text-white">{totals.grand} pcs</span>
             </div>
           </div>
         </footer>
-
-        {/* System ID - Print Only */}
-        <div className="mt-12 text-center hidden print:block">
-          <p className="text-[8px] text-gray-200 font-medium uppercase tracking-[0.5em]">GreyFlow Document System</p>
-        </div>
       </div>
     </div>
   );
 }
+
