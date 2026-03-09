@@ -2736,40 +2736,42 @@ export function OrderPanel({
   return (
     <div className="max-w-5xl mx-auto w-full px-4 sm:px-6 pt-8 pb-32">
       <div className="mb-8 rounded-2xl bg-background/70 border border-border/60 shadow-xl px-4 sm:px-6 py-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center justify-between gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <div className="flex items-center gap-2 min-w-0">
             <span>Dashboard</span>
             <ChevronRight className="w-3 h-3" />
             <span>Order:</span>
             <ChevronRight className="w-3 h-3" />
             <span className="text-foreground">{effectiveOrderNumber || "New Order"}</span>
-            <span className="ml-2 text-muted-foreground">Challan:</span>
-            <Select
-              value={headerChallan}
-              onValueChange={setHeaderChallan}
-              disabled={!newOrderStarted || !hasWorker || challanOptions.length === 0}
-            >
-              <SelectTrigger className="h-8 min-w-[150px] rounded-lg border-border/60 bg-card/70 px-2 normal-case tracking-normal text-xs">
-                <SelectValue
-                  placeholder={
-                    newOrderStarted
-                      ? !hasWorker
-                        ? "Select worker first"
-                        : challanOptions.length
-                          ? "Select challan"
-                          : "No challans"
-                      : "Click New Order first"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent>
-                {challanOptions.map((c) => (
-                  <SelectItem key={c.id} value={c.value}>
-                    {c.value}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="ml-2 inline-flex items-center gap-2 shrink-0">
+              <span className="text-muted-foreground">Challan:</span>
+              <Select
+                value={headerChallan}
+                onValueChange={setHeaderChallan}
+                disabled={!newOrderStarted || !hasWorker || challanOptions.length === 0}
+              >
+                <SelectTrigger className="h-8 w-[132px] rounded-lg border-border/60 bg-card/70 px-2 normal-case tracking-normal text-xs">
+                  <SelectValue
+                    placeholder={
+                      newOrderStarted
+                        ? !hasWorker
+                          ? "Select worker first"
+                          : challanOptions.length
+                            ? "Select challan"
+                            : "No challans"
+                        : "Click New Order first"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {challanOptions.map((c) => (
+                    <SelectItem key={c.id} value={c.value}>
+                      {c.value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
