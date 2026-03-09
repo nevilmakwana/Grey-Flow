@@ -1123,7 +1123,11 @@ export function OrderPanel({
     if (!pid) return;
     const entry = jobworkInputs[pid] || {};
     const usedMeters = Number(entry.qty || 0);
-    const ratePerUnit = Number(entry.rate || 0);
+    if (usedMeters <= 0) {
+      toast({ variant: "destructive", title: "Enter quantity", description: "Quantity 0 se badi honi chahiye." });
+      return;
+    }
+    const ratePerUnit = Number(entry.rate ?? usageByPurchase[pid]?.ratePerUnit ?? 20);
     const gstPct = Number(entry.gstPct ?? 5);
     const receivedDate = entry.receivedDate ? String(entry.receivedDate) : undefined;
     const receivedBy = entry.receivedBy ? String(entry.receivedBy) : undefined;
@@ -2848,208 +2852,155 @@ export function OrderPanel({
       <div className="py-2 sm:py-6 sm:py-8 space-y-4 sm:space-y-10">
         {mainTab === "jobwork" && (
           <div className="space-y-2 sm:space-y-6">
-            <div className="flex items-center justify-between p-2 sm:p-6 bg-card rounded-2xl border border-border">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                  <Calculator className="w-6 h-6" />
+            <div className="rounded-2xl border border-border/50 bg-card/60 p-5 sm:p-6">
+              <h3 className="text-3xl font-black tracking-tight text-foreground">Print Order Job-work Tracking</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Worker ke purchases se date/challan. Quantity aur rate editable.
+              </p>
+
+              {!headerPrintingWorker ? (
+                <div className="mt-5 p-16 rounded-xl border border-dashed border-border/40 bg-muted/5 text-center text-muted-foreground">
+                  Select worker first.
                 </div>
-                <div>
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-foreground">Job-work Tracking</h3>
-                  <p className="text-[9px] font-medium text-muted-foreground uppercase tracking-widest mt-0.5">Worker Ledger & Payouts</p>
+              ) : purchases.length === 0 ? (
+                <div className="mt-5 p-16 rounded-xl border border-dashed border-border/40 bg-muted/5 text-center text-muted-foreground">
+                  No purchases found for selected worker.
                 </div>
-              </div>
+              ) : (
+                <div className="mt-5 overflow-x-auto">
+                  <table className="min-w-[1400px] w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border/40 bg-muted/20 text-muted-foreground">
+                        <th className="px-3 py-3 text-left font-semibold">Date</th>
+                        <th className="px-3 py-3 text-left font-semibold">Worker Name</th>
+                        <th className="px-3 py-3 text-left font-semibold">Purchase Challan</th>
+                        <th className="px-3 py-3 text-left font-semibold">Printing Challan</th>
+                        <th className="px-3 py-3 text-right font-semibold">Remaining (m)</th>
+                        <th className="px-3 py-3 text-right font-semibold">Quantity</th>
+                        <th className="px-3 py-3 text-right font-semibold">Rate per unit</th>
+                        <th className="px-3 py-3 text-right font-semibold">Amount</th>
+                        <th className="px-3 py-3 text-right font-semibold">GST %</th>
+                        <th className="px-3 py-3 text-right font-semibold">Final payable</th>
+                        <th className="px-3 py-3 text-left font-semibold">Received date</th>
+                        <th className="px-3 py-3 text-center font-semibold">Save</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visiblePurchases.map((p: any) => {
+                        const pid = String(p?._id || "");
+                        const entry = jobworkInputs[pid] || {};
+                        const remaining = getRemainingMeters(pid);
+                        const qtyRaw = Number(entry.qty || 0);
+                        const qty = Math.min(Math.max(0, qtyRaw), remaining || 0);
+                        const rate = Number(entry.rate ?? usageByPurchase[pid]?.ratePerUnit ?? 20);
+                        const gstPct = Number(entry.gstPct ?? usageByPurchase[pid]?.gstPct ?? 5);
+                        const amount = Math.round(qty * rate * 100) / 100;
+                        const gstAmount = Math.round(amount * (Math.max(0, gstPct) / 100) * 100) / 100;
+                        const finalPayable = Math.round((amount + gstAmount) * 100) / 100;
+                        const dateText = p?.date ? format(new Date(String(p.date)), "EEE, d MMM yyyy") : "-";
+                        return (
+                          <tr key={pid} className="border-b border-border/20">
+                            <td className="px-3 py-3 font-semibold">{dateText}</td>
+                            <td className="px-3 py-3 font-semibold">{String(p?.printingWorkerName || headerPrintingWorker || "-")}</td>
+                            <td className="px-3 py-3 font-semibold">{String(p?.challanOrInvoiceNo || "-")}</td>
+                            <td className="px-3 py-3">
+                              <Input
+                                value={String(entry.printingChallanNo || "")}
+                                onChange={(e) =>
+                                  setJobworkInputs((prev) => ({
+                                    ...prev,
+                                    [pid]: { ...prev[pid], printingChallanNo: e.target.value },
+                                  }))
+                                }
+                                placeholder="Printing challan"
+                                className="h-10 rounded-xl border-border/60 bg-background/30 px-3 font-semibold"
+                              />
+                            </td>
+                            <td className="px-3 py-3 text-right font-black">{formatMeters(remaining)}</td>
+                            <td className="px-3 py-3">
+                              <Input
+                                type="number"
+                                value={String(entry.qty ?? 0)}
+                                onChange={(e) => {
+                                  const next = Math.max(0, Number(e.target.value || 0));
+                                  const capped = Math.min(next, getRemainingMeters(pid));
+                                  setJobworkInputs((prev) => ({
+                                    ...prev,
+                                    [pid]: { ...prev[pid], qty: capped },
+                                  }));
+                                }}
+                                className="h-10 rounded-xl border-border/60 bg-background/30 px-3 text-right font-black"
+                              />
+                            </td>
+                            <td className="px-3 py-3">
+                              <Input
+                                type="number"
+                                value={String(rate)}
+                                onChange={(e) =>
+                                  setJobworkInputs((prev) => ({
+                                    ...prev,
+                                    [pid]: { ...prev[pid], rate: Math.max(0, Number(e.target.value || 0)) },
+                                  }))
+                                }
+                                className="h-10 rounded-xl border-border/60 bg-background/30 px-3 text-right font-black"
+                              />
+                            </td>
+                            <td className="px-3 py-3 text-right font-black">{formatInr(amount)}</td>
+                            <td className="px-3 py-3">
+                              <Input
+                                type="number"
+                                value={String(gstPct)}
+                                onChange={(e) =>
+                                  setJobworkInputs((prev) => ({
+                                    ...prev,
+                                    [pid]: { ...prev[pid], gstPct: Math.max(0, Number(e.target.value || 0)) },
+                                  }))
+                                }
+                                className="h-10 rounded-xl border-border/60 bg-background/30 px-3 text-right font-black"
+                              />
+                            </td>
+                            <td className="px-3 py-3 text-right font-black">{formatInr(finalPayable)}</td>
+                            <td className="px-3 py-3">
+                              <Input
+                                type="date"
+                                value={String(entry.receivedDate || "")}
+                                onChange={(e) =>
+                                  setJobworkInputs((prev) => ({
+                                    ...prev,
+                                    [pid]: { ...prev[pid], receivedDate: e.target.value },
+                                  }))
+                                }
+                                className="h-10 rounded-xl border-border/60 bg-background/30 px-3 font-semibold"
+                              />
+                            </td>
+                            <td className="px-3 py-3 text-center">
+                              <Button
+                                size="icon"
+                                onClick={() => saveJobworkRow(p)}
+                                className="h-10 w-10 rounded-xl"
+                                disabled={remaining <= 0}
+                              >
+                                <Save className="w-4 h-4" />
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      <tr className="bg-muted/20">
+                        <td className="px-3 py-3 font-black" colSpan={5}>Totals</td>
+                        <td className="px-3 py-3 text-right font-black">{formatMeters(jobworkTotals.qty)}</td>
+                        <td className="px-3 py-3 text-right font-black">-</td>
+                        <td className="px-3 py-3 text-right font-black">{formatInr(jobworkTotals.amount)}</td>
+                        <td className="px-3 py-3 text-right font-black">{formatInr(jobworkTotals.gst)}</td>
+                        <td className="px-3 py-3 text-right font-black">{formatInr(jobworkTotals.final)}</td>
+                        <td className="px-3 py-3" />
+                        <td className="px-3 py-3" />
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
-
-            {!headerPrintingWorker ? (
-              <div className="p-20 rounded-2xl border-2 border-dashed border-border/40 bg-muted/5 flex flex-col items-center justify-center text-center">
-                <AlertTriangle className="w-12 h-12 text-muted-foreground/20 mb-4" />
-                <p className="text-xs font-bold text-muted-foreground/40 uppercase tracking-widest">Select worker to view ledger</p>
-              </div>
-            ) : purchases.length === 0 ? (
-              <div className="p-20 rounded-2xl border-2 border-dashed border-border/40 bg-muted/5 flex flex-col items-center justify-center text-center">
-                <AlertTriangle className="w-12 h-12 text-muted-foreground/20 mb-4" />
-                <p className="text-xs font-bold text-muted-foreground/40 uppercase tracking-widest">No active purchases found for this worker</p>
-              </div>
-            ) : (
-               <div className="grid grid-cols-1 gap-2 sm:p-6">
-                 {(() => {
-                    const hasAvailable = visiblePurchases.length > 0;
-                    const activePurchaseId = jobworkSelectedPurchaseId && visiblePurchases.find((p: any) => String(p?._id || "") === jobworkSelectedPurchaseId)
-                      ? jobworkSelectedPurchaseId
-                      : hasAvailable ? String(visiblePurchases[0]?._id || "") : String(purchases[0]?._id || "");
-                    const activePurchase = (hasAvailable ? visiblePurchases : purchases).find((p: any) => String(p?._id || "") === activePurchaseId) || (hasAvailable ? visiblePurchases[0] : purchases[0]);
-                    const id = String(activePurchase?._id || "");
-                    const entry = jobworkInputs[id] || {};
-                    const qtyRaw = Number(entry.qty || 0);
-                    const remaining = getRemainingMeters(id);
-                    const qty = Math.min(Math.max(0, qtyRaw), remaining || 0);
-                    const rate = Number(entry.rate || 0);
-                    const gstPct = Number(entry.gstPct ?? 5);
-                    const amount = Math.round(qty * rate * 100) / 100;
-                    const gst = Math.round(amount * (Math.max(0, gstPct) / 100) * 100) / 100;
-                    const finalPayable = Math.round((amount + gst) * 100) / 100;
-                    const paid = Boolean(entry.paidDate);
-                    
-                    return (
-                      <div className="p-4 sm:p-6 bg-card rounded-2xl border border-border space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-4">
-                            <div className="flex items-center gap-5">
-                               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                  <CalendarIcon className="w-6 h-6" />
-                               </div>
-                               <div className="space-y-1">
-                                  <span className="block text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40">Ledger Entry Date</span>
-                                  <span className="text-lg font-black text-foreground">{format(new Date(), "EEEE, d MMMM yyyy")}</span>
-                               </div>
-                            </div>
-                            <div className="flex items-center gap-2 sm:p-6">
-                               <div className="text-right">
-                                  <span className="block text-[9px] font-black uppercase text-muted-foreground/30 tracking-widest mb-1">Worker</span>
-                                  <Badge className="bg-primary/5 border-primary/20 text-primary font-black text-[10px] px-3 rounded-full">{String(activePurchase?.printingWorkerName || headerPrintingWorker)}</Badge>
-                               </div>
-                               <div className="text-right">
-                                  <span className="block text-[9px] font-black uppercase text-muted-foreground/30 tracking-widest mb-1">Fabric Lot</span>
-                                  <Badge variant="outline" className="font-black text-[10px] px-3 rounded-full">{String(activePurchase?.challanOrInvoiceNo || "-")}</Badge>
-                               </div>
-                            </div>
-                         </div>
-
-                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:p-6">
-                            <div className="p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-2 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Available Balance</Label>
-                               <div className="text-2xl font-black text-foreground tracking-tighter">
-                                  {formatMeters(remaining)} <span className="text-[10px] opacity-30 uppercase">Meters</span>
-                               </div>
-                            </div>
-                            <div className="p-2 sm:p-6 bg-primary/5 rounded-2xl space-y-3 border border-primary/20">
-                               <Label className="text-[10px] font-black uppercase text-primary/60 tracking-widest">Processing Quantity</Label>
-                               <Input 
-                                 type="number"
-                                 value={entry.qty ?? ""}
-                                 onChange={(e) => setJobworkInputs((p) => {
-                                   const next = Math.max(0, Number(e.target.value || 0));
-                                   const capped = Math.min(next, getRemainingMeters(id));
-                                   return { ...p, [id]: { ...p[id], qty: capped } };
-                                 })}
-                                 className="h-10 bg-transparent border-none p-0 text-2xl font-black focus-visible:ring-0 placeholder:text-muted-foreground/10"
-                                 placeholder="0.00"
-                               />
-                            </div>
-                            <div className="p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-3 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Rate per Meter</Label>
-                               <div className="flex items-center gap-2">
-                                  <span className="text-lg font-black text-muted-foreground/40">₹</span>
-                                  <Input 
-                                    type="number"
-                                    value={entry.rate ?? ""}
-                                    onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], rate: Number(e.target.value || 0) } }))}
-                                    className="h-10 bg-transparent border-none p-0 text-2xl font-black focus-visible:ring-0 placeholder:text-muted-foreground/10"
-                                    placeholder="0.00"
-                                  />
-                               </div>
-                            </div>
-                            <div className="p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-3 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Base Amount</Label>
-                               <div className="text-2xl font-black text-foreground tracking-tighter">
-                                  {formatInr(amount)}
-                               </div>
-                            </div>
-                         </div>
-
-                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:p-6">
-                            <div className="p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-3 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Printing Challan #</Label>
-                               <Input 
-                                 value={entry.printingChallanNo || ""}
-                                 onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], printingChallanNo: e.target.value } }))}
-                                 className="h-8 bg-transparent border-none p-0 text-sm font-black focus-visible:ring-0 placeholder:text-muted-foreground/20"
-                                 placeholder="Enter Challan Record"
-                               />
-                            </div>
-                            <div className="p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-3 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Worker Arrival Date</Label>
-                               <Input 
-                                 type="date"
-                                 value={entry.receivedDate || ""}
-                                 onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], receivedDate: e.target.value } }))}
-                                 className="h-8 bg-transparent border-none p-0 text-sm font-black focus-visible:ring-0 appearance-none cursor-pointer"
-                               />
-                            </div>
-                            <div className="p-2 sm:p-6 bg-emerald-500/5 rounded-2xl space-y-3 border border-emerald-500/20">
-                               <Label className="text-[10px] font-black uppercase text-emerald-600/60 tracking-widest">Received By</Label>
-                               <Input 
-                                 value={entry.receivedBy || ""}
-                                 onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], receivedBy: e.target.value } }))}
-                                 className="h-8 bg-transparent border-none p-0 text-sm font-black focus-visible:ring-0 placeholder:text-muted-foreground/20"
-                                 placeholder="Who received?"
-                               />
-                            </div>
-                         </div>
-
-                         <div className="flex flex-col lg:flex-row gap-2 sm:p-6">
-                            <div className="flex-1 p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-4 border border-border/20">
-                               <div className="flex items-center justify-between">
-                                  <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Payment Status</Label>
-                                  {paid ? (
-                                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-black text-[9px] px-3">PAID</Badge>
-                                  ) : (
-                                    <Badge variant="outline" className="opacity-40 font-black text-[9px] px-3">UNPAID</Badge>
-                                  )}
-                               </div>
-                               <div className="grid grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                     <Label className="text-[9px] font-black uppercase text-muted-foreground/30">Paid Date</Label>
-                                     <Input 
-                                       type="date"
-                                       value={entry.paidDate || ""}
-                                       onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], paidDate: e.target.value } }))}
-                                       className="h-8 bg-transparent border-none p-0 text-xs font-black focus-visible:ring-0"
-                                     />
-                                  </div>
-                                  <div className="space-y-2">
-                                     <Label className="text-[9px] font-black uppercase text-muted-foreground/30">GST Percentage</Label>
-                                     <div className="flex items-center gap-2">
-                                        <Input 
-                                          type="number"
-                                          value={entry.gstPct ?? "5"}
-                                          onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], gstPct: Number(e.target.value || 0) } }))}
-                                          className="h-8 bg-transparent border-none p-0 text-xs font-black focus-visible:ring-0 w-12"
-                                        />
-                                        <span className="text-[9px] font-black text-muted-foreground/40">%</span>
-                                     </div>
-                                  </div>
-                               </div>
-                            </div>
-                            <div className="flex-[1.5] p-2 sm:p-6 bg-muted/10 rounded-2xl space-y-3 border border-border/20">
-                               <Label className="text-[10px] font-black uppercase text-muted-foreground/40 tracking-widest">Administrative Remark</Label>
-                               <Textarea 
-                                 value={entry.remark || ""}
-                                 onChange={(e) => setJobworkInputs((p) => ({ ...p, [id]: { ...p[id], remark: e.target.value } }))}
-                                 className="min-h-[60px] bg-transparent border-none p-0 text-sm font-bold focus-visible:ring-0 placeholder:text-muted-foreground/10 resize-none"
-                                 placeholder="Add internal notes about this payout..."
-                               />
-                            </div>
-                         </div>
-
-                         <div className="p-3 sm:p-8 rounded-[2.5rem] bg-primary text-primary-foreground shadow-2xl shadow-primary/30 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:p-6 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32 blur-3xl pointer-events-none" />
-                            <div className="space-y-1">
-                               <span className="block text-[10px] font-black uppercase opacity-60 tracking-[0.2em]">Net Payable Amount (with GST)</span>
-                               <span className="text-4xl font-black tracking-tighter">{formatInr(finalPayable)}</span>
-                            </div>
-                            <Button 
-                               onClick={() => saveJobworkRow(activePurchase)}
-                               disabled={remaining <= 0}
-                               className="h-16 px-4 sm:px-10 rounded-[1.5rem] bg-white text-primary font-black text-xs uppercase tracking-[0.3em] shadow-xl hover:scale-[1.02] transition-all hover:bg-white/90 active:scale-95"
-                            >
-                               <Plus className="w-5 h-5 mr-3" /> Commit to Ledger
-                            </Button>
-                         </div>
-                      </div>
-                    );
-                 })()}
-               </div>
-            )}
           </div>
         )}
         {mainTab === "jobworkDamage" && (
@@ -4504,3 +4455,4 @@ export function OrderPanel({
     </div>
   );
 }
+
