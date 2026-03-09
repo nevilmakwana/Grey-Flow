@@ -170,8 +170,7 @@ body {
   letter-spacing: 0;
 }
 
-.grid,
-.design-grid {
+.grid {
   display: grid;
   background: #ffffff !important;
   grid-template-columns: repeat(4, 582.67px); /* 437pt */
@@ -181,8 +180,7 @@ body {
   page-break-before: avoid;
 }
 
-.card,
-.design-card {
+.card {
   background: #ffffff !important;
   border: 2.67px solid #e5e7eb; /* 2pt */
   border-radius: 37.33px; /* 28pt */
@@ -347,3 +345,4 @@ img {
   color: #111827;
   line-height: 1;
 }
+
